@@ -1,4 +1,4 @@
-﻿/*
+/*
     Shellify, .NET implementation of Shell Link (.LNK) Binary File Format
     Copyright (C) 2010 Sebastien LEBRETON
 
@@ -16,19 +16,35 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
+using System.Collections.Generic;
+using Shellify.Tool.CommandLine;
+using Shellify.Tool.Options;
 
-namespace Shellify.Tool
+namespace Shellify.Tool.Commands
 {
-    class CommandLineAttribute : Attribute 
+    public abstract class Command : CommandLineItem
     {
-        public string Tag { get; set; }
-        public string Description { get; set; }
 
-        public CommandLineAttribute(string tag, string description)
+        public IList<Option> Options { get; set; }
+        public ShellLinkFile Context { get; set; }
+
+        public abstract void Execute();
+
+        public Command(string tag, string description, int expectedArguments)
+            : base(tag, description, expectedArguments)
         {
-            Tag = tag;
-            Description = description;
+            Options = new List<Option>();
         }
+
+        public string Filename
+        {
+            get { return Arguments.Count > 0 ? Arguments[0] : null; }
+        }
+
+        public string Target
+        {
+            get { return Arguments.Count > 1 ? Arguments[1] : null; }
+        }
+
     }
 }

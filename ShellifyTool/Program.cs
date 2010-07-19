@@ -19,53 +19,39 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Shellify.Tool.CommandLine;
+using Shellify.Tool.Commands;
+using Shellify.Tool.Options;
+using System.Text;
 
 namespace Shellify.Tool
 {
     public class Program
     {
-        private static void ForEachEnumCLA<T>(Action<CommandLineAttribute, T> action)
-        {
-            foreach (FieldInfo fi in typeof(T).GetFields())
-            {
-                foreach (CommandLineAttribute cla in fi.GetCustomAttributes(typeof(CommandLineAttribute), false))
-                {
-                    action(cla, (T) fi.GetValue(null));
-                }
-            }
-        }
-
-        private static Command GetCommand(string p)
-        {
-            Command result = Command.None;
-            ForEachEnumCLA<Command>((cla, cmd) => result = (cla.Tag.Equals(p, StringComparison.InvariantCultureIgnoreCase)) ? cmd : result);
-            return result;
-        }
-
-        public static void Usage()
-        {
-            Console.WriteLine("Usage: ShellifyTool <Command> filename [target]");
-            Console.WriteLine();
-            Console.WriteLine("Commands:");
-            ForEachEnumCLA<Command>((cla, cmd) => Console.WriteLine(String.Format("{0}\t{1}", cla.Tag, cla.Description)));
-        }
+        public const string DemoValue = "value";
+        public const string OptionTagDescriptionSeparator = " - ";
 
         public static void Main(string[] args)
         {
             try
             {
-                if (args.Length >= 2)
+                Console.WriteLine(string.Format("ShellifyTool v{0} by Sebastien LEBRETON", typeof(Program).Assembly.GetName().Version.ToString(2)));
+                Console.WriteLine();
+                Command command = CommandLineParser.Parse(args);
+                if (command != null)
                 {
-                    Command command = GetCommand(args[0]);
-                    string filename = args[1];
-                    string target = args.Length >= 3 ? args[2] : null;
-
-                    ProcessCommand(command, target, filename);
+                    command.Execute();
                 }
                 else
                 {
-                    Usage();
+                    DisplayUsage();
                 }
+            }
+            catch (CommandLineParseException e)
+            {
+                DisplayUsage();
+                Console.WriteLine();
+                Console.WriteLine(string.Concat("ERROR: ", e.Message));
             }
             catch (Exception e)
             {
@@ -73,49 +59,90 @@ namespace Shellify.Tool
             }
         }
 
-        private static void CheckExists(string target, string filename)
+        private static int ComputeOptionWidth()
         {
-            if (!File.Exists(target))
+            int result = 0;
+            int value = 0;
+
+            foreach (Option option in ProgramContext.Options)
             {
-                Console.WriteLine(string.Format("WARN: {0} doesn't exist", target));
+                value = option.Tag.Length + CommandLineParser.OptionPrefix.Length;
+                if (option.ExpectedArguments > 0)
+                {
+                    value += CommandLineParser.OptionArgumentSeparator.Length + DemoValue.Length;
+                }
+                result = Math.Max(result, value);
             }
-            else
+
+            return result;
+        }
+
+        private static void DisplayUsage()
+        {
+            Console.WriteLine("Usage: ShellifyTool <Command> [Options...] filename [target]");
+            Console.WriteLine();
+            Console.WriteLine("Commands:");
+            foreach (Command command in ProgramContext.Commands)
             {
-                Console.WriteLine(string.Format("{0} => {1}", filename, target));
+                Console.WriteLine(string.Format("{0}: {1}", command.Tag, command.Description));
+            }
+
+            int optionWidth = ComputeOptionWidth();
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            foreach (Option option in ProgramContext.Options)
+            {
+                StringBuilder builder = new StringBuilder();
+                builder.AppendFormat("{0}{1}", CommandLineParser.OptionPrefix, option.Tag);
+                if (option.ExpectedArguments > 0)
+                {
+                    builder.Append(CommandLineParser.OptionArgumentSeparator);
+                    builder.Append("value");
+                }
+                while (builder.Length < optionWidth)
+                {
+                    builder.Append(" ");
+                }
+                builder.Append(OptionTagDescriptionSeparator);
+                builder.Append(option.Description);
+                Console.WriteLine(NormalizeBuilder(builder, optionWidth));
             }
         }
 
-        private static void ProcessCommand(Command command, string target, string filename)
+        private static string NormalizeBuilder(StringBuilder builder, int optionWidth)
         {
-            switch (command)
+            string result = builder.ToString();
+            char separator = ',';
+            int currentWidth = 0;
+
+            if (builder.Length > Console.WindowWidth)
             {
-                case Command.CreateAbsolute:
-                    var slfabs = ShellLinkFile.CreateAbsolute(target);
-                    slfabs.SaveAs(filename);
-                    CheckExists(target, filename);
-                    break;
-
-                case Command.CreateRelative:
-                    var baseDirectory = Path.GetDirectoryName(filename);
-                    if (string.IsNullOrEmpty(baseDirectory)) {
-                        baseDirectory = ".";
+                string[] splits = result.Split(separator);
+                builder.Length = 0;
+                foreach (String split in splits)
+                {
+                    if (builder.Length > 0)
+                    {
+                        builder.Append(separator);
+                        currentWidth++;
                     }
-                    Console.WriteLine(String.Format("Using {0} as base directory", baseDirectory));
-
-                    var slfrel = ShellLinkFile.CreateRelative(baseDirectory, target);
-                    slfrel.SaveAs(filename);
-                    CheckExists(Path.Combine(baseDirectory, target), filename);
-                    break;
-
-                case Command.DisplayInfo:
-                    var slf = ShellLinkFile.Load(filename);
-                    Console.WriteLine(slf);
-                    break;
-
-                default:
-                    Usage();
-                    break;
+                    if (currentWidth + split.Length >= Console.WindowWidth)
+                    {
+                        builder.AppendLine();
+                        currentWidth = 0;
+                        while (currentWidth < optionWidth + OptionTagDescriptionSeparator.Length)
+                        {
+                            builder.Append(" ");
+                            currentWidth++;
+                        }
+                    }
+                    builder.Append(split);
+                    currentWidth += split.Length;
+                }
+                result = builder.ToString();
             }
+
+            return result;
         }
 
     }

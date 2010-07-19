@@ -24,9 +24,53 @@ namespace Shellify.Core
 	{
 		
 		public CommonNetworkRelativeLinkFlags CommonNetworkRelativeLinkFlags { get; set; }
-		public NetworkProviderType NetworkProviderType { get; set; }
 		public string NetName { get; set; }
-		public string DeviceName { get; set; }
+
+        public NetworkProviderType? _networkProviderType;
+        public NetworkProviderType? NetworkProviderType
+        {
+            get
+            {
+                return _networkProviderType;
+            }
+            set
+            {
+                _networkProviderType = value;
+                UpdateHeaderFlags(!value.HasValue, CommonNetworkRelativeLinkFlags.ValidNetType);
+            }
+        }
+
+        private string _deviceName;
+        public string DeviceName
+        {
+            get
+            {
+                return _deviceName;
+            }
+            set
+            {
+                _deviceName = value;
+                UpdateHeaderFlags(value, CommonNetworkRelativeLinkFlags.ValidDevice);
+            }
+        }
+
+        private void UpdateHeaderFlags(object item, CommonNetworkRelativeLinkFlags flag)
+        {
+            UpdateHeaderFlags(((item is string) && string.IsNullOrEmpty(item as string)) || (item == null), flag);
+        }
+
+        private void UpdateHeaderFlags(bool resetcondition, CommonNetworkRelativeLinkFlags flag)
+        {
+            if (resetcondition)
+            {
+                CommonNetworkRelativeLinkFlags &= ~flag;
+            }
+            else
+            {
+                CommonNetworkRelativeLinkFlags |= flag;
+            }
+        }
+
 
         public override string ToString()
         {

@@ -48,10 +48,15 @@ namespace Shellify.IO
 			
 			NetNameOffset = reader.ReadInt32();
 			DeviceNameOffset = reader.ReadInt32();
-			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
-			{
-				Item.NetworkProviderType = (NetworkProviderType) (reader.ReadInt32());
-			}
+            int nptvalue = reader.ReadInt32();
+            if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
+            {
+                Item.NetworkProviderType = (NetworkProviderType)(nptvalue);
+            }
+            else
+            {
+                Item.NetworkProviderType = null;
+            }
 			
 			if (NetNameOffset > 0x14)
 			{
@@ -71,15 +76,10 @@ namespace Shellify.IO
 			get
 			{
 				int result = Marshal.SizeOf(CommonNetworkRelativeLinkSize) +
-				Marshal.SizeOf(typeof(int)) +
+				Marshal.SizeOf(typeof(int))*2 +
 				Marshal.SizeOf(NetNameOffset) +
 				Marshal.SizeOf(DeviceNameOffset) +
 				IOHelper.GetASCIIZSize(Item.NetName, Encoding.Default);
-				
-				if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
-				{
-					result += Marshal.SizeOf(typeof(int));
-				}
 				
                 // TODO: Handle unicode strings and offsets
                 // NetNameOffsetUnicode = 
@@ -117,11 +117,13 @@ namespace Shellify.IO
 				DeviceNameOffset = 0;
 			}
 			writer.Write(DeviceNameOffset);
-			
+
+            int nptvalue = 0;
 			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
 			{
-				writer.Write((int) Item.NetworkProviderType);
+                nptvalue = (int)Item.NetworkProviderType;
 			}
+            writer.Write(nptvalue);
 
             // TODO: Handle unicode strings and offsets
             // NetNameOffsetUnicode = 

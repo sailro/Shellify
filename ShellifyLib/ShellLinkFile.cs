@@ -30,20 +30,110 @@ namespace Shellify
 	{
 
         public ShellLinkHeader Header { get; set; }
-		public LinkInfo LinkInfo { get; set; }
 		public IList<ExtraDataBlock> ExtraDataBlocks { get; set; }
 		public IList<ShItemID> ShItemIDs { get; set; }
-		public string Name { get; set; }
-		public string RelativePath { get; set; }
-		public string WorkingDirectory { get; set; }
-		public string Arguments { get; set; }
-		public string IconLocation { get; set; }
+
+        private LinkInfo _linkInfo;
+        public LinkInfo LinkInfo
+        {
+            get
+            {
+                return _linkInfo;
+            }
+            set
+            {
+                _linkInfo = value;
+                UpdateHeaderFlags(value, LinkFlags.HasLinkInfo);
+            }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+                UpdateHeaderFlags(value, LinkFlags.HasName);
+            }
+        }
+
+        private string _relativePath;
+        public string RelativePath
+        {
+            get
+            {
+                return _relativePath;
+            }
+            set
+            {
+                _relativePath = value;
+                UpdateHeaderFlags(value, LinkFlags.HasRelativePath);
+            }
+        }
+
+        private string _workingDirectory;
+        public string WorkingDirectory
+        {
+            get
+            {
+                return _workingDirectory;
+            }
+            set
+            {
+                _workingDirectory = value;
+                UpdateHeaderFlags(value, LinkFlags.HasWorkingDir);
+            }
+        }
+
+        private string _arguments;
+        public string Arguments
+        {
+            get
+            {
+                return _arguments;
+            }
+            set
+            {
+                _arguments = value;
+                UpdateHeaderFlags(value, LinkFlags.HasArguments);
+            }
+        }
+
+        private string _iconLocation;
+        public string IconLocation 
+        {
+            get
+            {
+                return _iconLocation;
+            }
+            set
+            {
+                _iconLocation = value;
+                UpdateHeaderFlags(value, LinkFlags.HasIconLocation);
+            }
+        }
 
         public ShellLinkFile()
         {
             Header = new ShellLinkHeader();
             ExtraDataBlocks = new List<ExtraDataBlock>();
             ShItemIDs = new List<ShItemID>();
+        }
+
+        private void UpdateHeaderFlags(object item, LinkFlags flag)
+        {
+            if (((item is string) && string.IsNullOrEmpty(item as string)) || (item == null))
+            {
+                Header.LinkFlags &= ~flag;
+            }
+            else
+            {
+                Header.LinkFlags |= flag;
+            }
         }
 
         public override string ToString()
@@ -87,55 +177,70 @@ namespace Shellify
                 }
             }
 		}
-		
-		public static ShellLinkFile CreateRelative(string baseDirectory, string relativeTarget)
-		{
+
+        public static FileSystemInfo SetFileSystemInfo(ShellLinkFile slf, string target)
+        {
+            FileSystemInfo targetInfo;
+            if (Directory.Exists(target))
+            {
+                targetInfo = new DirectoryInfo(target);
+            }
+            else
+            {
+                targetInfo = new FileInfo(target);
+            }
+
+            if (targetInfo.Exists)
+            {
+                slf.Header.FileAttributes = targetInfo.Attributes;
+                slf.Header.AccessTime = targetInfo.LastAccessTime;
+                slf.Header.CreationTime = targetInfo.CreationTime;
+                slf.Header.WriteTime = targetInfo.LastWriteTime;
+                if (targetInfo is FileInfo)
+                {
+                    slf.Header.FileSize = Convert.ToInt32((targetInfo as FileInfo).Length);
+                }
+            }
+            return targetInfo;
+        }
+
+        public static ShellLinkFile CreateRelative(string baseDirectory, string relativeTarget)
+        {
             if (Path.IsPathRooted(relativeTarget))
             {
                 throw new ArgumentException("Target must be relative to base directory !!!");
             }
-            
+
             ShellLinkFile result = new ShellLinkFile();
-			
-			FileInfo targetInfo = new FileInfo(Path.Combine(baseDirectory, relativeTarget));
-            if (targetInfo.Exists)
+
+            SetFileSystemInfo(result, Path.Combine(baseDirectory, relativeTarget));
+            result.Header.ShowCommand = ShowCommand.Normal;
+
+            result.RelativePath = relativeTarget;
+            result.WorkingDirectory = ".";
+
+            return result;
+        }
+
+        public static ShellLinkFile CreateAbsolute(string target)
+        {
+            ShellLinkFile result = new ShellLinkFile();
+
+            FileSystemInfo targetInfo = SetFileSystemInfo(result, target);
+            result.Header.ShowCommand = ShowCommand.Normal;
+
+            result.RelativePath = targetInfo.FullName;
+            if (targetInfo is FileInfo)
             {
-                result.Header.FileAttributes = targetInfo.Attributes;
-                result.Header.AccessTime = targetInfo.LastAccessTime;
-                result.Header.CreationTime = targetInfo.CreationTime;
-                result.Header.WriteTime = targetInfo.LastWriteTime;
-                result.Header.FileSize = Convert.ToInt32(targetInfo.Length);
+                result.WorkingDirectory = (targetInfo as FileInfo).DirectoryName;
             }
-			result.Header.ShowCommand = ShowCommand.Normal;
-			
-			result.Header.LinkFlags = LinkFlags.HasWorkingDir | LinkFlags.HasRelativePath;
-			result.RelativePath = relativeTarget;
-			result.WorkingDirectory = ".";
-			
-			return result;
-		}
-		
-		public static ShellLinkFile CreateAbsolute(string target)
-		{
-			ShellLinkFile result = new ShellLinkFile();
-			
-			FileInfo targetInfo = new FileInfo(target);
-            if (targetInfo.Exists)
+            else
             {
-                result.Header.FileAttributes = targetInfo.Attributes;
-                result.Header.AccessTime = targetInfo.LastAccessTime;
-                result.Header.CreationTime = targetInfo.CreationTime;
-                result.Header.WriteTime = targetInfo.LastWriteTime;
-                result.Header.FileSize = Convert.ToInt32(targetInfo.Length);
+                result.WorkingDirectory = targetInfo.FullName;
             }
-			result.Header.ShowCommand = ShowCommand.Normal;
-			
-			result.Header.LinkFlags = LinkFlags.HasWorkingDir | LinkFlags.HasRelativePath;
-			result.RelativePath = targetInfo.FullName;
-			result.WorkingDirectory = targetInfo.DirectoryName;
-			
-			return result;
-		}
+
+            return result;
+        }
 
         public void SaveAs(string filename)
         {

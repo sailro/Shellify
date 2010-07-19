@@ -47,12 +47,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoundTripTest.cs" />
+    <Compile Include="LibTest.cs" />
+    <Compile Include="ToolTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShellifyLib\ShellifyLib.csproj">
       <Project>{96BDF0A5-CE59-4F15-A809-4B086B2120AF}</Project>
       <Name>ShellifyLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShellifyTool\ShellifyTool.csproj">
+      <Project>{D532AE73-8E91-4F89-881A-688D80AE0103}</Project>
+      <Name>ShellifyTool</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
