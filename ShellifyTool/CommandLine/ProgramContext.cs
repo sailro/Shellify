@@ -82,7 +82,7 @@ namespace Shellify.Tool.CommandLine
             Option fnlt = CreateHeaderFlagOption("fnlt", LinkFlags.ForceNoLinkTrack);
             Option npa = CreateHeaderFlagOption("npa", LinkFlags.NoPidlAlias);
             Option risp = CreateHeaderFlagOption("risp", LinkFlags.RunInSeparateProcess);
-            Option rau = CreateHeaderFlagOption("risp", LinkFlags.RunAsUser);
+            Option rau = CreateHeaderFlagOption("rau", LinkFlags.RunAsUser);
 
             List<Option> alloptions = new List<Option>() { atime, ctime, wtime, fsize, iidx, iloc, name, rpath, wdir, args, fattr, swin, dlpt, dkft, dkfa, fnli, fnlt, npa, risp, rau};
             Options = alloptions.AsReadOnly();

@@ -114,8 +114,9 @@ namespace Shellify.Tool
             string result = builder.ToString();
             char separator = ',';
             int currentWidth = 0;
+            const int windowWidth = 80; // Console.WindowWidth no implemented in mono...
 
-            if (builder.Length > Console.WindowWidth)
+            if (builder.Length > windowWidth)
             {
                 string[] splits = result.Split(separator);
                 builder.Length = 0;
@@ -126,7 +127,7 @@ namespace Shellify.Tool
                         builder.Append(separator);
                         currentWidth++;
                     }
-                    if (currentWidth + split.Length >= Console.WindowWidth)
+                    if (currentWidth + split.Length >= windowWidth)
                     {
                         builder.AppendLine();
                         currentWidth = 0;
