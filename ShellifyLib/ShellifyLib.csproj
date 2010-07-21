@@ -46,7 +46,7 @@
     <Compile Include="ExtraData\FontFamily.cs" />
     <Compile Include="ExtraData\FillAttributes.cs" />
     <Compile Include="ExtraData\KnownFolderDataBlock.cs" />
-    <Compile Include="ExtraData\Unimplemented\ConsoleDataBlock.cs" />
+    <Compile Include="ExtraData\ConsoleDataBlock.cs" />
     <Compile Include="ExtraData\Unimplemented\ConsoleFEDataBlock.cs" />
     <Compile Include="ExtraData\Unimplemented\DarwinDataBlock.cs" />
     <Compile Include="ExtraData\Unimplemented\EnvironmentVariableDataBlock.cs" />
@@ -59,7 +59,7 @@
     <Compile Include="ExtraData\Unimplemented\VistaAndAboveIDListDataBlock.cs" />
     <Compile Include="IO\CommonNetworkRelativeLinkHandler.cs" />
     <Compile Include="IO\BaseRawDataBlockHandler.cs" />
-    <Compile Include="ExtraData\Unimplemented\ConsoleDataBlockHandler.cs" />
+    <Compile Include="IO\ConsoleDataBlockHandler.cs" />
     <Compile Include="IO\PropertyStoreDataBlockHandler.cs" />
     <Compile Include="IO\SpecialFolderDataBlockHandler.cs" />
     <Compile Include="IO\KnownFolderDataBlockHandler.cs" />

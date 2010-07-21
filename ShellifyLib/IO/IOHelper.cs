@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 using System.Collections;
+using System.Diagnostics;
 
 namespace Shellify.IO
 {
@@ -78,12 +79,8 @@ namespace Shellify.IO
         public static string ReadSTDATA(BinaryReader reader, Encoding encoding)
         {
             int charcount = reader.ReadUInt16();
-            if (!encoding.IsSingleByte)
-            {
-                // TODO: change this
-                charcount = charcount * 2;
-            }
-            return encoding.GetString(reader.ReadBytes(charcount));
+            int bytecount = charcount * encoding.GetByteCount(" ");
+            return encoding.GetString(reader.ReadBytes(bytecount));
         }
 
         static public void WriteSTDATA(string value, BinaryWriter writer, Encoding encoding)
@@ -123,11 +120,12 @@ namespace Shellify.IO
         public static string ReadASCIIZ(BinaryReader reader, Encoding encoding)
         {
             List<byte> bytes = new List<byte>();
-            byte read;
+            byte[] read;
+            int bytecount = encoding.GetByteCount(" ");
 
-            while ((read = reader.ReadByte()) != 0)
+            while ( (read = reader.ReadBytes(bytecount)).First() != 0 )
             {
-                bytes.Add(read);
+                bytes.AddRange(read);
             }
 
             return encoding.GetString(bytes.ToArray());
@@ -136,13 +134,12 @@ namespace Shellify.IO
         public static string ReadASCIIZF(BinaryReader reader, Encoding encoding, int length)
         {
             List<byte> bytes = new List<byte>(reader.ReadBytes(length));
+            int bytecount = encoding.GetByteCount(" ");
+            int zerocounter = 0;
 
-            while (bytes.Count > 0 && bytes.Last() == 0)
-            {
-                bytes.RemoveAt(bytes.Count - 1);
-            }
-
-            return encoding.GetString(bytes.ToArray());
+            List<byte> filtered = bytes.TakeWhile(b => (zerocounter = (b == 0) ? zerocounter + 1 : 0) < bytecount).ToList();
+            Debug.Assert(bytes.Skip(filtered.Count).ToList().TrueForAll(b => b==0), "Warning, non zero padding detected");
+            return encoding.GetString(filtered.ToArray());
         }
 
         public static void WriteASCIIZF(string value, BinaryWriter writer, Encoding encoding, int length)

@@ -25,6 +25,8 @@ namespace Shellify.ExtraData
 		{
 			switch (signature)
 			{
+                case ExtraDataBlockSignature.ConsoleDataBlock:
+                    return new ConsoleDataBlock();
                 case ExtraDataBlockSignature.PropertyStoreDataBlock:
                     return new PropertyStoreDataBlock();
                 case ExtraDataBlockSignature.SpecialFolderDataBlock:
