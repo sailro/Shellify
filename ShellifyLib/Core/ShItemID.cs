@@ -18,6 +18,7 @@
 
 using System.Text;
 using Shellify.IO;
+using Shellify.Extensions;
 
 namespace Shellify.Core
 {
@@ -32,8 +33,8 @@ namespace Shellify.Core
             builder.AppendLine(">> ShItemId");
             if (Data != null)
             {
-                builder.AppendFormat("Data lenth: {0}", Data.Length); builder.AppendLine();
-                builder.AppendFormat("Hash: {0}", IOHelper.ComputeHash(Data));
+                builder.AppendFormat("Data length: {0}", Data.Length); builder.AppendLine();
+                builder.AppendFormat("Hash: {0}", Data.ComputeHash());
             }
             else
             {

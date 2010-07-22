@@ -20,6 +20,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Shellify.Core;
+using Shellify.Extensions;
 
 namespace Shellify.IO
 {
@@ -63,11 +64,11 @@ namespace Shellify.IO
 				NetNameOffsetUnicode = reader.ReadInt32();
 				DeviceNameOffsetUnicode = reader.ReadInt32();
 			}
-			
-			Item.NetName = IOHelper.ReadASCIIZ(reader, readerOffset, NetNameOffset, NetNameOffsetUnicode);
+
+            Item.NetName = reader.ReadASCIIZ(readerOffset, NetNameOffset, NetNameOffsetUnicode);
 			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0)
 			{
-				Item.DeviceName = IOHelper.ReadASCIIZ(reader, readerOffset, DeviceNameOffset, DeviceNameOffsetUnicode);
+                Item.DeviceName = reader.ReadASCIIZ(readerOffset, DeviceNameOffset, DeviceNameOffsetUnicode);
 			}
 		}
 		
@@ -79,7 +80,7 @@ namespace Shellify.IO
 				Marshal.SizeOf(typeof(int))*2 +
 				Marshal.SizeOf(NetNameOffset) +
 				Marshal.SizeOf(DeviceNameOffset) +
-				IOHelper.GetASCIIZSize(Item.NetName, Encoding.Default);
+                Encoding.Default.GetASCIIZSize(Item.NetName);
 				
                 // TODO: Handle unicode strings and offsets
                 // NetNameOffsetUnicode = 
@@ -88,7 +89,7 @@ namespace Shellify.IO
 				
 				if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0)
 				{
-					result += IOHelper.GetASCIIZSize(Item.DeviceName, Encoding.Default);
+                    result += Encoding.Default.GetASCIIZSize(Item.DeviceName);
 				}
 				
 				return result;
@@ -110,7 +111,7 @@ namespace Shellify.IO
 			
 			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0)
 			{
-				DeviceNameOffset = NetNameOffset + IOHelper.GetASCIIZSize(Item.NetName, Encoding.Default);
+                DeviceNameOffset = NetNameOffset + Encoding.Default.GetASCIIZSize(Item.NetName);
 			}
 			else
 			{
@@ -129,11 +130,11 @@ namespace Shellify.IO
             // NetNameOffsetUnicode = 
             // DeviceNameOffsetUnicode = 
             // NetNameOffset > &H14
-			
-			IOHelper.WriteASCIIZ(Item.NetName, writer, Encoding.Default);
+
+            writer.WriteASCIIZ(Item.NetName, Encoding.Default);
 			if (DeviceNameOffset > 0)
 			{
-				IOHelper.WriteASCIIZ(Item.DeviceName, writer, Encoding.Default);
+                writer.WriteASCIIZ(Item.DeviceName, Encoding.Default);
 			}
 		}
 	}

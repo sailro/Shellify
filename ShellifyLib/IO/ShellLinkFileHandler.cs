@@ -22,6 +22,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Shellify.Core;
+using Shellify.Extensions;
 using Shellify.ExtraData;
 
 namespace Shellify.IO
@@ -41,7 +42,7 @@ namespace Shellify.IO
             Encoding enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
             if ((Item.Header.LinkFlags & mask) != 0)
             {
-                return IOHelper.ReadSTDATA(reader, enc);
+                return reader.ReadSTDATA(enc);
             }
             return null;
         }
@@ -196,7 +197,7 @@ namespace Shellify.IO
             Encoding enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
             if ((Item.Header.LinkFlags & mask) != 0)
             {
-                IOHelper.WriteSTDATA(value, writer, enc);
+                writer.WriteSTDATA(value, enc);
             }
         }
 

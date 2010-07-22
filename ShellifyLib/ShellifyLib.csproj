@@ -41,6 +41,8 @@
   <ItemGroup>
     <Compile Include="Core\CommonNetworkRelativeLink.cs" />
     <Compile Include="Core\CommonNetworkRelativeLinkFlags.cs" />
+    <Compile Include="Extensions\ByteArrayExtensions.cs" />
+    <Compile Include="Extensions\EncodingExtensions.cs" />
     <Compile Include="ExtraData\BaseFolderIDDataBlock.cs" />
     <Compile Include="ExtraData\BaseRawDataBlock.cs" />
     <Compile Include="ExtraData\FontFamily.cs" />
@@ -60,6 +62,8 @@
     <Compile Include="IO\CommonNetworkRelativeLinkHandler.cs" />
     <Compile Include="IO\BaseRawDataBlockHandler.cs" />
     <Compile Include="IO\ConsoleDataBlockHandler.cs" />
+    <Compile Include="Extensions\BinaryReaderExtensions.cs" />
+    <Compile Include="Extensions\BinaryWriterExtensions.cs" />
     <Compile Include="IO\PropertyStoreDataBlockHandler.cs" />
     <Compile Include="IO\SpecialFolderDataBlockHandler.cs" />
     <Compile Include="IO\KnownFolderDataBlockHandler.cs" />
@@ -70,7 +74,6 @@
     <Compile Include="IO\IBinaryReadable.cs" />
     <Compile Include="IO\IBinaryWriteable.cs" />
     <Compile Include="ExtraData\Unimplemented\IconEnvironmentDataBlock.cs" />
-    <Compile Include="IO\IOHelper.cs" />
     <Compile Include="Core\LinkFlags.cs" />
     <Compile Include="Core\LinkInfo.cs" />
     <Compile Include="Core\LinkInfoFlags.cs" />

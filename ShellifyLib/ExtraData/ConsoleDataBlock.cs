@@ -16,9 +16,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Shellify.IO;
-using System.Text;
 using System.Drawing;
+using System.Text;
+using Shellify.Extensions;
 
 namespace Shellify.ExtraData
 {
@@ -30,10 +30,23 @@ namespace Shellify.ExtraData
         public Size ScreenBufferSize { get; set; }
         public Size WindowSize { get; set; }
         public Point WindowOrigin { get; set; }
-        public Size FontSize { get; set; }
+        public int FontSize { get; set; }
         public FontFamily FontFamily { get; set; }
         public uint FontWeight { get; set; }
-        public string FaceName { get; set; }
+
+        private string _facename;
+        public string FaceName
+        {
+            get
+            { return _facename; }
+            set
+            {
+                _facename = value;
+                FaceNamePadding = null;
+            }
+        }
+
+        public byte[] FaceNamePadding { get; set; }
         public uint CursorSize { get; set; }
         public bool FullScreen { get; set; }
         public bool FastEdit { get; set; }
@@ -61,6 +74,11 @@ namespace Shellify.ExtraData
             builder.AppendFormat("FontSize: {0}", FontSize); builder.AppendLine();
             builder.AppendFormat("FontWeight: {0}", FontWeight); builder.AppendLine();
             builder.AppendFormat("FaceName: {0}", FaceName); builder.AppendLine();
+            if (FaceNamePadding != null)
+            {
+                builder.AppendFormat("FaceName padding length: {0}", FaceNamePadding.Length); builder.AppendLine();
+                builder.AppendFormat("FaceName padding Hash: {0}", FaceNamePadding.ComputeHash()); builder.AppendLine();
+            }
             builder.AppendFormat("CursorSize: {0}", CursorSize); builder.AppendLine();
             builder.AppendFormat("FullScreen: {0}", FullScreen); builder.AppendLine();
             builder.AppendFormat("FastEdit: {0}", FastEdit); builder.AppendLine();
@@ -71,8 +89,8 @@ namespace Shellify.ExtraData
             builder.AppendFormat("HistoryDuplicateAllowed: {0}", HistoryDuplicateAllowed); builder.AppendLine();
             if (ColorTable != null)
             {
-                builder.AppendFormat("Color Table lenth: {0}", ColorTable.Length); builder.AppendLine();
-                builder.AppendFormat("Hash: {0}", IOHelper.ComputeHash(ColorTable));
+                builder.AppendFormat("Color Table length: {0}", ColorTable.Length); builder.AppendLine();
+                builder.AppendFormat("Color Table Hash: {0}", ColorTable.ComputeHash());
             }
             else
             {

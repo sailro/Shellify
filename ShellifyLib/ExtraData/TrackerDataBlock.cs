@@ -19,6 +19,7 @@
 using System;
 using System.Text;
 using Shellify.IO;
+using System.Collections;
 
 namespace Shellify.ExtraData
 {
@@ -35,14 +36,30 @@ namespace Shellify.ExtraData
 			Signature = ExtraDataBlockSignature.TrackerDataBlock;
 		}
 
+        private static string ToString(IEnumerable collection)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("{");
+            foreach (object item in collection)
+            {
+                if (builder.Length > 1)
+                {
+                    builder.Append(",");
+                }
+                builder.Append(item);
+            }
+            builder.Append("}");
+            return builder.ToString();
+        }
+
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendLine(base.ToString());
             builder.AppendFormat("Version: {0}", Version); builder.AppendLine();
             builder.AppendFormat("MachineID: {0}", MachineID); builder.AppendLine();
-            builder.AppendFormat("Droid:\n{0}", IOHelper.ToString(Droid)); builder.AppendLine();
-            builder.AppendFormat("DroidBirth:\n{0}", IOHelper.ToString(DroidBirth));
+            builder.AppendFormat("Droid:\n{0}", ToString(Droid)); builder.AppendLine();
+            builder.AppendFormat("DroidBirth:\n{0}", ToString(DroidBirth));
             return builder.ToString();
         }
 		

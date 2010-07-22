@@ -16,32 +16,31 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Security.Cryptography;
 using System.Text;
-using Shellify.IO;
-using Shellify.Extensions;
 
-namespace Shellify.ExtraData
+namespace Shellify.Extensions
 {
-	public abstract class BaseRawDataBlock: ExtraDataBlock
-	{
-		
-		public byte[] Raw { get; set; }
-		
-        public override string ToString()
+    public static class ByteArrayExtensions
+    {
+
+        public static string ToHexString(this byte[] bytes)
         {
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            if (Raw != null)
+            foreach (byte b in bytes)
             {
-                builder.AppendFormat("Data length: {0}", Raw.Length); builder.AppendLine();
-                builder.AppendFormat("Hash: {0}", Raw.ComputeHash());
-            }
-            else
-            {
-                builder.Append("No data");
+                builder.AppendFormat("{0:x2}", b);
             }
             return builder.ToString();
         }
-		
-	}
+
+        public static string ComputeHash(this byte[] bytes)
+        {
+            using (MD5 md5 = new MD5CryptoServiceProvider())
+            {
+                return ToHexString(md5.ComputeHash(bytes));
+            }
+        }
+
+    }
 }

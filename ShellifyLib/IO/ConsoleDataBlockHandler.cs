@@ -16,11 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Shellify.ExtraData;
+using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Drawing;
-using System;
+using Shellify.Extensions;
+using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
@@ -41,10 +42,11 @@ namespace Shellify.IO
             get
             {
                 return base.ComputedSize
-                    + Marshal.SizeOf(typeof(short)) * 10
+                    + Marshal.SizeOf(typeof(short)) * 8
                     + UnusedLength 
                     + Marshal.SizeOf(typeof(int))*6
                     + Marshal.SizeOf(Item.FontWeight)
+                    + Marshal.SizeOf(Item.FontSize)
                     + FaceNameLength
                     + Marshal.SizeOf(Item.CursorSize)
                     + Marshal.SizeOf(Item.HistoryBufferSize)
@@ -66,11 +68,17 @@ namespace Shellify.IO
 
             reader.ReadBytes(UnusedLength);
 
-            Item.FontSize = new Size(reader.ReadInt16(), reader.ReadInt16());
+            //Item.FontSize = reader.ReadInt32();
+            reader.ReadInt16();
+            Item.FontSize = reader.ReadInt16();
+
             Item.FontFamily = (Shellify.ExtraData.FontFamily)reader.ReadUInt32();
             Item.FontWeight = reader.ReadUInt32();
-            
-            Item.FaceName = IOHelper.ReadASCIIZF(reader, Encoding.Unicode, FaceNameLength);
+
+            // Keep unknown data padding to preserve valid file roundtrip
+            byte[] padding = null;
+            Item.FaceName = reader.ReadASCIIZF(Encoding.Unicode, FaceNameLength, out padding);
+            Item.FaceNamePadding = padding;
 
             Item.CursorSize = reader.ReadUInt32();
             Item.FullScreen = reader.ReadUInt32() > 0;
@@ -99,12 +107,14 @@ namespace Shellify.IO
 
             writer.Write(new byte[UnusedLength]);
 
-            writer.Write((short)Item.FontSize.Width);
-            writer.Write((short)Item.FontSize.Height);
+            //writer.Write(Item.FontSize);
+            writer.Write((short)0);
+            writer.Write((short)Item.FontSize);
+
             writer.Write((uint)Item.FontFamily);
             writer.Write(Item.FontWeight);
 
-            IOHelper.WriteASCIIZF(Item.FaceName, writer, Encoding.Unicode, FaceNameLength);
+            writer.WriteASCIIZF(Item.FaceName, Encoding.Unicode, FaceNameLength, Item.FaceNamePadding);
 
             writer.Write(Item.CursorSize);
             writer.Write(Convert.ToInt32(Item.FullScreen));

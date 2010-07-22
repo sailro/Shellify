@@ -20,6 +20,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using Shellify.Core;
+using Shellify.Extensions;
 
 namespace Shellify.IO
 {
@@ -49,8 +50,8 @@ namespace Shellify.IO
 			{
 				VolumeLabelOffsetUnicode = reader.ReadInt32();
 			}
-			
-			Item.VolumeLabel = IOHelper.ReadASCIIZ(reader, readerOffset, VolumeLabelOffset, VolumeLabelOffsetUnicode);
+
+            Item.VolumeLabel = reader.ReadASCIIZ(readerOffset, VolumeLabelOffset, VolumeLabelOffsetUnicode);
 		}
 		
 		public int ComputedSize
@@ -61,7 +62,7 @@ namespace Shellify.IO
                 Marshal.SizeOf(typeof(int)) +
                 Marshal.SizeOf(Item.DriveSerialNumber) +
                 Marshal.SizeOf(VolumeLabelOffset) +
-                IOHelper.GetASCIIZSize(Item.VolumeLabel, Encoding.Default);
+                Encoding.Default.GetASCIIZSize(Item.VolumeLabel);
 
                 // TODO: Handle unicode strings and offsets
                 // VolumeLabelOffsetUnicode = 
@@ -85,8 +86,8 @@ namespace Shellify.IO
             // TODO: Handle unicode strings and offsets
             // VolumeLabelOffsetUnicode = 
             // VolumeLabelOffset = &H14 
-			
-			IOHelper.WriteASCIIZ(Item.VolumeLabel, writer, Encoding.Default);
+
+            writer.WriteASCIIZ(Item.VolumeLabel, Encoding.Default);
 		}
 	}
 }

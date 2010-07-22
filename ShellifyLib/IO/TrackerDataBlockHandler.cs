@@ -21,6 +21,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Shellify.IO;
 using Shellify.ExtraData;
+using Shellify.Extensions;
 
 namespace Shellify.IO
 {
@@ -60,7 +61,7 @@ namespace Shellify.IO
             base.ReadFrom(reader);
             Length = reader.ReadInt32();
             Item.Version = reader.ReadInt32();
-            Item.MachineID = IOHelper.ReadASCIIZF(reader, Encoding.Default, MachineIDLength); // 16 bytes, 0 fill
+            Item.MachineID = reader.ReadASCIIZF(Encoding.Default, MachineIDLength); // 16 bytes, 0 fill
             Item.Droid = new Guid[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
             Item.DroidBirth = new Guid[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
         }
@@ -71,7 +72,7 @@ namespace Shellify.IO
             Length = ComputedSize - base.ComputedSize; 
             writer.Write(Length);
             writer.Write(Item.Version);
-            IOHelper.WriteASCIIZF(Item.MachineID, writer, Encoding.Default, MachineIDLength);
+            writer.WriteASCIIZF(Item.MachineID, Encoding.Default, MachineIDLength);
             foreach (Guid guid in Item.Droid) writer.Write(guid.ToByteArray());
             foreach (Guid guid in Item.DroidBirth) writer.Write(guid.ToByteArray());
         }

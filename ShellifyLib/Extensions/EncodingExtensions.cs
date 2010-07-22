@@ -17,31 +17,22 @@
 */
 
 using System.Text;
-using Shellify.IO;
-using Shellify.Extensions;
 
-namespace Shellify.ExtraData
+namespace Shellify.Extensions
 {
-	public abstract class BaseRawDataBlock: ExtraDataBlock
-	{
-		
-		public byte[] Raw { get; set; }
-		
-        public override string ToString()
+    public static class EncodingExtensions
+    {
+
+        public static int GetASCIIZSize(this Encoding encoding, string value)
         {
-            StringBuilder builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            if (Raw != null)
+            if (value == null)
             {
-                builder.AppendFormat("Data length: {0}", Raw.Length); builder.AppendLine();
-                builder.AppendFormat("Hash: {0}", Raw.ComputeHash());
+                return 1;
             }
             else
             {
-                builder.Append("No data");
+                return encoding.GetByteCount(value) + 1;
             }
-            return builder.ToString();
         }
-		
-	}
+    }
 }
