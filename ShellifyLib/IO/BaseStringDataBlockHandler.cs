@@ -26,7 +26,7 @@ namespace Shellify.IO
 	{
 
         public const int ValueSize = 260;
-        public const int UnicodeValueSize = 520;
+        public const int ValueSizeUnicode = 520;
 
         public BaseStringDataBlockHandler(T item, ShellLinkFile context)
             : base(item, context)
@@ -37,7 +37,7 @@ namespace Shellify.IO
 		{
 			get
 			{
-                return base.ComputedSize + ValueSize + UnicodeValueSize;
+                return base.ComputedSize + ValueSize + ValueSizeUnicode;
 			}
 		}
 		
@@ -49,15 +49,18 @@ namespace Shellify.IO
             Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out padding);
             Item.ValuePadding = padding;
 
-            Item.ValueUnicode = reader.ReadASCIIZF(Encoding.Unicode, UnicodeValueSize, out padding);
+            Item.ValueUnicode = reader.ReadASCIIZF(Encoding.Unicode, ValueSizeUnicode, out padding);
             Item.ValueUnicodePadding = padding;
         }
 		
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
-			base.WriteTo(writer);
+            CheckLength(Item.Value, ValueSize, CheckLengthOption.MustBeLower);
+            CheckLength(Item.ValueUnicode, ValueSizeUnicode, CheckLengthOption.MustBeLower);
+            
+            base.WriteTo(writer);
             writer.WriteASCIIZF(Item.Value, Encoding.Default, ValueSize, Item.ValuePadding);
-            writer.WriteASCIIZF(Item.ValueUnicode, Encoding.Unicode, UnicodeValueSize, Item.ValueUnicodePadding);
+            writer.WriteASCIIZF(Item.ValueUnicode, Encoding.Unicode, ValueSizeUnicode, Item.ValueUnicodePadding);
         }
 		
 	}

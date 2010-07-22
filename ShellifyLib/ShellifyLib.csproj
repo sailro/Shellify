@@ -8,7 +8,7 @@
     <ProjectGuid>{96BDF0A5-CE59-4F15-A809-4B086B2120AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Shellify.Lib</RootNamespace>
+    <RootNamespace>Shellify</RootNamespace>
     <AssemblyName>ShellifyLib</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -60,6 +60,7 @@
     <Compile Include="ExtraData\TrackerDataBlock.cs" />
     <Compile Include="ExtraData\UnknownDataBlock.cs" />
     <Compile Include="ExtraData\Unimplemented\VistaAndAboveIDListDataBlock.cs" />
+    <Compile Include="IO\CheckLengthOption.cs" />
     <Compile Include="IO\CommonNetworkRelativeLinkHandler.cs" />
     <Compile Include="IO\BaseRawDataBlockHandler.cs" />
     <Compile Include="IO\ConsoleDataBlockHandler.cs" />

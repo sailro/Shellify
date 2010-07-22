@@ -68,6 +68,8 @@ namespace Shellify.IO
 
         public override void WriteTo(System.IO.BinaryWriter writer)
         {
+            CheckLength(Item.MachineID, MachineIDLength, CheckLengthOption.MustBeLowerOrEqual);
+
             base.WriteTo(writer);
             Length = ComputedSize - base.ComputedSize; 
             writer.Write(Length);

@@ -94,6 +94,9 @@ namespace Shellify.IO
 
         public override void WriteTo(System.IO.BinaryWriter writer)
         {
+            CheckLength(Item.FaceName, FaceNameLength, CheckLengthOption.MustBeLower);
+            CheckLength(Item.ColorTable, ColorTableLength, CheckLengthOption.MustBeEqual);
+
             base.WriteTo(writer);
             writer.Write((ushort)Item.FillAttributes);
             writer.Write((ushort)Item.PopupFillAttributes);
