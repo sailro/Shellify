@@ -25,6 +25,10 @@ namespace Shellify.ExtraData
 		{
 			switch (signature)
 			{
+                case ExtraDataBlockSignature.IconEnvironmentDataBlock:
+                    return new IconEnvironmentDataBlock();
+                case ExtraDataBlockSignature.EnvironmentVariableDataBlock:
+                    return new EnvironmentVariableDataBlock();
                 case ExtraDataBlockSignature.ConsoleDataBlock:
                     return new ConsoleDataBlock();
                 case ExtraDataBlockSignature.PropertyStoreDataBlock:

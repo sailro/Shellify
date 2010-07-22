@@ -45,13 +45,14 @@
     <Compile Include="Extensions\EncodingExtensions.cs" />
     <Compile Include="ExtraData\BaseFolderIDDataBlock.cs" />
     <Compile Include="ExtraData\BaseRawDataBlock.cs" />
+    <Compile Include="ExtraData\BaseStringDataBlock.cs" />
     <Compile Include="ExtraData\FontFamily.cs" />
     <Compile Include="ExtraData\FillAttributes.cs" />
     <Compile Include="ExtraData\KnownFolderDataBlock.cs" />
     <Compile Include="ExtraData\ConsoleDataBlock.cs" />
     <Compile Include="ExtraData\Unimplemented\ConsoleFEDataBlock.cs" />
     <Compile Include="ExtraData\Unimplemented\DarwinDataBlock.cs" />
-    <Compile Include="ExtraData\Unimplemented\EnvironmentVariableDataBlock.cs" />
+    <Compile Include="ExtraData\EnvironmentVariableDataBlock.cs" />
     <Compile Include="ExtraData\ExtraDataBlock.cs" />
     <Compile Include="ExtraData\ExtraDataBlockFactory.cs" />
     <Compile Include="ExtraData\ExtraDataBlockSignature.cs" />
@@ -64,6 +65,9 @@
     <Compile Include="IO\ConsoleDataBlockHandler.cs" />
     <Compile Include="Extensions\BinaryReaderExtensions.cs" />
     <Compile Include="Extensions\BinaryWriterExtensions.cs" />
+    <Compile Include="IO\BaseStringDataBlockHandler.cs" />
+    <Compile Include="IO\IconEnvironmentDataBlockHandler.cs" />
+    <Compile Include="IO\EnvironmentVariableDataBlockHandler.cs" />
     <Compile Include="IO\PropertyStoreDataBlockHandler.cs" />
     <Compile Include="IO\SpecialFolderDataBlockHandler.cs" />
     <Compile Include="IO\KnownFolderDataBlockHandler.cs" />
@@ -73,7 +77,7 @@
     <Compile Include="IO\ExtraDataBlockHandlerFactory.cs" />
     <Compile Include="IO\IBinaryReadable.cs" />
     <Compile Include="IO\IBinaryWriteable.cs" />
-    <Compile Include="ExtraData\Unimplemented\IconEnvironmentDataBlock.cs" />
+    <Compile Include="ExtraData\IconEnvironmentDataBlock.cs" />
     <Compile Include="Core\LinkFlags.cs" />
     <Compile Include="Core\LinkInfo.cs" />
     <Compile Include="Core\LinkInfoFlags.cs" />

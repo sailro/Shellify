@@ -71,15 +71,26 @@ namespace Shellify.Extensions
             return ReadASCIIZF(reader, encoding, length, out padding);
         }
 
-        public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length, out byte[] padding) {
-            List<byte> bytes = new List<byte>(reader.ReadBytes(length));
+        public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length, out byte[] padding)
+        {
+            byte[] bytes = reader.ReadBytes(length);
             int bytecount = encoding.GetByteCount(" ");
-            int zerocounter = 0;
+            byte[] nullsequence = new byte[bytecount];
 
-            List<byte> filtered = bytes.TakeWhile(b => (zerocounter = (b == 0) ? zerocounter + 1 : 0) < bytecount).ToList();
-            padding = bytes.Skip(filtered.Count).ToArray();
-            //Debug.Assert(bytes.Skip(filtered.Count).ToList().TrueForAll(b => b==0), "Warning, non zero padding detected");
-            return encoding.GetString(filtered.ToArray());
+            int split = bytes.IndexOf(nullsequence);
+            if (split <= 0)
+            {
+                padding = bytes.ToArray();
+                return string.Empty;
+            }
+            else
+            {
+                byte[] stringdata = bytes.Take(split -1 + bytecount).ToArray();
+                List<byte> temp = bytes.ToList();
+                temp.RemoveRange(0, split - 1 + bytecount);
+                padding = temp.ToArray();
+                return encoding.GetString(stringdata);
+            }
         }
 
     }
