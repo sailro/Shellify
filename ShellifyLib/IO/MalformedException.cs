@@ -1,4 +1,4 @@
-﻿/*
+/*
     Shellify, .NET implementation of Shell Link (.LNK) Binary File Format
     Copyright (C) 2010 Sebastien LEBRETON
 
@@ -17,17 +17,21 @@
 */
 
 using System;
-using System.Reflection;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
+using Shellify.Extensions;
+using Shellify.ExtraData;
 
-[assembly: AssemblyTitle("ShellifyTest")]
-[assembly: AssemblyDescription("ShellifyTest")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Shellify")]
-[assembly: AssemblyCopyright("Copyright © 2010 Sebastien LEBRETON")]
-[assembly: AssemblyTrademark("")]
+namespace Shellify.IO
+{
+    public class MalformedException : Exception
+    {
 
-[assembly: ComVisible(false)]
-[assembly: Guid("e974c94f-ba63-407b-b0a4-3e3a6731292c")]
-[assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.0.0")]
+        public MalformedException(String message)
+            : base(message)
+        {
+        }
+
+    }
+}

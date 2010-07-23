@@ -57,7 +57,6 @@ namespace Shellify.Tool
             {
                 Console.WriteLine(string.Concat("ERROR: ", e.Message));
             }
-            Console.ReadKey();
         }
 
         private static int ComputeOptionWidth()

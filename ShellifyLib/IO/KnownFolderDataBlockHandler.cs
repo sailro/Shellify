@@ -24,6 +24,7 @@ namespace Shellify.IO
 {
     public class KnownFolderDataBlockHandler : BaseFolderIDDataBlockHandler<KnownFolderDataBlock>
     {
+        public const int ExactBlockSize = 0x1C;
 
         public override int ComputedSize
         {
@@ -40,11 +41,13 @@ namespace Shellify.IO
 
         protected override void ReadID(System.IO.BinaryReader reader)
         {
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
             Item.KnownFolder = new Guid(reader.ReadBytes(Marshal.SizeOf(Item.KnownFolder)));
         }
 
         protected override void WriteID(System.IO.BinaryWriter writer)
         {
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
             writer.Write(Item.KnownFolder.ToByteArray());
         }
 

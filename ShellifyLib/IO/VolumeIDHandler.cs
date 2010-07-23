@@ -26,6 +26,7 @@ namespace Shellify.IO
 {
     public class VolumeIDHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
 	{
+        public const int MinimumVolumeIDSize = 0x10;
 		
 		private VolumeID Item;
 		private int VolumeIDSize { get; set; }
@@ -42,14 +43,20 @@ namespace Shellify.IO
 			long readerOffset = reader.BaseStream.Position;
 			
 			VolumeIDSize = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => VolumeIDSize > MinimumVolumeIDSize);
+
 			Item.DriveType = (DriveType) (reader.ReadInt32());
 			Item.DriveSerialNumber = reader.ReadInt32();
 			VolumeLabelOffset = reader.ReadInt32();
-			
-			if (VolumeLabelOffset == 0x14)
-			{
-				VolumeLabelOffsetUnicode = reader.ReadInt32();
-			}
+
+            if (VolumeLabelOffset > MinimumVolumeIDSize)
+            {
+                VolumeLabelOffsetUnicode = reader.ReadInt32();
+            }
+            else
+            {
+                FormatChecker.CheckExpression(() => VolumeLabelOffset == MinimumVolumeIDSize);
+            }
 
             Item.VolumeLabel = reader.ReadASCIIZ(readerOffset, VolumeLabelOffset, VolumeLabelOffsetUnicode);
 		}
@@ -73,7 +80,10 @@ namespace Shellify.IO
 		public void WriteTo(System.IO.BinaryWriter writer)
 		{
 			VolumeIDSize = ComputedSize;
-			writer.Write(VolumeIDSize);
+
+            FormatChecker.CheckExpression(() => VolumeIDSize > MinimumVolumeIDSize);
+
+            writer.Write(VolumeIDSize);
 			writer.Write((int) Item.DriveType);
 			writer.Write(Item.DriveSerialNumber);
 			

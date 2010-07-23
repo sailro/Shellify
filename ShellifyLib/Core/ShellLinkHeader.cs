@@ -25,6 +25,7 @@ namespace Shellify.Core
 {
 	public class ShellLinkHeader
 	{
+        public const string LNKGuid = "00021401-0000-0000-c000-000000000046";
 		
 		public Guid Guid { get; set; }
 		public LinkFlags LinkFlags { get; set; }
@@ -39,7 +40,7 @@ namespace Shellify.Core
 
         public ShellLinkHeader()
         {
-            Guid = new Guid("00021401-0000-0000-c000-000000000046");
+            Guid = new Guid(LNKGuid);
             CreationTime = DateTime.Now;
             AccessTime = DateTime.Now;
             WriteTime = DateTime.Now;

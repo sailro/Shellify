@@ -77,24 +77,8 @@ namespace Shellify.IO
             Item.ShItemIDs = new List<ShItemID>();
             if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) != 0)
             {
-                short idListSize = reader.ReadInt16();
-                if (idListSize > 0)
-                {
-                    do
-                    {
-                        ShItemID shitem = new ShItemID();
-                        ShItemIdHandler shitemReader = new ShItemIdHandler(shitem);
-                        shitemReader.ReadFrom(reader);
-                        if (shitem.Data != null)
-                        {
-                            Item.ShItemIDs.Add(shitem);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    } while (true);
-                }
+                IDListHandler idlhandler = new IDListHandler(Item, true);
+                idlhandler.ReadFrom(reader);
             }
         }
 
@@ -148,19 +132,8 @@ namespace Shellify.IO
         {
             if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) != 0)
             {
-                ushort idListSize = 0;
-
-                idListSize = Convert.ToUInt16(Marshal.SizeOf(idListSize));
-                List<ShItemIdHandler> writers = new List<ShItemIdHandler>();
-                foreach (ShItemID shitem in Item.ShItemIDs)
-                {
-                    ShItemIdHandler shitemWriter = new ShItemIdHandler(shitem);
-                    idListSize += Convert.ToUInt16(shitemWriter.ComputedSize);
-                    writers.Add(shitemWriter);
-                }
-                writer.Write(idListSize);
-                writers.ForEach(handler => handler.WriteTo(writer));
-                writer.Write((short)0);
+                IDListHandler idlhandler = new IDListHandler(Item, true);
+                idlhandler.WriteTo(writer);
             }
         }
 

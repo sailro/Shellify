@@ -1,4 +1,4 @@
-﻿/*
+/*
     Shellify, .NET implementation of Shell Link (.LNK) Binary File Format
     Copyright (C) 2010 Sebastien LEBRETON
 
@@ -16,18 +16,17 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Reflection;
-using System.Runtime.InteropServices;
+using Shellify.ExtraData;
 
-[assembly: AssemblyTitle("ShellifyTest")]
-[assembly: AssemblyDescription("ShellifyTest")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Shellify")]
-[assembly: AssemblyCopyright("Copyright © 2010 Sebastien LEBRETON")]
-[assembly: AssemblyTrademark("")]
+namespace Shellify.IO
+{
+	public class DarwinDataBlockHandler : BaseStringDataBlockHandler<DarwinDataBlock>
+	{
 
-[assembly: ComVisible(false)]
-[assembly: Guid("e974c94f-ba63-407b-b0a4-3e3a6731292c")]
-[assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.0.0")]
+        public DarwinDataBlockHandler(DarwinDataBlock item, ShellLinkFile context)
+            : base(item, context)
+		{
+		}
+		
+	}
+}

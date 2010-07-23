@@ -64,52 +64,10 @@ namespace Shellify.IO
 		
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
-			writer.Write(ComputedSize);
+            BlockSize = ComputedSize;
+            writer.Write(BlockSize);
 			writer.Write((int) Item.Signature);
 		}
-
-        protected void CheckLength(int itemlength, int length, CheckLengthOption option) {
-            switch(option) {
-                case CheckLengthOption.MustBeEqual:
-                    if (itemlength != length) {
-                        throw new ArgumentException(string.Format("Incorrect length: {0}, must be exactly {1}", itemlength, length));
-                    }
-                    break;
-                case CheckLengthOption.MustBeLower:
-                    if (itemlength >= length) {
-                        throw new ArgumentException(string.Format("Incorrect length: {0}, must be < {1}", itemlength, length));
-                    }
-                    break;
-                case CheckLengthOption.MustBeHigher:
-                    if (itemlength <= length) {
-                        throw new ArgumentException(string.Format("Incorrect length: {0}, must be > {1}", itemlength, length));
-                    }
-                    break;
-                case CheckLengthOption.MustBeLowerOrEqual:
-                    if (itemlength > length)
-                    {
-                        throw new ArgumentException(string.Format("Incorrect length: {0}, must be <= {1}", itemlength, length));
-                    }
-                    break;
-                case CheckLengthOption.MustBeHigherOrEqual:
-                    if (itemlength < length)
-                    {
-                        throw new ArgumentException(string.Format("Incorrect length: {0}, must be >= {1}", itemlength, length));
-                    }
-                    break;
-                default:
-                    throw new ArgumentException(string.Format("Unknown option '{0}'", option));
-            }
-        }
-
-        protected void CheckLength(Array item, int length, CheckLengthOption option) {
-            CheckLength(item == null ? 0 : item.Length, length, option);
-        }
-
-        protected void CheckLength(string item, int length, CheckLengthOption option)
-        {
-            CheckLength(item == null ? 0 : item.Length, length, option);
-        }
-		
+	
 	}
 }

@@ -16,16 +16,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
+using System.Collections.Generic;
 
-namespace Shellify.IO
+namespace Shellify.Core
 {
-    public enum CheckLengthOption
+    public interface IHasIDList
     {
-        MustBeLower,
-        MustBeHigher,
-        MustBeEqual,
-        MustBeLowerOrEqual,
-        MustBeHigherOrEqual
+        IList<ShItemID> ShItemIDs { get; set; }
     }
 }

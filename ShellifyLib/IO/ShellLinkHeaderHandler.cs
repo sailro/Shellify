@@ -26,7 +26,8 @@ namespace Shellify.IO
 {
 	public class ShellLinkHeaderHandler : IBinaryReadable, IBinaryWriteable
 	{
-		
+        public const int ExactHeaderSize = 0x4C;
+
 		private ShellLinkHeader Item { get; set; }
 		private int HeaderSize { get; set; }
 		private const int ReservedSize = 10;
@@ -39,7 +40,11 @@ namespace Shellify.IO
 		public void ReadFrom(BinaryReader reader)
 		{
 			HeaderSize = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => HeaderSize == ExactHeaderSize);
+
 			Item.Guid = new Guid(reader.ReadBytes(16));
+            FormatChecker.CheckExpression(() => Item.Guid.ToString().Equals(ShellLinkHeader.LNKGuid) );
+
 			Item.LinkFlags = (LinkFlags) (reader.ReadInt32());
 			Item.FileAttributes = (FileAttributes) (reader.ReadInt32());
 			
@@ -65,8 +70,11 @@ namespace Shellify.IO
 			3 * Marshal.SizeOf(typeof(int)) +
 			3 * Marshal.SizeOf(typeof(long)) +
 			ReservedSize;
-			
-			writer.Write(HeaderSize);
+
+            FormatChecker.CheckExpression(() => HeaderSize == ExactHeaderSize);
+            FormatChecker.CheckExpression(() => Item.Guid.ToString().Equals(ShellLinkHeader.LNKGuid));
+            
+            writer.Write(HeaderSize);
 			writer.Write(Item.Guid.ToByteArray());
 			writer.Write((int) Item.LinkFlags);
 			writer.Write((int) Item.FileAttributes);

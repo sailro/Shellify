@@ -26,6 +26,7 @@ namespace Shellify.IO
 {
     public class CommonNetworkRelativeLinkHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
 	{
+        public const int MinimumCommonNetworkRelativeLinkSize = 0x14;
 		
 		private CommonNetworkRelativeLink Item { get; set; }
 		private int CommonNetworkRelativeLinkSize { get; set; }
@@ -45,10 +46,16 @@ namespace Shellify.IO
 			long readerOffset = reader.BaseStream.Position;
 			
 			CommonNetworkRelativeLinkSize = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkSize >= MinimumCommonNetworkRelativeLinkSize);
+
 			Item.CommonNetworkRelativeLinkFlags = (CommonNetworkRelativeLinkFlags) (reader.ReadInt32());
 			
 			NetNameOffset = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => NetNameOffset < CommonNetworkRelativeLinkSize);
+
 			DeviceNameOffset = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => DeviceNameOffset < CommonNetworkRelativeLinkSize);
+
             int nptvalue = reader.ReadInt32();
             if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
             {
@@ -58,12 +65,19 @@ namespace Shellify.IO
             {
                 Item.NetworkProviderType = null;
             }
-			
-			if (NetNameOffset > 0x14)
-			{
-				NetNameOffsetUnicode = reader.ReadInt32();
-				DeviceNameOffsetUnicode = reader.ReadInt32();
-			}
+
+            if (NetNameOffset > MinimumCommonNetworkRelativeLinkSize)
+            {
+                NetNameOffsetUnicode = reader.ReadInt32();
+                FormatChecker.CheckExpression(() => NetNameOffsetUnicode < CommonNetworkRelativeLinkSize);
+
+                DeviceNameOffsetUnicode = reader.ReadInt32();
+                FormatChecker.CheckExpression(() => DeviceNameOffsetUnicode < CommonNetworkRelativeLinkSize);
+            }
+            else
+            {
+                FormatChecker.CheckExpression(() => NetNameOffset == MinimumCommonNetworkRelativeLinkSize);
+            }
 
             Item.NetName = reader.ReadASCIIZ(readerOffset, NetNameOffset, NetNameOffsetUnicode);
 			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0)
@@ -99,7 +113,9 @@ namespace Shellify.IO
 		public void WriteTo(System.IO.BinaryWriter writer)
 		{
 			CommonNetworkRelativeLinkSize = ComputedSize;
-			writer.Write(CommonNetworkRelativeLinkSize);
+            FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkSize >= MinimumCommonNetworkRelativeLinkSize);
+
+            writer.Write(CommonNetworkRelativeLinkSize);
 			writer.Write((int) Item.CommonNetworkRelativeLinkFlags);
 			
 			NetNameOffset = Marshal.SizeOf(ComputedSize) +

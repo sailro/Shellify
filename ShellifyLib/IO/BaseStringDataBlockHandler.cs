@@ -27,6 +27,7 @@ namespace Shellify.IO
 
         public const int ValueSize = 260;
         public const int ValueSizeUnicode = 520;
+        public const int ExactBlockSize = 0x314;
 
         public BaseStringDataBlockHandler(T item, ShellLinkFile context)
             : base(item, context)
@@ -44,6 +45,8 @@ namespace Shellify.IO
 		public override void ReadFrom(System.IO.BinaryReader reader)
 		{
 			base.ReadFrom(reader);
+
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize); 
             byte[] padding = null;
             
             Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out padding);
@@ -52,13 +55,15 @@ namespace Shellify.IO
             Item.ValueUnicode = reader.ReadASCIIZF(Encoding.Unicode, ValueSizeUnicode, out padding);
             Item.ValueUnicodePadding = padding;
         }
-		
+
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
-            CheckLength(Item.Value, ValueSize, CheckLengthOption.MustBeLower);
-            CheckLength(Item.ValueUnicode, ValueSizeUnicode, CheckLengthOption.MustBeLower);
-            
             base.WriteTo(writer);
+
+            FormatChecker.CheckExpression(() => Item.Value == null || Item.Value.Length < ValueSize);
+            FormatChecker.CheckExpression(() => Item.ValueUnicode == null || Item.ValueUnicode.Length < ValueSizeUnicode);
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize); 
+            
             writer.WriteASCIIZF(Item.Value, Encoding.Default, ValueSize, Item.ValuePadding);
             writer.WriteASCIIZF(Item.ValueUnicode, Encoding.Unicode, ValueSizeUnicode, Item.ValueUnicodePadding);
         }

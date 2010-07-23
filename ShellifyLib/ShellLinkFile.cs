@@ -26,7 +26,7 @@ using Shellify.IO;
 
 namespace Shellify
 {
-	public class ShellLinkFile
+	public class ShellLinkFile : IHasIDList
 	{
 
         public ShellLinkHeader Header { get; set; }

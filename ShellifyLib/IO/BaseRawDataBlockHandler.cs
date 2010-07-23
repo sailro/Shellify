@@ -22,7 +22,8 @@ namespace Shellify.IO
 {
 	public abstract class BaseRawDataBlockHandler<T> : ExtraDataBlockHandler<T> where T: BaseRawDataBlock
 	{
-		
+        public const int MinimumBlockSize = 0xC;
+
 		public BaseRawDataBlockHandler(T item, ShellLinkFile context) : base(item, context)
 		{
 		}
@@ -38,13 +39,15 @@ namespace Shellify.IO
 		public override void ReadFrom(System.IO.BinaryReader reader)
 		{
 			base.ReadFrom(reader);
+            FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
 			Item.Raw = reader.ReadBytes(BlockSize - base.ComputedSize);
 		}
 		
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
 			base.WriteTo(writer);
-			if (ComputedSize > 0)
+            FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
+            if (BlockSize > 0)
 			{
 				writer.Write(Item.Raw);
 			}

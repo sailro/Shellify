@@ -27,6 +27,8 @@ namespace Shellify.IO
 {
     public class TrackerDataBlockHandler : ExtraDataBlockHandler<TrackerDataBlock>
     {
+        public const int ExactBlockSize = 0x60;
+        public const int MinimumLength = 0x58;
 
         public int Length { get; set; }
         public const int MachineIDLength = 16;
@@ -59,7 +61,12 @@ namespace Shellify.IO
         public override void ReadFrom(System.IO.BinaryReader reader)
         {
             base.ReadFrom(reader);
+
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+            
             Length = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => Length >= MinimumLength);
+
             Item.Version = reader.ReadInt32();
             Item.MachineID = reader.ReadASCIIZF(Encoding.Default, MachineIDLength); // 16 bytes, 0 fill
             Item.Droid = new Guid[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
@@ -68,10 +75,14 @@ namespace Shellify.IO
 
         public override void WriteTo(System.IO.BinaryWriter writer)
         {
-            CheckLength(Item.MachineID, MachineIDLength, CheckLengthOption.MustBeLowerOrEqual);
-
             base.WriteTo(writer);
-            Length = ComputedSize - base.ComputedSize; 
+
+            FormatChecker.CheckExpression(() => Item.MachineID == null || Item.MachineID.Length <= MachineIDLength);
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+
+            Length = ComputedSize - base.ComputedSize;
+            FormatChecker.CheckExpression(() => Length >= MinimumLength);
+
             writer.Write(Length);
             writer.Write(Item.Version);
             writer.WriteASCIIZF(Item.MachineID, Encoding.Default, MachineIDLength);

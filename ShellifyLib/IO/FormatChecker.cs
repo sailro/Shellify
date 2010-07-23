@@ -1,4 +1,4 @@
-﻿/*
+/*
     Shellify, .NET implementation of Shell Link (.LNK) Binary File Format
     Copyright (C) 2010 Sebastien LEBRETON
 
@@ -17,17 +17,22 @@
 */
 
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
+using Shellify.ExtraData;
+using System.Linq.Expressions;
 
-[assembly: AssemblyTitle("ShellifyTest")]
-[assembly: AssemblyDescription("ShellifyTest")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Shellify")]
-[assembly: AssemblyCopyright("Copyright © 2010 Sebastien LEBRETON")]
-[assembly: AssemblyTrademark("")]
+namespace Shellify.IO
+{
+    public static class FormatChecker
+	{
 
-[assembly: ComVisible(false)]
-[assembly: Guid("e974c94f-ba63-407b-b0a4-3e3a6731292c")]
-[assembly: AssemblyVersion("0.4.0.0")]
-[assembly: AssemblyFileVersion("0.4.0.0")]
+        public static void CheckExpression(Expression<Func<Boolean>> expression)
+        {
+            if (!expression.Compile()())
+            {
+                throw new MalformedException(string.Concat("Bad file format, expecting ", expression.ToString().Replace("() => ", string.Empty)));
+            }
+        }
+
+	}
+}

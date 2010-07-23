@@ -27,6 +27,7 @@ namespace Shellify.IO
 {
 	public class LinkInfoHandler : IBinaryReadable, IBinaryWriteable
 	{
+        public const int MinimumLinkInfoHeaderSize = 0x1C;
 		
 		private LinkInfo Item { get; set; }
 		private int LinkInfoSize { get; set; }
@@ -63,18 +64,34 @@ namespace Shellify.IO
 			
 			LinkInfoSize = reader.ReadInt32();
 			LinkInfoHeaderSize = reader.ReadInt32();
-			Item.LinkInfoFlags = (LinkInfoFlags) (reader.ReadInt32());
+            FormatChecker.CheckExpression(() => LinkInfoHeaderSize < LinkInfoSize);
+
+            Item.LinkInfoFlags = (LinkInfoFlags) (reader.ReadInt32());
 			
 			VolumeIDOffset = reader.ReadInt32();
-			LocalBasePathOffset = reader.ReadInt32();
-			CommonNetworkRelativeLinkOffset = reader.ReadInt32();
-			CommonPathSuffixOffset = reader.ReadInt32();
-			
-			if (LinkInfoHeaderSize >= 0x24)
-			{
-				LocalBasePathOffsetUnicode = reader.ReadInt32();
-				CommonPathSuffixOffsetUnicode = reader.ReadInt32();
-			}
+            FormatChecker.CheckExpression(() => VolumeIDOffset < LinkInfoSize);
+            
+            LocalBasePathOffset = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => LocalBasePathOffset < LinkInfoSize);
+            
+            CommonNetworkRelativeLinkOffset = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkOffset < LinkInfoSize);
+            
+            CommonPathSuffixOffset = reader.ReadInt32();
+            FormatChecker.CheckExpression(() => CommonPathSuffixOffset < LinkInfoSize);
+
+            if (LinkInfoHeaderSize > MinimumLinkInfoHeaderSize)
+            {
+                LocalBasePathOffsetUnicode = reader.ReadInt32();
+                FormatChecker.CheckExpression(() => LocalBasePathOffsetUnicode < LinkInfoSize);
+
+                CommonPathSuffixOffsetUnicode = reader.ReadInt32();
+                FormatChecker.CheckExpression(() => CommonPathSuffixOffsetUnicode < LinkInfoSize);
+            }
+            else
+            {
+                FormatChecker.CheckExpression(() => LinkInfoHeaderSize == MinimumLinkInfoHeaderSize);
+            }
 			
 			if ((Item.LinkInfoFlags & LinkInfoFlags.VolumeIDAndLocalBasePath) != 0)
 			{

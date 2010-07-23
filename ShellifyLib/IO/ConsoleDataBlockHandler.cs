@@ -31,6 +31,7 @@ namespace Shellify.IO
         public const int UnusedLength = 8;
         public const int FaceNameLength = 64;
         public const int ColorTableLength = 64;
+        public const int ExactBlockSize = 0xCC;
 
         public ConsoleDataBlockHandler(ConsoleDataBlock item, ShellLinkFile context)
             : base(item, context)
@@ -58,6 +59,8 @@ namespace Shellify.IO
         public override void ReadFrom(System.IO.BinaryReader reader)
         {
             base.ReadFrom(reader);
+
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
 
             Item.FillAttributes = (FillAttributes)reader.ReadUInt16();
             Item.PopupFillAttributes = (FillAttributes)reader.ReadUInt16();
@@ -94,10 +97,12 @@ namespace Shellify.IO
 
         public override void WriteTo(System.IO.BinaryWriter writer)
         {
-            CheckLength(Item.FaceName, FaceNameLength, CheckLengthOption.MustBeLower);
-            CheckLength(Item.ColorTable, ColorTableLength, CheckLengthOption.MustBeEqual);
-
             base.WriteTo(writer);
+
+            FormatChecker.CheckExpression(() => Item.FaceName == null || Item.FaceName.Length < FaceNameLength);
+            FormatChecker.CheckExpression(() => Item.ColorTable != null && Item.ColorTable.Length == ColorTableLength);
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+
             writer.Write((ushort)Item.FillAttributes);
             writer.Write((ushort)Item.PopupFillAttributes);
 

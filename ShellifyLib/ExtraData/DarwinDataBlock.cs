@@ -1,6 +1,6 @@
 namespace Shellify.ExtraData
 {
-	public class DarwinDataBlock : ExtraDataBlock
+    public class DarwinDataBlock : BaseStringDataBlock
 	{
 		
 		public DarwinDataBlock()
