@@ -20,8 +20,8 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("ShellifyTest")]
-[assembly: AssemblyDescription("ShellifyTest")]
+[assembly: AssemblyTitle("ShellifyTool")]
+[assembly: AssemblyDescription("ShellifyTool")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Shellify")]
 [assembly: AssemblyCopyright("Copyright © 2010 Sebastien LEBRETON")]
