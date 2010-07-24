@@ -46,10 +46,11 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LibBlindTest.cs" />
     <Compile Include="LibHandlerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LibTest.cs" />
-    <Compile Include="ToolTest.cs" />
+    <Compile Include="LibRoundTripTest.cs" />
+    <Compile Include="ToolOptionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShellifyLib\ShellifyLib.csproj">

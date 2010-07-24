@@ -25,9 +25,9 @@ using System.Globalization;
 namespace Shellify.Test
 {
     [TestClass]
-    public class ToolTest
+    public class ToolOptionsTest
     {
-        public ToolTest()
+        public ToolOptionsTest()
         {
         }
 

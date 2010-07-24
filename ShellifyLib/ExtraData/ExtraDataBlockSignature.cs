@@ -20,7 +20,7 @@ namespace Shellify.ExtraData
 {
     public enum ExtraDataBlockSignature : uint
     {
-        Unknown = 0,
+        UnknownDataBlock = 0,
         ConsoleDataBlock = 0xA0000002,
         ConsoleFEDataBlock = 0xA0000004,
         DarwinDataBlock = 0xA0000006,

@@ -17,6 +17,7 @@
 */
 
 using Shellify.ExtraData;
+using Shellify.Core;
 
 namespace Shellify.IO
 {
@@ -27,6 +28,6 @@ namespace Shellify.IO
             : base(item, context)
 		{
 		}
-		
+
 	}
 }

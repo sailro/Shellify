@@ -21,13 +21,13 @@ using Shellify.Core;
 
 namespace Shellify.IO
 {
-	public class EnvironmentVariableDataBlockHandler : BaseStringDataBlockHandler<EnvironmentVariableDataBlock>
+	public class ShimDataBlockHandler : BaseRawDataBlockHandler<ShimDataBlock>
 	{
 
-        public EnvironmentVariableDataBlockHandler(EnvironmentVariableDataBlock item, ShellLinkFile context)
+        public ShimDataBlockHandler(ShimDataBlock item, ShellLinkFile context)
             : base(item, context)
 		{
 		}
-
+		
 	}
 }

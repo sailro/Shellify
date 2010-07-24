@@ -45,15 +45,8 @@ namespace Shellify.IO
                 int result = base.ComputedSize +
                              Marshal.SizeOf(Length) +
                              Marshal.SizeOf(Item.Version) +
-                             MachineIDLength;
-                if (Item.Droid != null)
-                {
-                    result += Marshal.SizeOf(typeof(Guid)) * Item.Droid.Length; 
-                }
-                if (Item.DroidBirth != null)
-                {
-                    result += Marshal.SizeOf(typeof(Guid)) * Item.DroidBirth.Length;
-                }
+                             MachineIDLength +
+                             Marshal.SizeOf(typeof(Guid)) * 4; 
                 return result;
             }
         }
@@ -79,6 +72,8 @@ namespace Shellify.IO
 
             FormatChecker.CheckExpression(() => Item.MachineID == null || Item.MachineID.Length <= MachineIDLength);
             FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+            FormatChecker.CheckExpression(() => Item.Droid != null && Item.Droid.Length == 2);
+            FormatChecker.CheckExpression(() => Item.DroidBirth != null && Item.DroidBirth.Length == 2);
 
             Length = ComputedSize - base.ComputedSize;
             FormatChecker.CheckExpression(() => Length >= MinimumLength);

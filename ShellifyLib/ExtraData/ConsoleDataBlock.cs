@@ -60,6 +60,7 @@ namespace Shellify.ExtraData
         public ConsoleDataBlock()
         {
             Signature = ExtraDataBlockSignature.ConsoleDataBlock;
+            ColorTable = new byte[64];
         }
 
         public override string ToString()

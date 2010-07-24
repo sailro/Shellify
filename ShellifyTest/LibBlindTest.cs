@@ -20,14 +20,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using Shellify.ExtraData;
 using Shellify.IO;
-using System;
 
 namespace Shellify.Test
 {
     [TestClass]
-    public class LibHandlerTest
+    public class LibBlindTest
     {
-        public LibHandlerTest()
+        public LibBlindTest()
         {
         }
 
@@ -50,28 +49,33 @@ namespace Shellify.Test
         }
 
         [TestMethod]
-        public void TestHandler()
+        public void TestBlindWrite()
         {
+            BlindWrite();
+        }
+
+        private string BlindWrite()
+        {
+            var tmpFile = Path.GetTempFileName();
+            var slf = new ShellLinkFile();
+
             foreach (ExtraDataBlockSignature signature in System.Enum.GetValues(typeof(ExtraDataBlockSignature)))
             {
-                ExtraDataBlock block = null;
-                try
-                {
-                    block = ExtraDataBlockFactory.GetInstance(signature);
-                }
-                catch (Exception)
-                {
-                    Assert.Fail("Check ExtraDataBlockFactory with '{0}' signature", signature);
-                }
-                try
-                {
-                    ExtraDataBlockHandler handler = ExtraDataBlockHandlerFactory.GetInstance(block, null);
-                }
-                catch (Exception)
-                {
-                    Assert.Fail("Check ExtraDataBlockHandlerFactory with '{0}' block type", block.GetType().Name);
-                }
+                if (signature == ExtraDataBlockSignature.UnknownDataBlock)
+                    continue;
+
+                ExtraDataBlock block = ExtraDataBlockFactory.GetInstance(signature);
+                slf.ExtraDataBlocks.Add(block);
             }
+
+            slf.SaveAs(tmpFile);
+            return tmpFile;
+        }
+
+        [TestMethod]
+        public void TestBlindRead()
+        {
+            var slf = ShellLinkFile.Load(BlindWrite());
         }
     }
 }

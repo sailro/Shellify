@@ -16,18 +16,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Shellify.ExtraData;
-using Shellify.Core;
-
-namespace Shellify.IO
+using System.Text;
+namespace Shellify.ExtraData
 {
-	public class EnvironmentVariableDataBlockHandler : BaseStringDataBlockHandler<EnvironmentVariableDataBlock>
+	public class ConsoleFEDataBlock : ExtraDataBlock
 	{
-
-        public EnvironmentVariableDataBlockHandler(EnvironmentVariableDataBlock item, ShellLinkFile context)
-            : base(item, context)
+        public uint CodePage { get; set; }
+		
+		public ConsoleFEDataBlock()
 		{
+			Signature = ExtraDataBlockSignature.ConsoleFEDataBlock;
 		}
 
+        public override string ToString()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine(base.ToString());
+            builder.AppendFormat("CodePage: {0}", CodePage);
+            return builder.ToString();
+        }
+		
 	}
 }

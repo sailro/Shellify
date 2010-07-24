@@ -30,7 +30,6 @@ namespace Shellify.IO
 
     public abstract class ExtraDataBlockHandler<T> : ExtraDataBlockHandler, ISizeComputable where T : ExtraDataBlock
 	{
-		
 		protected T Item { get; set; }
 		protected int BlockSize { get; set; }
         protected ShellLinkFile Context { get; set; }
@@ -52,18 +51,12 @@ namespace Shellify.IO
 		public override void ReadFrom(System.IO.BinaryReader reader)
 		{
 			BlockSize = reader.ReadInt32();
-			try
-			{
-				Item.Signature = (ExtraDataBlockSignature) (reader.ReadInt32());
-			}
-			catch (Exception)
-			{
-				Item.Signature = ExtraDataBlockSignature.Unknown;
-			}
+            Item.Signature = (ExtraDataBlockSignature) (reader.ReadInt32());
 		}
 		
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
+            FormatChecker.CheckExpression(() => Item.Signature != ExtraDataBlockSignature.UnknownDataBlock);
             BlockSize = ComputedSize;
             writer.Write(BlockSize);
 			writer.Write((int) Item.Signature);

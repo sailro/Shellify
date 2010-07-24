@@ -17,17 +17,40 @@
 */
 
 using Shellify.ExtraData;
-using Shellify.Core;
+using System.Runtime.InteropServices;
 
 namespace Shellify.IO
 {
-	public class EnvironmentVariableDataBlockHandler : BaseStringDataBlockHandler<EnvironmentVariableDataBlock>
+	public class ConsoleFEDataBlockHandler : ExtraDataBlockHandler<ConsoleFEDataBlock>
 	{
+        public const int ExactBlockSize = 0xC;
 
-        public EnvironmentVariableDataBlockHandler(EnvironmentVariableDataBlock item, ShellLinkFile context)
+        public ConsoleFEDataBlockHandler(ConsoleFEDataBlock item, ShellLinkFile context)
             : base(item, context)
 		{
 		}
-
+		
+		public override int ComputedSize
+		{
+			get
+			{
+				return base.ComputedSize + Marshal.SizeOf(Item.CodePage);
+			}
+		}
+		
+		public override void ReadFrom(System.IO.BinaryReader reader)
+		{
+			base.ReadFrom(reader);
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+            Item.CodePage = reader.ReadUInt32();
+		}
+		
+		public override void WriteTo(System.IO.BinaryWriter writer)
+		{
+			base.WriteTo(writer);
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+            writer.Write(Item.CodePage);
+		}
+		
 	}
 }

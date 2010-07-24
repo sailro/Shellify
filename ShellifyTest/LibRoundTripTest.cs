@@ -22,9 +22,9 @@ using System.IO;
 namespace Shellify.Test
 {
     [TestClass]
-    public class LibTest
+    public class LibRoundTripTest
     {
-        public LibTest()
+        public LibRoundTripTest()
         {
         }
 
@@ -88,13 +88,13 @@ namespace Shellify.Test
             foreach (string file in Directory.GetFiles(filesDirectory))
             {
                 testContextInstance.WriteLine("Testing {0}", file);
-                ShellLinkFile shf = ShellLinkFile.Load(file);
-                testContextInstance.WriteLine("{0}", shf);
+                ShellLinkFile slf = ShellLinkFile.Load(file);
+                testContextInstance.WriteLine("{0}", slf);
                 string tmpFile = Path.GetTempFileName();
 
-                shf.SaveAs(tmpFile);
-                ShellLinkFile shf2 = ShellLinkFile.Load(tmpFile);
-                Assert.AreEqual(shf.ToString(), shf2.ToString());
+                slf.SaveAs(tmpFile);
+                ShellLinkFile slf2 = ShellLinkFile.Load(tmpFile);
+                Assert.AreEqual(slf.ToString(), slf2.ToString());
                 CompareFiles(file, tmpFile);
             }
         }

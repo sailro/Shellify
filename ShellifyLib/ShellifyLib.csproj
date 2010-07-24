@@ -50,7 +50,7 @@
     <Compile Include="ExtraData\FillAttributes.cs" />
     <Compile Include="ExtraData\KnownFolderDataBlock.cs" />
     <Compile Include="ExtraData\ConsoleDataBlock.cs" />
-    <Compile Include="ExtraData\Unimplemented\ConsoleFEDataBlock.cs" />
+    <Compile Include="ExtraData\ConsoleFEDataBlock.cs" />
     <Compile Include="ExtraData\DarwinDataBlock.cs" />
     <Compile Include="ExtraData\EnvironmentVariableDataBlock.cs" />
     <Compile Include="ExtraData\ExtraDataBlock.cs" />
@@ -67,6 +67,8 @@
     <Compile Include="Extensions\BinaryReaderExtensions.cs" />
     <Compile Include="Extensions\BinaryWriterExtensions.cs" />
     <Compile Include="IO\BaseStringDataBlockHandler.cs" />
+    <Compile Include="IO\ConsoleFEDataBlockHandler.cs" />
+    <Compile Include="IO\ShimDataBlockHandler.cs" />
     <Compile Include="IO\VistaAndAboveIDListDataBlockHandler.cs" />
     <Compile Include="IO\IDListHandler.cs" />
     <Compile Include="IO\DarwinDataBlockHandler.cs" />
@@ -98,7 +100,7 @@
     <Compile Include="ExtraData\PropertyStoreDataBlock.cs" />
     <Compile Include="ShellLinkFile.cs" />
     <Compile Include="Core\ShellLinkHeader.cs" />
-    <Compile Include="ExtraData\Unimplemented\ShimDataBlock.cs" />
+    <Compile Include="ExtraData\ShimDataBlock.cs" />
     <Compile Include="Core\ShItemID.cs" />
     <Compile Include="Core\ShowCommand.cs" />
     <Compile Include="IO\UnknownDataBlockHandler.cs" />

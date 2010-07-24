@@ -16,6 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
+
 namespace Shellify.ExtraData
 {
 	public class ExtraDataBlockFactory
@@ -23,30 +25,9 @@ namespace Shellify.ExtraData
 		
 		public static ExtraDataBlock GetInstance(ExtraDataBlockSignature signature)
 		{
-			switch (signature)
-			{
-                case ExtraDataBlockSignature.VistaAndAboveIDListDataBlock:
-                    return new VistaAndAboveIDListDataBlock();
-                case ExtraDataBlockSignature.DarwinDataBlock:
-                    return new DarwinDataBlock();
-                case ExtraDataBlockSignature.IconEnvironmentDataBlock:
-                    return new IconEnvironmentDataBlock();
-                case ExtraDataBlockSignature.EnvironmentVariableDataBlock:
-                    return new EnvironmentVariableDataBlock();
-                case ExtraDataBlockSignature.ConsoleDataBlock:
-                    return new ConsoleDataBlock();
-                case ExtraDataBlockSignature.PropertyStoreDataBlock:
-                    return new PropertyStoreDataBlock();
-                case ExtraDataBlockSignature.SpecialFolderDataBlock:
-                    return new SpecialFolderDataBlock();
-                case ExtraDataBlockSignature.KnownFolderDataBlock:
-                    return new KnownFolderDataBlock();
-                case ExtraDataBlockSignature.TrackerDataBlock:
-                    return new TrackerDataBlock();
-				default:
-					return new UnknownDataBlock();
-					
-			}
+            string typename = string.Format("Shellify.ExtraData.{0}", signature);
+            Type type = Type.GetType(typename);
+            return type == null ? new UnknownDataBlock() : (ExtraDataBlock)Activator.CreateInstance(type);
 		}		
 	}
 }

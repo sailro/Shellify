@@ -45,7 +45,7 @@ namespace Shellify.Extensions
 
         public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length)
         {
-            List<byte> bytes = new List<byte>(encoding.GetBytes(value));
+            List<byte> bytes = new List<byte>(encoding.GetBytes(value == null ? string.Empty : value));
 
             while (bytes.Count < length)
             {
@@ -57,7 +57,7 @@ namespace Shellify.Extensions
 
         public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length, byte[] padding)
         {
-            List<byte> bytes = new List<byte>(encoding.GetBytes(value));
+            List<byte> bytes = new List<byte>(encoding.GetBytes(value == null ? string.Empty : value));
 
             if (padding != null)
             {

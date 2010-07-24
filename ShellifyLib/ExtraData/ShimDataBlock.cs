@@ -16,18 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using Shellify.ExtraData;
-using Shellify.Core;
-
-namespace Shellify.IO
+namespace Shellify.ExtraData
 {
-	public class EnvironmentVariableDataBlockHandler : BaseStringDataBlockHandler<EnvironmentVariableDataBlock>
+	public class ShimDataBlock : BaseRawDataBlock
 	{
-
-        public EnvironmentVariableDataBlockHandler(EnvironmentVariableDataBlock item, ShellLinkFile context)
-            : base(item, context)
+        public string LayerName { get; set; }
+		
+		public ShimDataBlock()
 		{
+			Signature = ExtraDataBlockSignature.ShimDataBlock;
 		}
-
+		
 	}
 }

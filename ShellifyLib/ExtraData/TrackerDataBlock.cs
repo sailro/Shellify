@@ -34,7 +34,9 @@ namespace Shellify.ExtraData
 		public TrackerDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.TrackerDataBlock;
-		}
+            Droid = new Guid[2];
+            DroidBirth = new Guid[2];
+        }
 
         private static string ToString(IEnumerable collection)
         {

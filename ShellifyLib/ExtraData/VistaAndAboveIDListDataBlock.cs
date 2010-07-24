@@ -30,7 +30,8 @@ namespace Shellify.ExtraData
 		public VistaAndAboveIDListDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.VistaAndAboveIDListDataBlock;
-		}
+            ShItemIDs = new List<ShItemID>();
+        }
 
         public override string ToString()
         {

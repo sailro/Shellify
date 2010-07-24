@@ -22,7 +22,7 @@ namespace Shellify.IO
 {
 	public abstract class BaseRawDataBlockHandler<T> : ExtraDataBlockHandler<T> where T: BaseRawDataBlock
 	{
-        public const int MinimumBlockSize = 0xC;
+        public const int MinimumBlockSize = 0x8;
 
 		public BaseRawDataBlockHandler(T item, ShellLinkFile context) : base(item, context)
 		{
@@ -47,7 +47,7 @@ namespace Shellify.IO
 		{
 			base.WriteTo(writer);
             FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
-            if (BlockSize > 0)
+            if (Item.Raw != null)
 			{
 				writer.Write(Item.Raw);
 			}
