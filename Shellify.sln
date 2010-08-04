@@ -8,6 +8,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyTest", "ShellifyTest\ShellifyTest.csproj", "{995CB573-137C-4FD6-8833-29B051763A4F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9356A07-807B-43CF-AA83-B6EF8613BD73}"
+	ProjectSection(SolutionItems) = preProject
+		Shellify.testsettings = Shellify.testsettings
+		Shellify.vsmdi = Shellify.vsmdi
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution

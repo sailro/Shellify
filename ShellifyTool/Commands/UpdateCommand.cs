@@ -21,7 +21,7 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.Commands
 {
-    class UpdateCommand : Command
+    public class UpdateCommand : Command
     {
 
         public UpdateCommand(string tag, string description)

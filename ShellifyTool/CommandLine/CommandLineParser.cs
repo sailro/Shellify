@@ -21,7 +21,7 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.CommandLine
 {
-    class CommandLineParser
+    public class CommandLineParser
     {
 
         public const string OptionPrefix = "-";

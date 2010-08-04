@@ -16,11 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shellify.Tool.CommandLine;
 using Shellify.Tool.Options;
-using System;
-using System.Globalization;
 
 namespace Shellify.Test
 {

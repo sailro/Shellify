@@ -24,7 +24,7 @@ using System.Collections.Generic;
 
 namespace Shellify.Tool.Commands
 {
-    class AnonimyzeCommand : Command
+    public class AnonimyzeCommand : Command
     {
 
         public AnonimyzeCommand(string tag, string description)

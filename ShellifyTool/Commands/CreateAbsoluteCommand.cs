@@ -22,7 +22,7 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.Commands
 {
-    class CreateAbsoluteCommand : Command
+    public class CreateAbsoluteCommand : Command
     {
 
         public CreateAbsoluteCommand(string tag, string description)

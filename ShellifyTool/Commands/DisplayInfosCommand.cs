@@ -21,7 +21,7 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.Commands
 {
-    class DisplayInfosCommand : Command
+    public class DisplayInfosCommand : Command
     {
         public DisplayInfosCommand(string tag, string description)
             : base(tag, description, 1)

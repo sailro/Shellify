@@ -20,7 +20,7 @@ using System;
 
 namespace Shellify.Tool.CommandLine
 {
-    class CommandLineParseException : Exception
+    public class CommandLineParseException : Exception
     {
 
         public CommandLineParseException(string message)
