@@ -1,4 +1,4 @@
-/* Shellify Copyright (c) 2010 Sebastien LEBRETON
+Shellify Copyright (c) 2010 Sebastien LEBRETON
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -17,25 +17,4 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
 NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
-
-using System.Text;
-
-namespace Shellify.Extensions
-{
-    public static class EncodingExtensions
-    {
-
-        public static int GetASCIIZSize(this Encoding encoding, string value)
-        {
-            if (value == null)
-            {
-                return 1;
-            }
-            else
-            {
-                return encoding.GetByteCount(value) + 1;
-            }
-        }
-    }
-}
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
