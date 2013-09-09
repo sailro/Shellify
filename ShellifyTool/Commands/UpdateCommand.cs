@@ -19,9 +19,6 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-using Shellify.Tool.CommandLine;
-using Shellify.Tool.Options;
-
 namespace Shellify.Tool.Commands
 {
     public class UpdateCommand : Command
@@ -35,7 +32,7 @@ namespace Shellify.Tool.Commands
         public override void Execute()
         {
             Context = ShellLinkFile.Load(Filename);
-            foreach (Option option in Options) option.Execute(Context);
+            foreach (var option in Options) option.Execute(Context);
             Context.SaveAs(Filename);
         }
 

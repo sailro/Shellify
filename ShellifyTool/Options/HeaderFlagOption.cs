@@ -22,8 +22,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 using System;
 using System.Collections.Generic;
 using Shellify.Tool.Commands;
-using System.Globalization;
-using System.Reflection;
 using Shellify.Core;
 
 namespace Shellify.Tool.Options
@@ -42,13 +40,9 @@ namespace Shellify.Tool.Options
         public override void Execute(ShellLinkFile context)
         {
             if (Convert.ToBoolean(Argument))
-            {
                 context.Header.LinkFlags |= Flag;
-            }
             else
-            {
                 context.Header.LinkFlags &= ~Flag;
-            }
         }
 
     }

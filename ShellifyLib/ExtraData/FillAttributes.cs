@@ -23,7 +23,7 @@ using System;
 
 namespace Shellify.ExtraData
 {
-    [Flags()]
+    [Flags]
     public enum FillAttributes
     {
         ForegroundBlue=0x1,

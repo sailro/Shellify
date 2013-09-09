@@ -21,7 +21,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
 using System.IO;
-using Shellify.Tool.Options;
 
 namespace Shellify.Tool.Commands
 {
@@ -37,13 +36,12 @@ namespace Shellify.Tool.Commands
         {
             var baseDirectory = Path.GetDirectoryName(Filename);
             if (string.IsNullOrEmpty(baseDirectory))
-            {
                 baseDirectory = ".";
-            }
-            Console.WriteLine(String.Format("Using {0} as base directory", baseDirectory));
+
+			Console.WriteLine("Using {0} as base directory", baseDirectory);
 
             Context = ShellLinkFile.CreateRelative(baseDirectory, Target);
-            foreach (Option option in Options) option.Execute(Context);
+            foreach (var option in Options) option.Execute(Context);
             Context.SaveAs(Filename);
             CheckExists(Path.Combine(baseDirectory, Target), Filename);
         }

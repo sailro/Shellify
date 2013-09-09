@@ -38,12 +38,12 @@ namespace Shellify.Tool.CommandLine
         public static IList<Option> Options { get; private set; }
 
         private static string DumpEnum(Type enumType) {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
-            foreach(object item in System.Enum.GetNames(enumType)) {
-                if (builder.Length > 0) {
+            foreach(object item in Enum.GetNames(enumType)) {
+                if (builder.Length > 0) 
                     builder.Append(",");
-                }
+                
                 builder.Append(item);
             }
 
@@ -58,36 +58,36 @@ namespace Shellify.Tool.CommandLine
             Command createRelative = new CreateRelativeCommand("R", "Create relative .LNK file.");
             Command update = new UpdateCommand("U", "Update .LNK file.");
 
-            List<Command> allcommands = new List<Command>() { anonymize, createAbsolute, displayInfos, createRelative, update };
-            List<Command> writecommands = new List<Command>() { anonymize, createAbsolute, createRelative, update };
+            var allcommands = new List<Command> { anonymize, createAbsolute, displayInfos, createRelative, update };
+            var writecommands = new List<Command> { anonymize, createAbsolute, createRelative, update };
             Commands = allcommands.AsReadOnly();
             WriteCommands = writecommands.AsReadOnly();
 
-            Option atime = CreateDateTimeOption("atime", "Header", "AccessTime");
-            Option ctime = CreateDateTimeOption("ctime", "Header", "CreationTime");
-            Option wtime = CreateDateTimeOption("wtime", "Header", "WriteTime");
+            var atime = CreateDateTimeOption("atime", "Header", "AccessTime");
+            var ctime = CreateDateTimeOption("ctime", "Header", "CreationTime");
+            var wtime = CreateDateTimeOption("wtime", "Header", "WriteTime");
 
-            Option fsize = CreateOption("fsize", "Header", "FileSize");
-            Option iidx = CreateOption("iidx", "Header", "IconIndex");
-            Option iloc = CreateOption("iloc", "IconLocation");
-            Option name = CreateOption("name", "Name");
-            Option rpath = CreateOption("rpath", "RelativePath");
-            Option wdir = CreateOption("wdir", "WorkingDirectory");
-            Option args = CreateOption("args", "Arguments");
+            var fsize = CreateOption("fsize", "Header", "FileSize");
+            var iidx = CreateOption("iidx", "Header", "IconIndex");
+            var iloc = CreateOption("iloc", "IconLocation");
+            var name = CreateOption("name", "Name");
+            var rpath = CreateOption("rpath", "RelativePath");
+            var wdir = CreateOption("wdir", "WorkingDirectory");
+            var args = CreateOption("args", "Arguments");
 
-            Option fattr = CreateEnumOption("fattr", typeof(FileAttributes), "Header", "FileAttributes");
-            Option swin = CreateEnumOption("scmd", typeof(ShowCommand), "Header", "ShowCommand");
+            var fattr = CreateEnumOption("fattr", typeof(FileAttributes), "Header", "FileAttributes");
+            var swin = CreateEnumOption("scmd", typeof(ShowCommand), "Header", "ShowCommand");
 
-            Option dlpt = CreateHeaderFlagOption("dlpt", LinkFlags.DisableLinkPathTracking);
-            Option dkft = CreateHeaderFlagOption("dkft", LinkFlags.DisableKnownFolderTracking);
-            Option dkfa = CreateHeaderFlagOption("dkfa", LinkFlags.DisableKnownFolderAlias);
-            Option fnli = CreateHeaderFlagOption("fnli", LinkFlags.ForceNoLinkInfo);
-            Option fnlt = CreateHeaderFlagOption("fnlt", LinkFlags.ForceNoLinkTrack);
-            Option npa = CreateHeaderFlagOption("npa", LinkFlags.NoPidlAlias);
-            Option risp = CreateHeaderFlagOption("risp", LinkFlags.RunInSeparateProcess);
-            Option rau = CreateHeaderFlagOption("rau", LinkFlags.RunAsUser);
+            var dlpt = CreateHeaderFlagOption("dlpt", LinkFlags.DisableLinkPathTracking);
+            var dkft = CreateHeaderFlagOption("dkft", LinkFlags.DisableKnownFolderTracking);
+            var dkfa = CreateHeaderFlagOption("dkfa", LinkFlags.DisableKnownFolderAlias);
+            var fnli = CreateHeaderFlagOption("fnli", LinkFlags.ForceNoLinkInfo);
+            var fnlt = CreateHeaderFlagOption("fnlt", LinkFlags.ForceNoLinkTrack);
+            var npa = CreateHeaderFlagOption("npa", LinkFlags.NoPidlAlias);
+            var risp = CreateHeaderFlagOption("risp", LinkFlags.RunInSeparateProcess);
+            var rau = CreateHeaderFlagOption("rau", LinkFlags.RunAsUser);
 
-            List<Option> alloptions = new List<Option>() { atime, ctime, wtime, fsize, iidx, iloc, name, rpath, wdir, args, fattr, swin, dlpt, dkft, dkfa, fnli, fnlt, npa, risp, rau};
+            var alloptions = new List<Option> { atime, ctime, wtime, fsize, iidx, iloc, name, rpath, wdir, args, fattr, swin, dlpt, dkft, dkfa, fnli, fnlt, npa, risp, rau};
             Options = alloptions.AsReadOnly();
         }
 
@@ -105,19 +105,18 @@ namespace Shellify.Tool.CommandLine
 
         private static Option CreateDateTimeOption(string tag, params string[] propertyPath)
         {
-            DateTimeFormatInfo info = new DateTimeFormatInfo();
-            string description = string.Format("Set {0} (\"{1} {2}\").", propertyPath[propertyPath.Length - 1], info.ShortDatePattern, info.ShortTimePattern);
+            var info = new DateTimeFormatInfo();
+            var description = string.Format("Set {0} (\"{1} {2}\").", propertyPath[propertyPath.Length - 1], info.ShortDatePattern, info.ShortTimePattern);
             return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
         }
 
         private static Option CreateEnumOption(string tag, Type enumType, params string[] propertyPath)
         {
-            bool flags = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
+            var flags = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
 
-            string description = string.Format("Set {0} ({1}).", propertyPath[propertyPath.Length - 1], DumpEnum(enumType));
-            if (flags) {
+            var description = string.Format("Set {0} ({1}).", propertyPath[propertyPath.Length - 1], DumpEnum(enumType));
+            if (flags) 
                 description = string.Concat(description, " Values can be combined.");
-            }
 
             return new EnumReflectionSetterOption(tag, description, WriteCommands, enumType, propertyPath);
         }

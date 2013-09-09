@@ -29,8 +29,13 @@ namespace Shellify.IO
 
         public static ExtraDataBlockHandler GetInstance(ExtraDataBlock item, ShellLinkFile context)
         {
-            string typename = string.Format("Shellify.IO.{0}Handler", item.GetType().Name);
-            return (ExtraDataBlockHandler)Activator.CreateInstance(Type.GetType(typename), new object[] { item, context});
+            var typename = string.Format("Shellify.IO.{0}Handler", item.GetType().Name);
+	        var type = Type.GetType(typename);
+
+			if (type == null)
+				throw new ArgumentException(typename);
+
+            return (ExtraDataBlockHandler)Activator.CreateInstance(type, new object[] { item, context});
         }
 
     }

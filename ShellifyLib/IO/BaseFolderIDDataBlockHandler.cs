@@ -19,8 +19,8 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+using System.Linq;
 using System.Runtime.InteropServices;
-using Shellify.Core;
 using Shellify.ExtraData;
 
 namespace Shellify.IO
@@ -30,7 +30,7 @@ namespace Shellify.IO
 
         private int Offset { get; set; }
 
-        public BaseFolderIDDataBlockHandler(T item, ShellLinkFile context)
+	    protected BaseFolderIDDataBlockHandler(T item, ShellLinkFile context)
             : base(item, context)
         {
         }
@@ -49,15 +49,15 @@ namespace Shellify.IO
             ReadID(reader);
             Offset = reader.ReadInt32();
 
-            int computedOffset = 0;
-            foreach (ShItemID shitemid in Context.ShItemIDs)
+            var computedOffset = 0;
+            foreach (var shitemid in Context.ShItemIDs)
             {
                 if (computedOffset == Offset)
                 {
                     Item.ShItemID = shitemid;
                     break;
                 }
-                ShItemIdHandler handler = new ShItemIdHandler(shitemid);
+                var handler = new ShItemIdHandler(shitemid);
                 computedOffset += handler.ComputedSize;
             }
         }
@@ -65,15 +65,8 @@ namespace Shellify.IO
         public override void WriteTo(System.IO.BinaryWriter writer)
         {
             Offset = 0;
-            foreach (ShItemID shitemid in Context.ShItemIDs)
-            {
-                if (Item.ShItemID == shitemid)
-                {
-                    break;
-                }
-                ShItemIdHandler handler = new ShItemIdHandler(shitemid);
-                Offset += handler.ComputedSize;
-            }
+            foreach (var handler in Context.ShItemIDs.TakeWhile(shitemid => Item.ShItemID != shitemid).Select(shitemid => new ShItemIdHandler(shitemid)))
+	            Offset += handler.ComputedSize;
 
             base.WriteTo(writer);
             WriteID(writer);

@@ -20,11 +20,6 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Text;
-using Shellify.Extensions;
-using Shellify.ExtraData;
 
 namespace Shellify.IO
 {

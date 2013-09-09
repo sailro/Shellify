@@ -32,14 +32,14 @@ namespace Shellify.Extensions
         public static string ReadSTDATA(this BinaryReader reader, Encoding encoding)
         {
             int charcount = reader.ReadUInt16();
-            int bytecount = charcount * encoding.GetByteCount(" ");
+            var bytecount = charcount * encoding.GetByteCount(" ");
             return encoding.GetString(reader.ReadBytes(bytecount));
         }
 
         public static string ReadASCIIZ(this BinaryReader reader, long baseOffset, long defaultOffset, long? unicodeOffset)
         {
-            long offset = defaultOffset;
-            Encoding encoding = Encoding.Default;
+            var offset = defaultOffset;
+            var encoding = Encoding.Default;
             if (unicodeOffset.HasValue)
             {
                 offset = unicodeOffset.Value;
@@ -56,9 +56,9 @@ namespace Shellify.Extensions
 
         public static string ReadASCIIZ(this BinaryReader reader, Encoding encoding)
         {
-            List<byte> bytes = new List<byte>();
+            var bytes = new List<byte>();
             byte[] read;
-            int bytecount = encoding.GetByteCount(" ");
+            var bytecount = encoding.GetByteCount(" ");
 
             while ( (read = reader.ReadBytes(bytecount)).First() != 0 )
             {
@@ -70,30 +70,28 @@ namespace Shellify.Extensions
 
         public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length)
         {
-            byte[] padding = null;
+            byte[] padding;
             return ReadASCIIZF(reader, encoding, length, out padding);
         }
 
         public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length, out byte[] padding)
         {
-            byte[] bytes = reader.ReadBytes(length);
-            int bytecount = encoding.GetByteCount(" ");
-            byte[] nullsequence = new byte[bytecount];
+            var bytes = reader.ReadBytes(length);
+            var bytecount = encoding.GetByteCount(" ");
+            var nullsequence = new byte[bytecount];
 
-            int split = bytes.IndexOf(nullsequence);
+            var split = bytes.IndexOf(nullsequence);
             if (split <= 0)
             {
                 padding = bytes.ToArray();
                 return string.Empty;
             }
-            else
-            {
-                byte[] stringdata = bytes.Take(split -1 + bytecount).ToArray();
-                List<byte> temp = bytes.ToList();
-                temp.RemoveRange(0, split - 1 + bytecount);
-                padding = temp.ToArray();
-                return encoding.GetString(stringdata);
-            }
+	        
+			var stringdata = bytes.Take(split -1 + bytecount).ToArray();
+	        var temp = bytes.ToList();
+	        temp.RemoveRange(0, split - 1 + bytecount);
+	        padding = temp.ToArray();
+	        return encoding.GetString(stringdata);
         }
 
     }

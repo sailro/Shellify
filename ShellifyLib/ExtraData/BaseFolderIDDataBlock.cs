@@ -31,7 +31,7 @@ namespace Shellify.ExtraData
 		
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append(base.ToString());
             if (ShItemID != null)
             {

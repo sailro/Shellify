@@ -27,12 +27,8 @@ namespace Shellify.Test
     [TestClass]
     public class LibRoundTripTest
     {
-        public LibRoundTripTest()
-        {
-        }
-
-        private TestContext testContextInstance;
-        private string filesDirectory;
+	    private TestContext _testContextInstance;
+        private string _filesDirectory;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -42,14 +38,14 @@ namespace Shellify.Test
         {
             get
             {
-                return testContextInstance;
+                return _testContextInstance;
             }
             set
             {
-                testContextInstance = value;
-                filesDirectory = Path.Combine(testContextInstance.TestDir, @"..\..");
-                filesDirectory = Path.Combine(filesDirectory, @"ShellifyTest\Files");
-                filesDirectory = Path.GetFullPath(filesDirectory);
+                _testContextInstance = value;
+                _filesDirectory = Path.Combine(_testContextInstance.TestDir, @"..\..");
+                _filesDirectory = Path.Combine(_filesDirectory, @"ShellifyTest\Files");
+                _filesDirectory = Path.GetFullPath(_filesDirectory);
             }
         }
 
@@ -66,9 +62,9 @@ namespace Shellify.Test
 
         public static void CompareFiles(Stream soriginal, Stream scompared)
         {
-            using (BinaryReader reoriginal = new BinaryReader(soriginal))
+            using (var reoriginal = new BinaryReader(soriginal))
             {
-                using (BinaryReader recompared = new BinaryReader(scompared))
+                using (var recompared = new BinaryReader(scompared))
                 {
                     CompareFiles(reoriginal, recompared);
                 }
@@ -76,9 +72,9 @@ namespace Shellify.Test
         }
 
         public static void CompareFiles(string original, string compared) {
-            using (FileStream fsoriginal = new FileStream(original, FileMode.Open))
+            using (var fsoriginal = new FileStream(original, FileMode.Open))
             {
-                using (FileStream fscompared = new FileStream(compared, FileMode.Open))
+                using (var fscompared = new FileStream(compared, FileMode.Open))
                 {
                     CompareFiles(fsoriginal, fscompared);
                 }
@@ -88,15 +84,15 @@ namespace Shellify.Test
         [TestMethod]
         public void TestRoundTrip()
         {
-            foreach (string file in Directory.GetFiles(filesDirectory))
+            foreach (var file in Directory.GetFiles(_filesDirectory))
             {
-                testContextInstance.WriteLine("Testing {0}", file);
-                ShellLinkFile slf = ShellLinkFile.Load(file);
-                testContextInstance.WriteLine("{0}", slf);
-                string tmpFile = Path.GetTempFileName();
+                _testContextInstance.WriteLine("Testing {0}", file);
+                var slf = ShellLinkFile.Load(file);
+                _testContextInstance.WriteLine("{0}", slf);
+                var tmpFile = Path.GetTempFileName();
 
                 slf.SaveAs(tmpFile);
-                ShellLinkFile slf2 = ShellLinkFile.Load(tmpFile);
+                var slf2 = ShellLinkFile.Load(tmpFile);
                 Assert.AreEqual(slf.ToString(), slf2.ToString());
                 CompareFiles(file, tmpFile);
             }

@@ -20,7 +20,6 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.Text;
-using Shellify.IO;
 using Shellify.Extensions;
 
 namespace Shellify.Core
@@ -32,7 +31,7 @@ namespace Shellify.Core
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(">> ShItemId");
             if (Data != null)
             {

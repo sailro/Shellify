@@ -21,7 +21,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.IO;
 using System.Text;
-using Shellify.IO;
 
 namespace Shellify.Core
 {
@@ -34,7 +33,7 @@ namespace Shellify.Core
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(">> VolumeID");
             builder.AppendFormat("DriveType: {0}", DriveType); builder.AppendLine();
             builder.AppendFormat("DriveSerialNumber: {0:x}", DriveSerialNumber); builder.AppendLine();

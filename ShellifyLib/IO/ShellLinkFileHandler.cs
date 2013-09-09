@@ -19,9 +19,9 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Shellify.Core;
@@ -37,20 +37,16 @@ namespace Shellify.IO
 
         public ShellLinkFileHandler(ShellLinkFile item)
         {
-            this.Item = item;
+            Item = item;
         }
 
         private string ReadStringData(BinaryReader reader, LinkFlags mask)
         {
-            Encoding enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
-            if ((Item.Header.LinkFlags & mask) != 0)
-            {
-                return reader.ReadSTDATA(enc);
-            }
-            return null;
+            var enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
+            return (Item.Header.LinkFlags & mask) != 0 ? reader.ReadSTDATA(enc) : null;
         }
 
-        public void ReadFrom(System.IO.BinaryReader reader)
+        public void ReadFrom(BinaryReader reader)
         {
             ReadHeaderSection(reader);
             ReadIDListSection(reader);
@@ -59,7 +55,7 @@ namespace Shellify.IO
             ReadExtraDataSection(reader);
         }
 
-        public void WriteTo(System.IO.BinaryWriter writer)
+        public void WriteTo(BinaryWriter writer)
         {
             WriteHeaderSection(writer);
             WriteIDListSection(writer);
@@ -71,7 +67,7 @@ namespace Shellify.IO
         private void ReadHeaderSection(BinaryReader reader)
         {
             Item.Header = new ShellLinkHeader();
-            ShellLinkHeaderHandler slhReader = new ShellLinkHeaderHandler(Item.Header);
+            var slhReader = new ShellLinkHeaderHandler(Item.Header);
             slhReader.ReadFrom(reader);
         }
 
@@ -80,7 +76,7 @@ namespace Shellify.IO
             Item.ShItemIDs = new List<ShItemID>();
             if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) != 0)
             {
-                IDListHandler idlhandler = new IDListHandler(Item, true);
+                var idlhandler = new IDListHandler(Item, true);
                 idlhandler.ReadFrom(reader);
             }
         }
@@ -90,7 +86,7 @@ namespace Shellify.IO
             if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) != 0)
             {
                 Item.LinkInfo = new LinkInfo();
-                LinkInfoHandler liReader = new LinkInfoHandler(Item.LinkInfo);
+                var liReader = new LinkInfoHandler(Item.LinkInfo);
                 liReader.ReadFrom(reader);
             }
         }
@@ -111,15 +107,13 @@ namespace Shellify.IO
             {
                 int blocksize = reader.ReadInt32();
                 if (blocksize < 0x4) // Terminal Block
-                {
                     break;
-                }
 
-                ExtraDataBlockSignature signature = (ExtraDataBlockSignature)(reader.ReadInt32());
-                ExtraDataBlock block = ExtraDataBlockFactory.GetInstance(signature);
+                var signature = (ExtraDataBlockSignature)(reader.ReadInt32());
+                var block = ExtraDataBlockFactory.GetInstance(signature);
                 Item.ExtraDataBlocks.Add(block);
 
-                ExtraDataBlockHandler blockReader = ExtraDataBlockHandlerFactory.GetInstance(block, Item);
+                var blockReader = ExtraDataBlockHandlerFactory.GetInstance(block, Item);
                 reader.BaseStream.Seek(- Marshal.SizeOf(blocksize) - Marshal.SizeOf(typeof(int)), SeekOrigin.Current);
                 blockReader.ReadFrom(reader);
             }
@@ -127,7 +121,7 @@ namespace Shellify.IO
 
         private void WriteHeaderSection(BinaryWriter writer)
         {
-            ShellLinkHeaderHandler slhWriter = new ShellLinkHeaderHandler(Item.Header);
+            var slhWriter = new ShellLinkHeaderHandler(Item.Header);
             slhWriter.WriteTo(writer);
         }
 
@@ -135,7 +129,7 @@ namespace Shellify.IO
         {
             if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) != 0)
             {
-                IDListHandler idlhandler = new IDListHandler(Item, true);
+                var idlhandler = new IDListHandler(Item, true);
                 idlhandler.WriteTo(writer);
             }
         }
@@ -144,7 +138,7 @@ namespace Shellify.IO
         {
             if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) != 0)
             {
-                LinkInfoHandler liWriter = new LinkInfoHandler(Item.LinkInfo);
+                var liWriter = new LinkInfoHandler(Item.LinkInfo);
                 liWriter.WriteTo(writer);
             }
         }
@@ -160,21 +154,17 @@ namespace Shellify.IO
 
         private void WriteExtraDataSection(BinaryWriter writer)
         {
-            foreach (ExtraDataBlock block in Item.ExtraDataBlocks)
-            {
-                ExtraDataBlockHandler blockWriter = ExtraDataBlockHandlerFactory.GetInstance(block, Item);
-                blockWriter.WriteTo(writer);
-            }
-            writer.Write((int) 0);
+	        foreach (var blockWriter in Item.ExtraDataBlocks.Select(block => ExtraDataBlockHandlerFactory.GetInstance(block, Item)))
+		        blockWriter.WriteTo(writer);
+
+			writer.Write(0);
         }
 
-        private void WriteStringData(string value, BinaryWriter writer, LinkFlags mask)
+	    private void WriteStringData(string value, BinaryWriter writer, LinkFlags mask)
         {
-            Encoding enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
+            var enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
             if ((Item.Header.LinkFlags & mask) != 0)
-            {
                 writer.WriteSTDATA(value, enc);
-            }
         }
 
     }

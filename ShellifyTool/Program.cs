@@ -20,11 +20,8 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
-using System.IO;
-using System.Reflection;
 using Shellify.Tool.CommandLine;
 using Shellify.Tool.Commands;
-using Shellify.Tool.Options;
 using System.Text;
 
 namespace Shellify.Tool
@@ -38,17 +35,13 @@ namespace Shellify.Tool
         {
             try
             {
-                Console.WriteLine(string.Format("ShellifyTool v{0} by Sebastien LEBRETON", typeof(Program).Assembly.GetName().Version.ToString(2)));
+                Console.WriteLine("ShellifyTool v{0} by Sebastien LEBRETON", typeof(Program).Assembly.GetName().Version.ToString(2));
                 Console.WriteLine();
                 Command command = CommandLineParser.Parse(args);
                 if (command != null)
-                {
                     command.Execute();
-                }
                 else
-                {
                     DisplayUsage();
-                }
             }
             catch (CommandLineParseException e)
             {
@@ -64,17 +57,16 @@ namespace Shellify.Tool
 
         private static int ComputeOptionWidth()
         {
-            int result = 0;
-            int value = 0;
+            var result = 0;
 
-            foreach (Option option in ProgramContext.Options)
+	        foreach (var option in ProgramContext.Options)
             {
-                value = option.Tag.Length + CommandLineParser.OptionPrefix.Length;
-                if (option.ExpectedArguments > 0)
-                {
-                    value += CommandLineParser.OptionArgumentSeparator.Length + DemoValue.Length;
-                }
-                result = Math.Max(result, value);
+                var value = option.Tag.Length + CommandLineParser.OptionPrefix.Length;
+	            
+				if (option.ExpectedArguments > 0)
+		            value += CommandLineParser.OptionArgumentSeparator.Length + DemoValue.Length;
+	            
+				result = Math.Max(result, value);
             }
 
             return result;
@@ -85,28 +77,29 @@ namespace Shellify.Tool
             Console.WriteLine("Usage: ShellifyTool <Command> [Options...] filename [target]");
             Console.WriteLine();
             Console.WriteLine("Commands:");
-            foreach (Command command in ProgramContext.Commands)
-            {
-                Console.WriteLine(string.Format("{0}: {1}", command.Tag, command.Description));
-            }
+	        
+			foreach (var command in ProgramContext.Commands)
+		        Console.WriteLine("{0}: {1}", command.Tag, command.Description);
 
-            int optionWidth = ComputeOptionWidth();
+	        var optionWidth = ComputeOptionWidth();
             Console.WriteLine();
             Console.WriteLine("Options:");
-            foreach (Option option in ProgramContext.Options)
+
+			foreach (var option in ProgramContext.Options)
             {
-                StringBuilder builder = new StringBuilder();
+                var builder = new StringBuilder();
                 builder.AppendFormat("{0}{1}", CommandLineParser.OptionPrefix, option.Tag);
-                if (option.ExpectedArguments > 0)
+
+				if (option.ExpectedArguments > 0)
                 {
                     builder.Append(CommandLineParser.OptionArgumentSeparator);
                     builder.Append("value");
                 }
-                while (builder.Length < optionWidth)
-                {
-                    builder.Append(" ");
-                }
-                builder.Append(OptionTagDescriptionSeparator);
+
+				while (builder.Length < optionWidth)
+		            builder.Append(" ");
+
+				builder.Append(OptionTagDescriptionSeparator);
                 builder.Append(option.Description);
                 Console.WriteLine(NormalizeBuilder(builder, optionWidth));
             }
@@ -114,16 +107,16 @@ namespace Shellify.Tool
 
         private static string NormalizeBuilder(StringBuilder builder, int optionWidth)
         {
-            string result = builder.ToString();
-            char separator = ',';
-            int currentWidth = 0;
+            var result = builder.ToString();
+            const char separator = ',';
+            var currentWidth = 0;
             const int windowWidth = 80; // Console.WindowWidth no implemented in mono...
 
             if (builder.Length > windowWidth)
             {
-                string[] splits = result.Split(separator);
+                var splits = result.Split(separator);
                 builder.Length = 0;
-                foreach (String split in splits)
+                foreach (var split in splits)
                 {
                     if (builder.Length > 0)
                     {

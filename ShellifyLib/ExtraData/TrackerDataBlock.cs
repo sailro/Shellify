@@ -21,7 +21,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
 using System.Text;
-using Shellify.IO;
 using System.Collections;
 
 namespace Shellify.ExtraData
@@ -43,7 +42,7 @@ namespace Shellify.ExtraData
 
         private static string ToString(IEnumerable collection)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("{");
             foreach (object item in collection)
             {
@@ -59,7 +58,7 @@ namespace Shellify.ExtraData
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(base.ToString());
             builder.AppendFormat("Version: {0}", Version); builder.AppendLine();
             builder.AppendFormat("MachineID: {0}", MachineID); builder.AppendLine();

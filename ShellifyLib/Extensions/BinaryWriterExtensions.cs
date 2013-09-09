@@ -32,7 +32,7 @@ namespace Shellify.Extensions
 
         static public void WriteSTDATA(this BinaryWriter writer, string value, Encoding encoding)
         {
-            short charcount = Convert.ToInt16(value.Length);
+            var charcount = Convert.ToInt16(value.Length);
             writer.Write(charcount);
             writer.Write(encoding.GetBytes(value));
         }
@@ -40,41 +40,34 @@ namespace Shellify.Extensions
         public static void WriteASCIIZ(this BinaryWriter writer, string value, Encoding encoding)
         {
             if (value != null)
-            {
                 writer.Write(encoding.GetBytes(value));
-            }
-            writer.Write((byte)0);
+
+			writer.Write((byte)0);
         }
 
         public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length)
         {
-            List<byte> bytes = new List<byte>(encoding.GetBytes(value == null ? string.Empty : value));
+            var bytes = new List<byte>(encoding.GetBytes(value ?? string.Empty));
 
             while (bytes.Count < length)
-            {
                 bytes.Add(0);
-            }
 
             writer.Write(bytes.Take(length).ToArray());
         }
 
         public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length, byte[] padding)
         {
-            List<byte> bytes = new List<byte>(encoding.GetBytes(value == null ? string.Empty : value));
+            var bytes = new List<byte>(encoding.GetBytes(value ?? string.Empty));
 
             if (padding != null)
             {
-                int padindex = 0;
+                var padindex = 0;
                 while ((bytes.Count < length) && (padindex < padding.Length))
-                {
                     bytes.Add(padding[padindex++]);
-                }
             }
 
             while (bytes.Count < length)
-            {
                 bytes.Add(0);
-            }
 
             writer.Write(bytes.Take(length).ToArray());
         }

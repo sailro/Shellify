@@ -19,6 +19,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+using System.IO;
 using Shellify.ExtraData;
 using Shellify.Extensions;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Shellify.IO
         public const int ValueSizeUnicode = 520;
         public const int ExactBlockSize = 0x314;
 
-        public BaseStringDataBlockHandler(T item, ShellLinkFile context)
+		protected BaseStringDataBlockHandler(T item, ShellLinkFile context)
             : base(item, context)
 		{
 		}
@@ -45,12 +46,12 @@ namespace Shellify.IO
 			}
 		}
 		
-		public override void ReadFrom(System.IO.BinaryReader reader)
+		public override void ReadFrom(BinaryReader reader)
 		{
 			base.ReadFrom(reader);
 
             FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize); 
-            byte[] padding = null;
+            byte[] padding;
             
             Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out padding);
             Item.ValuePadding = padding;
@@ -59,7 +60,7 @@ namespace Shellify.IO
             Item.ValueUnicodePadding = padding;
         }
 
-		public override void WriteTo(System.IO.BinaryWriter writer)
+		public override void WriteTo(BinaryWriter writer)
 		{
             base.WriteTo(writer);
 

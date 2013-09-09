@@ -33,7 +33,7 @@ namespace Shellify.Tool.Commands
 
         public abstract void Execute();
 
-        public Command(string tag, string description, int expectedArguments)
+	    protected Command(string tag, string description, int expectedArguments)
             : base(tag, description, expectedArguments)
         {
             Options = new List<Option>();

@@ -29,7 +29,7 @@ namespace Shellify.Core
 		public CommonNetworkRelativeLinkFlags CommonNetworkRelativeLinkFlags { get; set; }
 		public string NetName { get; set; }
 
-        public NetworkProviderType? _networkProviderType;
+		private NetworkProviderType? _networkProviderType;
         public NetworkProviderType? NetworkProviderType
         {
             get

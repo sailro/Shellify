@@ -30,11 +30,7 @@ namespace Shellify.Test
     [TestClass]
     public class ToolOptionsTest
     {
-        public ToolOptionsTest()
-        {
-        }
-
-        private TestContext testContextInstance;
+	    private TestContext _testContextInstance;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -44,22 +40,21 @@ namespace Shellify.Test
         {
             get
             {
-                return testContextInstance;
+                return _testContextInstance;
             }
             set
             {
-                testContextInstance = value;
+                _testContextInstance = value;
             }
         }
 
-        private void TestOption(ShellLinkFile context, Option option, string argument)
+        private static void TestOption(ShellLinkFile context, Option option, string argument)
         {
             option.Arguments.Clear();
-            for (int i = 0; i < option.ExpectedArguments; i++)
-            {
+            for (var i = 0; i < option.ExpectedArguments; i++)
                 option.Arguments.Add(argument);
-            }
-            // As we use Reflection to alter properties, just check if properties names are correct.
+
+			// As we use Reflection to alter properties, just check if properties names are correct.
             option.Execute(context);
         }
 
@@ -69,10 +64,10 @@ namespace Shellify.Test
             var info = new DateTimeFormatInfo();
             string[] testargs = { "0", "string", new DateTime().ToString(string.Format("{0} {1}",info.ShortDatePattern, info.ShortTimePattern), CultureInfo.InvariantCulture), "true" };
 
-            ShellLinkFile slf = new ShellLinkFile();
+            var slf = new ShellLinkFile();
             foreach (Option option in ProgramContext.Options)
             {
-                int argindex = 0;
+                var argindex = 0;
                 bool retry;
                 do
                 {
@@ -83,16 +78,13 @@ namespace Shellify.Test
                     }
                     catch (FormatException)
                     {
-                        if (argindex < testargs.Length - 1)
-                        {
-                            testContextInstance.WriteLine("Option '{0}' fail for argument '{1}', testing '{2}'", option, testargs[argindex], testargs[argindex + 1]);
-                            retry = true;
-                            argindex++;
-                        }
-                        else
-                        {
-                            throw;
-                        }
+	                    if (argindex >= testargs.Length - 1)
+		                    throw;
+
+	                    _testContextInstance.WriteLine("Option '{0}' fail for argument '{1}', testing '{2}'", option,
+	                                                   testargs[argindex], testargs[argindex + 1]);
+	                    retry = true;
+	                    argindex++;
                     }
                     catch (Exception)
                     {

@@ -28,8 +28,8 @@ namespace Shellify.ExtraData
 		
 		public static ExtraDataBlock GetInstance(ExtraDataBlockSignature signature)
 		{
-            string typename = string.Format("Shellify.ExtraData.{0}", signature);
-            Type type = Type.GetType(typename);
+            var typename = string.Format("Shellify.ExtraData.{0}", signature);
+            var type = Type.GetType(typename);
             return type == null ? new UnknownDataBlock() : (ExtraDataBlock)Activator.CreateInstance(type);
 		}		
 	}

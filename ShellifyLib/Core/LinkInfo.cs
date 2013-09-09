@@ -34,16 +34,16 @@ namespace Shellify.Core
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(">> LinkInfo");
             builder.AppendFormat("Flags: {0}", LinkInfoFlags); builder.AppendLine();
             builder.AppendFormat("LocalBasePath: {0}", LocalBasePath); builder.AppendLine();
             builder.AppendFormat("CommonPathSuffix: {0}", CommonPathSuffix); builder.AppendLine();
-            if (VolumeID != null) builder.Append(VolumeID.ToString());
+            if (VolumeID != null) builder.Append(VolumeID);
             if (CommonNetworkRelativeLink != null)
             {
                 if (VolumeID != null) builder.AppendLine();
-                builder.Append(CommonNetworkRelativeLink.ToString());
+                builder.Append(CommonNetworkRelativeLink);
             }
             return builder.ToString();
         }

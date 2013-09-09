@@ -32,48 +32,32 @@ namespace Shellify.Test
     [TestClass]
     public class ToolParserTest
     {
-        public ToolParserTest()
-        {
-        }
+	    /// <summary>
+	    ///Gets or sets the test context which provides
+	    ///information about and functionality for the current test run.
+	    ///</summary>
+	    public TestContext TestContext { get; set; }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
+	    [TestMethod]
         public void TestToolParser()
         {
             try
             {
-                CommandLineParser.Parse(new string[] { "foo" });
-                Assert.Fail("Exception  required");
+                CommandLineParser.Parse(new[] { "foo" });
+                Assert.Fail("Exception required");
             }
             catch (Exception e)
             {
                 Assert.IsInstanceOfType(e, typeof(CommandLineParseException));
             }
 
-            DisplayInfosCommand dic = (DisplayInfosCommand)(Enumerable.ToList(ProgramContext.Commands).Where(c => c is DisplayInfosCommand).First());
-            CommandLineParser.Parse(new string[] { dic.Tag, "filename" });
+            var dic = (DisplayInfosCommand)(ProgramContext.Commands.ToList().First(c => c is DisplayInfosCommand));
+            CommandLineParser.Parse(new[] { dic.Tag, "filename" });
 
             try
             {
-                CommandLineParser.Parse(new string[] { dic.Tag, "-foo", "filename" });
-                Assert.Fail("Exception  required");
+                CommandLineParser.Parse(new[] { dic.Tag, "-foo", "filename" });
+                Assert.Fail("Exception required");
             }
             catch (Exception e)
             {
@@ -83,9 +67,9 @@ namespace Shellify.Test
             try
             {
                 dic.Arguments.Clear();
-                Command cmd = CommandLineParser.Parse(new string[] { dic.Tag, "filename.foo" });
+                var cmd = CommandLineParser.Parse(new[] { dic.Tag, "filename.foo" });
                 cmd.Execute();
-                Assert.Fail("Exception  required");
+                Assert.Fail("Exception required");
             }
             catch (Exception e)
             {
@@ -95,9 +79,9 @@ namespace Shellify.Test
             try
             {
                 dic.Arguments.Clear();
-                Command cmd = CommandLineParser.Parse(new string[] { dic.Tag, @"..\..\..\Shellify.sln" });
+                Command cmd = CommandLineParser.Parse(new[] { dic.Tag, @"..\..\..\Shellify.sln" });
                 cmd.Execute();
-                Assert.Fail("Exception  required");
+                Assert.Fail("Exception required");
             }
             catch (Exception e)
             {

@@ -20,6 +20,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shellify.ExtraData;
 
@@ -28,47 +29,25 @@ namespace Shellify.Test
     [TestClass]
     public class LibBlindTest
     {
-        public LibBlindTest()
-        {
-        }
+	    /// <summary>
+	    ///Gets or sets the test context which provides
+	    ///information about and functionality for the current test run.
+	    ///</summary>
+	    public TestContext TestContext { get; set; }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
+	    [TestMethod]
         public void TestBlindWrite()
         {
             BlindWrite();
         }
 
-        private string BlindWrite()
+        private static string BlindWrite()
         {
             var tmpFile = Path.GetTempFileName();
             var slf = new ShellLinkFile();
 
-            foreach (ExtraDataBlockSignature signature in System.Enum.GetValues(typeof(ExtraDataBlockSignature)))
-            {
-                if (signature == ExtraDataBlockSignature.UnknownDataBlock)
-                    continue;
-
-                ExtraDataBlock block = ExtraDataBlockFactory.GetInstance(signature);
-                slf.ExtraDataBlocks.Add(block);
-            }
+            foreach (var block in from ExtraDataBlockSignature signature in System.Enum.GetValues(typeof(ExtraDataBlockSignature)) where signature != ExtraDataBlockSignature.UnknownDataBlock select ExtraDataBlockFactory.GetInstance(signature))
+	            slf.ExtraDataBlocks.Add(block);
 
             slf.SaveAs(tmpFile);
             return tmpFile;
@@ -77,7 +56,7 @@ namespace Shellify.Test
         [TestMethod]
         public void TestBlindRead()
         {
-            var slf = ShellLinkFile.Load(BlindWrite());
+	        ShellLinkFile.Load(BlindWrite());
         }
     }
 }

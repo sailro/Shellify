@@ -31,37 +31,33 @@ namespace Shellify.IO
 	{
         public const int MinimumVolumeIDSize = 0x10;
 		
-		private VolumeID Item;
+		private readonly VolumeID _item;
 		private int VolumeIDSize { get; set; }
 		private int VolumeLabelOffset { get; set; }
 		private int? VolumeLabelOffsetUnicode { get; set; } // Optional
 		
 		public VolumeIDHandler(VolumeID item)
 		{
-			this.Item = item;
+			_item = item;
 		}
 		
 		public void ReadFrom(BinaryReader reader)
 		{
-			long readerOffset = reader.BaseStream.Position;
+			var readerOffset = reader.BaseStream.Position;
 			
 			VolumeIDSize = reader.ReadInt32();
             FormatChecker.CheckExpression(() => VolumeIDSize > MinimumVolumeIDSize);
 
-			Item.DriveType = (DriveType) (reader.ReadInt32());
-			Item.DriveSerialNumber = reader.ReadInt32();
+			_item.DriveType = (DriveType) (reader.ReadInt32());
+			_item.DriveSerialNumber = reader.ReadInt32();
 			VolumeLabelOffset = reader.ReadInt32();
 
             if (VolumeLabelOffset > MinimumVolumeIDSize)
-            {
                 VolumeLabelOffsetUnicode = reader.ReadInt32();
-            }
             else
-            {
                 FormatChecker.CheckExpression(() => VolumeLabelOffset == MinimumVolumeIDSize);
-            }
 
-            Item.VolumeLabel = reader.ReadASCIIZ(readerOffset, VolumeLabelOffset, VolumeLabelOffsetUnicode);
+            _item.VolumeLabel = reader.ReadASCIIZ(readerOffset, VolumeLabelOffset, VolumeLabelOffsetUnicode);
 		}
 		
 		public int ComputedSize
@@ -70,9 +66,9 @@ namespace Shellify.IO
 			{
                 return Marshal.SizeOf(VolumeIDSize) +
                 Marshal.SizeOf(typeof(int)) +
-                Marshal.SizeOf(Item.DriveSerialNumber) +
+                Marshal.SizeOf(_item.DriveSerialNumber) +
                 Marshal.SizeOf(VolumeLabelOffset) +
-                Encoding.Default.GetASCIIZSize(Item.VolumeLabel);
+                Encoding.Default.GetASCIIZSize(_item.VolumeLabel);
 
                 // TODO: Handle unicode strings and offsets
                 // VolumeLabelOffsetUnicode = 
@@ -80,19 +76,19 @@ namespace Shellify.IO
 			}
 		}
 		
-		public void WriteTo(System.IO.BinaryWriter writer)
+		public void WriteTo(BinaryWriter writer)
 		{
 			VolumeIDSize = ComputedSize;
 
             FormatChecker.CheckExpression(() => VolumeIDSize > MinimumVolumeIDSize);
 
             writer.Write(VolumeIDSize);
-			writer.Write((int) Item.DriveType);
-			writer.Write(Item.DriveSerialNumber);
+			writer.Write((int) _item.DriveType);
+			writer.Write(_item.DriveSerialNumber);
 			
 			VolumeLabelOffset = Marshal.SizeOf(VolumeIDSize) +
 			Marshal.SizeOf(typeof(int)) +
-			Marshal.SizeOf(Item.DriveSerialNumber) +
+			Marshal.SizeOf(_item.DriveSerialNumber) +
 			Marshal.SizeOf(VolumeLabelOffset);
 			writer.Write(VolumeLabelOffset);
 
@@ -100,7 +96,7 @@ namespace Shellify.IO
             // VolumeLabelOffsetUnicode = 
             // VolumeLabelOffset = &H14 
 
-            writer.WriteASCIIZ(Item.VolumeLabel, Encoding.Default);
+            writer.WriteASCIIZ(_item.VolumeLabel, Encoding.Default);
 		}
 	}
 }

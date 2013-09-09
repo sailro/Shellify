@@ -29,13 +29,9 @@ namespace Shellify.Extensions
         public static int GetASCIIZSize(this Encoding encoding, string value)
         {
             if (value == null)
-            {
                 return 1;
-            }
-            else
-            {
-                return encoding.GetByteCount(value) + 1;
-            }
+
+            return encoding.GetByteCount(value) + 1;
         }
     }
 }

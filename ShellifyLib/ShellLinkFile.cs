@@ -141,24 +141,23 @@ namespace Shellify
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             if (Header != null) builder.AppendLine(Header.ToString());
             if (LinkInfo != null) builder.AppendLine(LinkInfo.ToString());
-            if (ExtraDataBlocks != null)
+
+			if (ExtraDataBlocks != null)
             {
-                foreach (ExtraDataBlock block in ExtraDataBlocks)
-                {
+                foreach (var block in ExtraDataBlocks)
                     builder.AppendLine(block.ToString());
-                }
             }
+
             if (ShItemIDs != null)
             {
-                foreach (ShItemID shitem in ShItemIDs)
-                {
+                foreach (var shitem in ShItemIDs)
                     builder.AppendLine(shitem.ToString());
-                }
             }
-            builder.AppendLine(">>File");
+
+			builder.AppendLine(">>File");
             builder.AppendFormat("Name: {0}", Name); builder.AppendLine();
             builder.AppendFormat("RelativePath: {0}", RelativePath); builder.AppendLine();
             builder.AppendFormat("WorkingDirectory: {0}", WorkingDirectory); builder.AppendLine();
@@ -169,12 +168,12 @@ namespace Shellify
 
 		public static ShellLinkFile Load(string filename)
 		{
-			ShellLinkFile result = new ShellLinkFile();
-            using (FileStream stream = new FileStream(filename, FileMode.Open))
+			var result = new ShellLinkFile();
+            using (var stream = new FileStream(filename, FileMode.Open))
             {
-                using (BinaryReader binaryReader = new BinaryReader(stream))
+                using (var binaryReader = new BinaryReader(stream))
                 {
-                    ShellLinkFileHandler reader = new ShellLinkFileHandler(result);
+                    var reader = new ShellLinkFileHandler(result);
                     reader.ReadFrom(binaryReader);
                     return result;
                 }
@@ -183,26 +182,16 @@ namespace Shellify
 
         public static FileSystemInfo SetFileSystemInfo(ShellLinkFile slf, string target)
         {
-            FileSystemInfo targetInfo;
-            if (Directory.Exists(target))
-            {
-                targetInfo = new DirectoryInfo(target);
-            }
-            else
-            {
-                targetInfo = new FileInfo(target);
-            }
+	        var targetInfo = Directory.Exists(target) ? (FileSystemInfo) new DirectoryInfo(target) : new FileInfo(target);
 
-            if (targetInfo.Exists)
+	        if (targetInfo.Exists)
             {
                 slf.Header.FileAttributes = targetInfo.Attributes;
                 slf.Header.AccessTime = targetInfo.LastAccessTime;
                 slf.Header.CreationTime = targetInfo.CreationTime;
                 slf.Header.WriteTime = targetInfo.LastWriteTime;
                 if (targetInfo is FileInfo)
-                {
                     slf.Header.FileSize = Convert.ToInt32((targetInfo as FileInfo).Length);
-                }
             }
             return targetInfo;
         }
@@ -210,11 +199,9 @@ namespace Shellify
         public static ShellLinkFile CreateRelative(string baseDirectory, string relativeTarget)
         {
             if (Path.IsPathRooted(relativeTarget))
-            {
                 throw new ArgumentException("Target must be relative to base directory !!!");
-            }
 
-            ShellLinkFile result = new ShellLinkFile();
+            var result = new ShellLinkFile();
 
             SetFileSystemInfo(result, Path.Combine(baseDirectory, relativeTarget));
             result.Header.ShowCommand = ShowCommand.Normal;
@@ -227,31 +214,24 @@ namespace Shellify
 
         public static ShellLinkFile CreateAbsolute(string target)
         {
-            ShellLinkFile result = new ShellLinkFile();
+            var result = new ShellLinkFile();
 
-            FileSystemInfo targetInfo = SetFileSystemInfo(result, target);
+            var targetInfo = SetFileSystemInfo(result, target);
             result.Header.ShowCommand = ShowCommand.Normal;
 
             result.RelativePath = targetInfo.FullName;
-            if (targetInfo is FileInfo)
-            {
-                result.WorkingDirectory = (targetInfo as FileInfo).DirectoryName;
-            }
-            else
-            {
-                result.WorkingDirectory = targetInfo.FullName;
-            }
+	        result.WorkingDirectory = targetInfo is FileInfo ? (targetInfo as FileInfo).DirectoryName : targetInfo.FullName;
 
-            return result;
+	        return result;
         }
 
         public void SaveAs(string filename)
         {
-            using (FileStream stream = new FileStream(filename, FileMode.Create))
+            using (var stream = new FileStream(filename, FileMode.Create))
             {
-                using (BinaryWriter binaryWriter = new BinaryWriter(stream))
+                using (var binaryWriter = new BinaryWriter(stream))
                 {
-                    ShellLinkFileHandler writer = new ShellLinkFileHandler(this);
+                    var writer = new ShellLinkFileHandler(this);
                     writer.WriteTo(binaryWriter);
                 }
             }

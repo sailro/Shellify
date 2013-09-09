@@ -37,15 +37,13 @@ namespace Shellify.Tool.Options
             set
             {
                 if (Arguments.Count > 0)
-                {
                     Arguments[0] = value;
-                }
             }
         }
         public IList<Command> Applies { get; set; }
         public abstract void Execute(ShellLinkFile context);
 
-        public Option(string tag, string description, int expectedArguments, IList<Command> applies)
+	    protected Option(string tag, string description, int expectedArguments, IList<Command> applies)
             : base(tag, description, expectedArguments)
         {
             Applies = applies;

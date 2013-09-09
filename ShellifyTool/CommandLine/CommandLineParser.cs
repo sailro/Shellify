@@ -19,6 +19,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+using System.Linq;
 using Shellify.Tool.Commands;
 using Shellify.Tool.Options;
 
@@ -43,21 +44,10 @@ namespace Shellify.Tool.CommandLine
 
         public static Command ParseCommand(string item)
         {
-            Command command = null;
+            Command command = ProgramContext.Commands.FirstOrDefault(c => c.Tag.Equals(item, System.StringComparison.InvariantCultureIgnoreCase));
 
-            foreach (Command c in ProgramContext.Commands)
-            {
-                if (c.Tag.Equals(item, System.StringComparison.InvariantCultureIgnoreCase))
-                {
-                    command = c;
-                    break;
-                }
-            }
-
-            if (command == null)
-            {
+	        if (command == null)
                 throw new CommandLineParseException(string.Format("Unknown command {0}", item));
-            }
 
             return command;
         }
@@ -66,62 +56,49 @@ namespace Shellify.Tool.CommandLine
         {
             Option option = null;
 
-            foreach (Option o in ProgramContext.Options)
+            foreach (var o in ProgramContext.Options)
             {
-                string[] tokens = item.Split(OptionArgumentSeparator.ToCharArray()[0]);
-                string oname = tokens[0];
+                var tokens = item.Split(OptionArgumentSeparator.ToCharArray()[0]);
+                var oname = tokens[0];
 
-                if (oname.Equals(string.Concat(OptionPrefix, o.Tag), System.StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (o.Applies.Contains(command))
-                    {
-                        if (tokens.Length > 1)
-                        {
-                            o.Arguments.Add(tokens[1]);
-                        }
-                        option = o;
-                        break;
-                    }
-                    else
-                    {
-                        throw new CommandLineParseException(string.Format("'{0}' option is not available for '{1}' command", o, command));
-                    }
-                }
+	            if (!oname.Equals(string.Concat(OptionPrefix, o.Tag), System.StringComparison.InvariantCultureIgnoreCase))
+		            continue;
+
+	            if (!o.Applies.Contains(command))
+		            throw new CommandLineParseException(string.Format("'{0}' option is not available for '{1}' command", o,
+		                                                              command));
+	            if (tokens.Length > 1)
+		            o.Arguments.Add(tokens[1]);
+
+				option = o;
+	            break;
             }
 
-            if (option == null)
-            {
-                throw new CommandLineParseException(string.Format("Unknown option {0}", item));
-            }
+	        if (option == null)
+		        throw new CommandLineParseException(string.Format("Unknown option {0}", item));
 
-            CheckItem(option);
-            return option;
+			CheckItem(option);
+	        return option;
         }
 
         public static Command Parse(string[] args)
         {
             Command command = null;
 
-            foreach (string item in args)
+            foreach (var item in args)
             {
                 if (command == null)
-                {
                     command = ParseCommand(item);
-                }
                 else
                 {
-                    if (item.StartsWith(OptionPrefix.ToString()))
+                    if (item.StartsWith(OptionPrefix))
                     {
-                        Option option = ParseOption(command, item);
+                        var option = ParseOption(command, item);
                         if (!command.Options.Contains(option))
-                        {
                             command.Options.Add(option);
-                        }
                     }
                     else
-                    {
                         command.Arguments.Add(item);
-                    }
                 }
             }
 

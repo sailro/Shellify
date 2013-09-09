@@ -41,7 +41,7 @@ namespace Shellify.Tool.CommandLine
 
         public override string ToString()
         {
-            return Tag.ToString();
+            return Tag;
         }
 
     }

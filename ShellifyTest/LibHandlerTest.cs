@@ -29,32 +29,16 @@ namespace Shellify.Test
     [TestClass]
     public class LibHandlerTest
     {
-        public LibHandlerTest()
-        {
-        }
+	    /// <summary>
+	    ///Gets or sets the test context which provides
+	    ///information about and functionality for the current test run.
+	    ///</summary>
+	    public TestContext TestContext { get; set; }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
+	    [TestMethod]
         public void TestHandler()
         {
-            foreach (ExtraDataBlockSignature signature in System.Enum.GetValues(typeof(ExtraDataBlockSignature)))
+            foreach (ExtraDataBlockSignature signature in Enum.GetValues(typeof(ExtraDataBlockSignature)))
             {
                 ExtraDataBlock block = null;
                 try
@@ -67,7 +51,7 @@ namespace Shellify.Test
                 }
                 try
                 {
-                    ExtraDataBlockHandler handler = ExtraDataBlockHandlerFactory.GetInstance(block, null);
+                    ExtraDataBlockHandlerFactory.GetInstance(block, null);
                 }
                 catch (Exception)
                 {

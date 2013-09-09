@@ -68,7 +68,7 @@ namespace Shellify.ExtraData
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(base.ToString());
             builder.AppendFormat("FillAttributes: {0}", FillAttributes); builder.AppendLine();
             builder.AppendFormat("PopupFillAttributes: {0}", PopupFillAttributes); builder.AppendLine();

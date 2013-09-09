@@ -30,8 +30,8 @@ namespace Shellify.ExtraData
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
-            builder.AppendFormat(">> {0}", this.GetType().Name);
+            var builder = new StringBuilder();
+            builder.AppendFormat(">> {0}", GetType().Name);
             builder.AppendLine();
             builder.AppendFormat("Signature: {0:x}", Signature);
             return builder.ToString();

@@ -51,7 +51,7 @@ namespace Shellify.Core
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(">> Header");
             builder.AppendFormat("Guid: {0}", Guid); builder.AppendLine();
             builder.AppendFormat("LinkFlags: {0}", LinkFlags); builder.AppendLine();

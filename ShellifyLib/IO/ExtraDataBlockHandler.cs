@@ -19,7 +19,6 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-using System;
 using System.Runtime.InteropServices;
 using Shellify.ExtraData;
 
@@ -44,11 +43,11 @@ namespace Shellify.IO
 				return Marshal.SizeOf(BlockSize) + Marshal.SizeOf(typeof(int));
 			}
 		}
-		
-		public ExtraDataBlockHandler(T item, ShellLinkFile context)
+
+	    protected ExtraDataBlockHandler(T item, ShellLinkFile context)
 		{
-			this.Item = item;
-            this.Context = context;
+			Item = item;
+            Context = context;
 		}
 		
 		public override void ReadFrom(System.IO.BinaryReader reader)

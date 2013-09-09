@@ -21,9 +21,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
-using Shellify.Core;
-using Shellify.Extensions;
 using Shellify.ExtraData;
 
 namespace Shellify.IO
@@ -41,8 +38,8 @@ namespace Shellify.IO
         {
             get
             {
-                int result = base.ComputedSize + Marshal.SizeOf(typeof(short));
-                foreach (ShItemID item in Item.ShItemIDs)
+                var result = base.ComputedSize + Marshal.SizeOf(typeof(short));
+                foreach (var item in Item.ShItemIDs)
                 {
                     result += Marshal.SizeOf(typeof(short));
                     result += item.Data == null ? 0 : item.Data.Length;
@@ -57,7 +54,7 @@ namespace Shellify.IO
 
             FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
 
-            IDListHandler handler = new IDListHandler(Item, false);
+            var handler = new IDListHandler(Item, false);
             handler.ReadFrom(reader);
         }
 
@@ -66,7 +63,7 @@ namespace Shellify.IO
             base.WriteTo(writer);
 
             FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
-            IDListHandler handler = new IDListHandler(Item, false);
+            var handler = new IDListHandler(Item, false);
             handler.WriteTo(writer);
         }
     }

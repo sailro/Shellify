@@ -19,6 +19,7 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -29,42 +30,31 @@ namespace Shellify.Extensions
 
         public static string ToHexString(this byte[] bytes)
         {
-            StringBuilder builder = new StringBuilder();
-            foreach (byte b in bytes)
-            {
+            var builder = new StringBuilder();
+
+			foreach (byte b in bytes)
                 builder.AppendFormat("{0:x2}", b);
-            }
-            return builder.ToString();
+
+			return builder.ToString();
         }
 
         public static string ComputeHash(this byte[] bytes)
         {
             using (MD5 md5 = new MD5CryptoServiceProvider())
-            {
                 return ToHexString(md5.ComputeHash(bytes));
-            }
         }
 
         public static bool Match(this byte[] array, byte[] item, int offset)
         {
-            for (int i = 0; i < item.Length; i++)
-            {
-                if (i >= array.Length || (array[i + offset] != item[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
+	        return !item.Where((t, i) => i >= array.Length || (array[i + offset] != t)).Any();
         }
 
-        public static int IndexOf(this byte[] array, byte[] item)
+	    public static int IndexOf(this byte[] array, byte[] item)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 if (Match(array, item, i))
-                {
                     return i;
-                }
             }
             return -1;
         }

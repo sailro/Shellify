@@ -38,14 +38,14 @@ namespace Shellify.ExtraData
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append(base.ToString());
             if (ShItemIDs != null)
             {
                 foreach (ShItemID shitem in ShItemIDs)
                 {
                     builder.AppendLine();
-                    builder.Append(shitem.ToString());
+                    builder.Append(shitem);
                 }
             }
             return builder.ToString();

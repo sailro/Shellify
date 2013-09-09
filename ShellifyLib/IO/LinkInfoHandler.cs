@@ -45,25 +45,21 @@ namespace Shellify.IO
 		
 		public LinkInfoHandler(LinkInfo item)
 		{
-			this.Item = item;
+			Item = item;
 		}
 
         private void EnsurePosition(BinaryReader reader, long baseOffset, int offset)
         {
-            int delta = (int)(baseOffset + offset - reader.BaseStream.Position);
+            var delta = (int)(baseOffset + offset - reader.BaseStream.Position);
             if (delta > 0)
-            {
-                byte[] padding = reader.ReadBytes(delta);
-            }
+                reader.ReadBytes(delta);
             else if (delta < 0)
-            {
                 throw new ArgumentException();
-            }
-        }
+		}
 		
 		public void ReadFrom(BinaryReader reader)
 		{
-			long readerOffset = reader.BaseStream.Position;
+			var readerOffset = reader.BaseStream.Position;
 			
 			LinkInfoSize = reader.ReadInt32();
 			LinkInfoHeaderSize = reader.ReadInt32();
@@ -92,15 +88,13 @@ namespace Shellify.IO
                 FormatChecker.CheckExpression(() => CommonPathSuffixOffsetUnicode < LinkInfoSize);
             }
             else
-            {
                 FormatChecker.CheckExpression(() => LinkInfoHeaderSize == MinimumLinkInfoHeaderSize);
-            }
 			
 			if ((Item.LinkInfoFlags & LinkInfoFlags.VolumeIDAndLocalBasePath) != 0)
 			{
                 EnsurePosition(reader, readerOffset, VolumeIDOffset);
 				Item.VolumeID = new VolumeID();
-				VolumeIDHandler vidReader = new VolumeIDHandler(Item.VolumeID);
+				var vidReader = new VolumeIDHandler(Item.VolumeID);
 				vidReader.ReadFrom(reader);
                 Item.LocalBasePath = reader.ReadASCIIZ(readerOffset, LocalBasePathOffset, LocalBasePathOffsetUnicode);
 			} 
@@ -109,16 +103,16 @@ namespace Shellify.IO
 			{
                 EnsurePosition(reader, readerOffset, CommonNetworkRelativeLinkOffset);
 				Item.CommonNetworkRelativeLink = new CommonNetworkRelativeLink();
-				CommonNetworkRelativeLinkHandler cnrlReader = new CommonNetworkRelativeLinkHandler(Item.CommonNetworkRelativeLink);
+				var cnrlReader = new CommonNetworkRelativeLinkHandler(Item.CommonNetworkRelativeLink);
 				cnrlReader.ReadFrom(reader);
 			}
 
             Item.CommonPathSuffix = reader.ReadASCIIZ(readerOffset, CommonPathSuffixOffset, CommonPathSuffixOffsetUnicode);
 		}
 		
-		public void WriteTo(System.IO.BinaryWriter writer)
+		public void WriteTo(BinaryWriter writer)
 		{
-            byte[] padding = new byte[]{};
+            var padding = new byte[]{};
 
             LinkInfoHeaderSize = Marshal.SizeOf(LinkInfoSize) +
 			Marshal.SizeOf(LinkInfoHeaderSize) +
@@ -181,15 +175,14 @@ namespace Shellify.IO
 				vidWriter.WriteTo(writer);
                 writer.WriteASCIIZ(Item.LocalBasePath, Encoding.Default);
 			}
-            if (padding.Length > 0)
-            {
+
+			if (padding.Length > 0)
                 writer.Write(padding);
-            }
-            if (cnrWriter != null)
-			{
+
+			if (cnrWriter != null)
 				cnrWriter.WriteTo(writer);
-			}
-            writer.WriteASCIIZ(Item.CommonPathSuffix, Encoding.Default);
+
+			writer.WriteASCIIZ(Item.CommonPathSuffix, Encoding.Default);
 			
 		}
 	}

@@ -22,7 +22,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using Shellify.IO;
 using Shellify.ExtraData;
 using Shellify.Extensions;
 
@@ -65,8 +64,8 @@ namespace Shellify.IO
 
             Item.Version = reader.ReadInt32();
             Item.MachineID = reader.ReadASCIIZF(Encoding.Default, MachineIDLength); // 16 bytes, 0 fill
-            Item.Droid = new Guid[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
-            Item.DroidBirth = new Guid[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
+            Item.Droid = new[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
+            Item.DroidBirth = new[] { new Guid(reader.ReadBytes(16)), new Guid(reader.ReadBytes(16)) };
         }
 
         public override void WriteTo(System.IO.BinaryWriter writer)
@@ -84,8 +83,8 @@ namespace Shellify.IO
             writer.Write(Length);
             writer.Write(Item.Version);
             writer.WriteASCIIZF(Item.MachineID, Encoding.Default, MachineIDLength);
-            foreach (Guid guid in Item.Droid) writer.Write(guid.ToByteArray());
-            foreach (Guid guid in Item.DroidBirth) writer.Write(guid.ToByteArray());
+            foreach (var guid in Item.Droid) writer.Write(guid.ToByteArray());
+            foreach (var guid in Item.DroidBirth) writer.Write(guid.ToByteArray());
         }
 
     }

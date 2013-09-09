@@ -21,7 +21,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
 using System.IO;
-using Shellify.Tool.Options;
 
 namespace Shellify.Tool.Commands
 {
@@ -36,19 +35,15 @@ namespace Shellify.Tool.Commands
         protected static void CheckExists(string target, string filename)
         {
             if (!File.Exists(target) && !Directory.Exists(target))
-            {
-                Console.WriteLine(string.Format("WARN: {0} doesn't exist", target));
-            }
+                Console.WriteLine("WARN: {0} doesn't exist", target);
             else
-            {
-                Console.WriteLine(string.Format("{0} => {1}", filename, target));
-            }
+                Console.WriteLine("{0} => {1}", filename, target);
         }
 
         public override void Execute()
         {
             Context = ShellLinkFile.CreateAbsolute(Target);
-            foreach (Option option in Options) option.Execute(Context);
+            foreach (var option in Options) option.Execute(Context);
             Context.SaveAs(Filename);
             CheckExists(Target, Filename);
         }

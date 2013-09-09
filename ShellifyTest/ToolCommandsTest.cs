@@ -25,44 +25,26 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shellify.Tool.CommandLine;
 using Shellify.Tool.Commands;
-using Shellify.Tool.Options;
 
 namespace Shellify.Test
 {
     [TestClass]
     public class ToolCommandsTest
     {
-        public ToolCommandsTest()
-        {
-        }
+	    /// <summary>
+	    ///Gets or sets the test context which provides
+	    ///information about and functionality for the current test run.
+	    ///</summary>
+	    public TestContext TestContext { get; set; }
 
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        [TestMethod]
+	    [TestMethod]
         public void TestToolCommands()
         {
-            CreateRelativeCommand crc = new CreateRelativeCommand(string.Empty, string.Empty);
-            CreateAbsoluteCommand cac = new CreateAbsoluteCommand(string.Empty, string.Empty);
-            UpdateCommand uc = new UpdateCommand(string.Empty, string.Empty);
-            DisplayInfosCommand dic = new DisplayInfosCommand(string.Empty, string.Empty);
+            var crc = new CreateRelativeCommand(string.Empty, string.Empty);
+            var cac = new CreateAbsoluteCommand(string.Empty, string.Empty);
+            var uc = new UpdateCommand(string.Empty, string.Empty);
 
-            string tmpFile = Path.GetTempFileName();
+            var tmpFile = Path.GetTempFileName();
 
             crc.Arguments.Add(tmpFile);
             crc.Arguments.Add("ShellifyTool.exe");
@@ -87,7 +69,7 @@ namespace Shellify.Test
             cac.Arguments[1] = ".";
             cac.Execute();
 
-            Option on = Enumerable.ToList(ProgramContext.Options).Where(o => o.Tag == "name").First();
+            var on = ProgramContext.Options.ToList().First(o => o.Tag == "name");
             on.Arguments.Add(string.Empty);
 
             uc.Arguments.Add(tmpFile);

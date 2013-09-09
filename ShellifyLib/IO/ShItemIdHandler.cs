@@ -20,6 +20,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using Shellify.Core;
 
@@ -33,10 +34,10 @@ namespace Shellify.IO
 		
 		public ShItemIdHandler(ShItemID item)
 		{
-			this.Item = item;
+			Item = item;
 		}
 		
-		public void ReadFrom(System.IO.BinaryReader reader)
+		public void ReadFrom(BinaryReader reader)
 		{
 			Size = reader.ReadUInt16();
 			if (Size > Marshal.SizeOf(Size))
@@ -53,7 +54,7 @@ namespace Shellify.IO
 			}
 		}
 		
-		public void WriteTo(System.IO.BinaryWriter writer)
+		public void WriteTo(BinaryWriter writer)
 		{
 			Size = Convert.ToUInt16(ComputedSize);
 			writer.Write(Size);

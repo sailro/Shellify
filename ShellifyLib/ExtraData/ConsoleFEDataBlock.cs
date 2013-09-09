@@ -33,7 +33,7 @@ namespace Shellify.ExtraData
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(base.ToString());
             builder.AppendFormat("CodePage: {0}", CodePage);
             return builder.ToString();

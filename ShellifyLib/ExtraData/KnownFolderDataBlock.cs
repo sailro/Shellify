@@ -20,7 +20,6 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.Text;
-using Shellify.Core;
 using System;
 
 namespace Shellify.ExtraData
@@ -37,7 +36,7 @@ namespace Shellify.ExtraData
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(base.ToString());
             builder.AppendFormat("KnownFolder: {0}", KnownFolder);
             return builder.ToString();

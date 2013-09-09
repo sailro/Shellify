@@ -22,16 +22,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 using System;
 using System.Collections.Generic;
 using Shellify.Tool.Commands;
-using System.Globalization;
-using System.Reflection;
-using Shellify.Core;
 
 namespace Shellify.Tool.Options
 {
     class EnumReflectionSetterOption : ReflectionSetterOption
     {
 
+// ReSharper disable UnusedAutoPropertyAccessor.Local
         Type EnumType { get; set; }
+// ReSharper restore UnusedAutoPropertyAccessor.Local
 
         public EnumReflectionSetterOption(string tag, string description, IList<Command> applies, Type enumType, params string[] propertyPath)
             : base(tag, description, applies, propertyPath)
@@ -42,7 +41,7 @@ namespace Shellify.Tool.Options
 
         public override object ChangeType(object source, Type targetType)
         {
-            return System.Enum.Parse(targetType, source.ToString());
+            return Enum.Parse(targetType, source.ToString());
         }
 
         public override void Execute(ShellLinkFile context)

@@ -37,7 +37,7 @@ namespace Shellify.IO
 		
 		public ShellLinkHeaderHandler(ShellLinkHeader item)
 		{
-			this.Item = item;
+			Item = item;
 		}
 		
 		public void ReadFrom(BinaryReader reader)
@@ -92,7 +92,7 @@ namespace Shellify.IO
 			writer.Write((int) Item.ShowCommand);
 			writer.Write((short) Item.HotKey);
 			
-			byte[] reserved = new byte[ReservedSize];
+			var reserved = new byte[ReservedSize];
 			writer.Write(reserved); // Reserved
 		}
 		

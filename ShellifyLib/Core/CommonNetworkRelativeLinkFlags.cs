@@ -23,7 +23,7 @@ using System;
 
 namespace Shellify.Core
 {
-    [Flags()]
+    [Flags]
     public enum CommonNetworkRelativeLinkFlags : uint
     {
         None = 0,

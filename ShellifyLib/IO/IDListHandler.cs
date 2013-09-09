@@ -20,6 +20,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.IO;
+using System.Linq;
 using Shellify.Core;
 using System.Collections.Generic;
 using System;
@@ -29,59 +30,53 @@ namespace Shellify.IO
 {
     public class IDListHandler : IBinaryReadable, IBinaryWriteable
 	{
-		private IHasIDList Item;
-        private bool UseIDListSize;
+		private readonly IHasIDList _item;
+        private readonly bool _useIDListSize;
 
         public IDListHandler(IHasIDList item, bool useIDListSize)
 		{
-			this.Item = item;
-            UseIDListSize = useIDListSize;
+			_item = item;
+            _useIDListSize = useIDListSize;
 		}
 
         public void ReadFrom(BinaryReader reader)
         {
-            Item.ShItemIDs = new List<ShItemID>();
+            _item.ShItemIDs = new List<ShItemID>();
             short idListSize = 0;
-            if (UseIDListSize)
-            {
+            if (_useIDListSize)
                 idListSize = reader.ReadInt16();
-            }
-            if (!UseIDListSize || idListSize > 0)
-            {
-                do
-                {
-                    ShItemID shitem = new ShItemID();
-                    ShItemIdHandler shitemReader = new ShItemIdHandler(shitem);
-                    shitemReader.ReadFrom(reader);
-                    if (shitem.Data != null)
-                    {
-                        Item.ShItemIDs.Add(shitem);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                } while (true);
-            }
+
+			if (_useIDListSize && idListSize <= 0)
+				return;
+	        
+			do
+	        {
+		        var shitem = new ShItemID();
+		        var shitemReader = new ShItemIdHandler(shitem);
+		        shitemReader.ReadFrom(reader);
+		        if (shitem.Data != null)
+			        _item.ShItemIDs.Add(shitem);
+		        else
+			        break;
+	        } while (true);
         }
 	
-		public void WriteTo(System.IO.BinaryWriter writer)
+		public void WriteTo(BinaryWriter writer)
 		{
             ushort idListSize = 0;
 
             idListSize = Convert.ToUInt16(Marshal.SizeOf(idListSize));
-            List<ShItemIdHandler> writers = new List<ShItemIdHandler>();
-            foreach (ShItemID shitem in Item.ShItemIDs)
+            var writers = new List<ShItemIdHandler>();
+            foreach (var shitemWriter in _item.ShItemIDs.Select(shitem => new ShItemIdHandler(shitem)))
             {
-                ShItemIdHandler shitemWriter = new ShItemIdHandler(shitem);
-                idListSize += Convert.ToUInt16(shitemWriter.ComputedSize);
-                writers.Add(shitemWriter);
+	            idListSize += Convert.ToUInt16(shitemWriter.ComputedSize);
+	            writers.Add(shitemWriter);
             }
-            if (UseIDListSize)
-            {
+
+            if (_useIDListSize)
                 writer.Write(idListSize);
-            }
-            writers.ForEach(handler => handler.WriteTo(writer));
+
+			writers.ForEach(handler => handler.WriteTo(writer));
             writer.Write((short)0);
         }
 	}

@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using Shellify.Tool.Commands;
 using System.Globalization;
 using System.Reflection;
-using Shellify.Core;
 
 namespace Shellify.Tool.Options
 {
@@ -47,20 +46,21 @@ namespace Shellify.Tool.Options
         public override void Execute(ShellLinkFile context)
         {
             PropertyInfo pinfo = null;
-            Type ptype = context.GetType();
+            var ptype = context.GetType();
             object obj = context;
-            foreach (string item in PropertyPath)
+            foreach (var item in PropertyPath)
             {
-                if (pinfo != null)
-                {
-                    obj = pinfo.GetValue(obj, null);
-                }
-                pinfo = ptype.GetProperty(item);
+	            if (pinfo != null)
+		            obj = pinfo.GetValue(obj, null);
+	            
+				pinfo = ptype.GetProperty(item);
                 ptype = pinfo.PropertyType;
             }
 
-            object value = ChangeType(Argument, ptype);
-            pinfo.SetValue(obj, value, null);
+            var value = ChangeType(Argument, ptype);
+
+			if (pinfo != null)
+				pinfo.SetValue(obj, value, null);
         }
 
     }

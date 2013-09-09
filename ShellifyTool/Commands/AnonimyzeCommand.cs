@@ -19,11 +19,9 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-using Shellify.Tool.CommandLine;
-using Shellify.Tool.Options;
+using System.Linq;
 using Shellify.Core;
 using Shellify.ExtraData;
-using System.Collections.Generic;
 
 namespace Shellify.Tool.Commands
 {
@@ -56,17 +54,10 @@ namespace Shellify.Tool.Commands
                 }
             }
 
-            List<ExtraDataBlock> blocks = new List<ExtraDataBlock>(); 
-            foreach (ExtraDataBlock block in Context.ExtraDataBlocks)
-            {
-                if (! (block is TrackerDataBlock || block is PropertyStoreDataBlock))
-                {
-                    blocks.Add(block);                    
-                }
-            }
-            Context.ExtraDataBlocks = blocks;
+            var blocks = Context.ExtraDataBlocks.Where(block => ! (block is TrackerDataBlock || block is PropertyStoreDataBlock)).ToList();
+	        Context.ExtraDataBlocks = blocks;
 
-            foreach (Option option in Options) option.Execute(Context);
+            foreach (var option in Options) option.Execute(Context);
             Context.SaveAs(Filename);
         }
 
