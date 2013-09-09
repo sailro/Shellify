@@ -1,4 +1,4 @@
-﻿/* Shellify Copyright (c) 2010 Sebastien LEBRETON
+﻿/* Shellify Copyright (c) 2010-2013 Sebastien LEBRETON
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("ShellifyLib")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Shellify")]
-[assembly: AssemblyCopyright("Copyright © 2010 Sebastien LEBRETON")]
+[assembly: AssemblyCopyright("Copyright © 2010-2013 Sebastien LEBRETON")]
 [assembly: AssemblyTrademark("")]
 
 [assembly: ComVisible(false)]
