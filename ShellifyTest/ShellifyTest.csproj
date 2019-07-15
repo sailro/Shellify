@@ -62,7 +62,7 @@
       <Name>ShellifyLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShellifyTool\ShellifyTool.csproj">
-      <Project>{D532AE73-8E91-4F89-881A-688D80AE0103}</Project>
+      <Project>{d532ae73-8e91-4f89-881a-688d80ae0103}</Project>
       <Name>ShellifyTool</Name>
     </ProjectReference>
   </ItemGroup>

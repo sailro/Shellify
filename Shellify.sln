@@ -1,22 +1,15 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyLib", "ShellifyLib\ShellifyLib.csproj", "{96BDF0A5-CE59-4F15-A809-4B086B2120AF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyTool", "ShellifyTool\ShellifyTool.csproj", "{D532AE73-8E91-4F89-881A-688D80AE0103}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyTest", "ShellifyTest\ShellifyTest.csproj", "{995CB573-137C-4FD6-8833-29B051763A4F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D9356A07-807B-43CF-AA83-B6EF8613BD73}"
-	ProjectSection(SolutionItems) = preProject
-		Shellify.testsettings = Shellify.testsettings
-		Shellify.vsmdi = Shellify.vsmdi
-	EndProjectSection
-EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Shellify.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -36,16 +29,18 @@ Global
 		{96BDF0A5-CE59-4F15-A809-4B086B2120AF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{96BDF0A5-CE59-4F15-A809-4B086B2120AF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{96BDF0A5-CE59-4F15-A809-4B086B2120AF}.Release|x86.ActiveCfg = Release|Any CPU
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|x86.ActiveCfg = Debug|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|x86.Build.0 = Debug|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Any CPU.ActiveCfg = Release|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Mixed Platforms.Build.0 = Release|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|x86.ActiveCfg = Release|x86
-		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|x86.Build.0 = Release|x86
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Debug|x86.Build.0 = Debug|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|x86.ActiveCfg = Release|Any CPU
+		{D532AE73-8E91-4F89-881A-688D80AE0103}.Release|x86.Build.0 = Release|Any CPU
 		{995CB573-137C-4FD6-8833-29B051763A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{995CB573-137C-4FD6-8833-29B051763A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{995CB573-137C-4FD6-8833-29B051763A4F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -59,5 +54,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4B2BF86-9FAB-4653-8A66-242E19877548}
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Shellify.vsmdi
 	EndGlobalSection
 EndGlobal
