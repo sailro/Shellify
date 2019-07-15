@@ -27,118 +27,118 @@ using Shellify.Extensions;
 
 namespace Shellify.IO
 {
-    public class CommonNetworkRelativeLinkHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
+	public class CommonNetworkRelativeLinkHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
 	{
 		private const int MinimumCommonNetworkRelativeLinkSize = 0x14;
-		
+
 		private CommonNetworkRelativeLink Item { get; set; }
 		private int CommonNetworkRelativeLinkSize { get; set; }
 		private int NetNameOffset { get; set; }
 		private int DeviceNameOffset { get; set; }
 
-        private int? NetNameOffsetUnicode { get; set; } // Optional
+		private int? NetNameOffsetUnicode { get; set; } // Optional
 		private int? DeviceNameOffsetUnicode { get; set; } // Optional
-		
+
 		public CommonNetworkRelativeLinkHandler(CommonNetworkRelativeLink item)
 		{
 			Item = item;
 		}
-		
+
 		public void ReadFrom(BinaryReader reader)
 		{
 			var readerOffset = reader.BaseStream.Position;
-			
-			CommonNetworkRelativeLinkSize = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkSize >= MinimumCommonNetworkRelativeLinkSize);
 
-			Item.CommonNetworkRelativeLinkFlags = (CommonNetworkRelativeLinkFlags) (reader.ReadInt32());
-			
+			CommonNetworkRelativeLinkSize = reader.ReadInt32();
+			FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkSize >= MinimumCommonNetworkRelativeLinkSize);
+
+			Item.CommonNetworkRelativeLinkFlags = (CommonNetworkRelativeLinkFlags)(reader.ReadInt32());
+
 			NetNameOffset = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => NetNameOffset < CommonNetworkRelativeLinkSize);
+			FormatChecker.CheckExpression(() => NetNameOffset < CommonNetworkRelativeLinkSize);
 
 			DeviceNameOffset = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => DeviceNameOffset < CommonNetworkRelativeLinkSize);
+			FormatChecker.CheckExpression(() => DeviceNameOffset < CommonNetworkRelativeLinkSize);
 
-            var nptvalue = reader.ReadInt32();
-            if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
-                Item.NetworkProviderType = (NetworkProviderType)(nptvalue);
-            else
-                Item.NetworkProviderType = null;
+			var nptvalue = reader.ReadInt32();
+			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0)
+				Item.NetworkProviderType = (NetworkProviderType)(nptvalue);
+			else
+				Item.NetworkProviderType = null;
 
-            if (NetNameOffset > MinimumCommonNetworkRelativeLinkSize)
-            {
-                NetNameOffsetUnicode = reader.ReadInt32();
-                FormatChecker.CheckExpression(() => NetNameOffsetUnicode < CommonNetworkRelativeLinkSize);
+			if (NetNameOffset > MinimumCommonNetworkRelativeLinkSize)
+			{
+				NetNameOffsetUnicode = reader.ReadInt32();
+				FormatChecker.CheckExpression(() => NetNameOffsetUnicode < CommonNetworkRelativeLinkSize);
 
-                DeviceNameOffsetUnicode = reader.ReadInt32();
-                FormatChecker.CheckExpression(() => DeviceNameOffsetUnicode < CommonNetworkRelativeLinkSize);
-            }
-            else
-                FormatChecker.CheckExpression(() => NetNameOffset == MinimumCommonNetworkRelativeLinkSize);
+				DeviceNameOffsetUnicode = reader.ReadInt32();
+				FormatChecker.CheckExpression(() => DeviceNameOffsetUnicode < CommonNetworkRelativeLinkSize);
+			}
+			else
+				FormatChecker.CheckExpression(() => NetNameOffset == MinimumCommonNetworkRelativeLinkSize);
 
-            Item.NetName = reader.ReadASCIIZ(readerOffset, NetNameOffset, NetNameOffsetUnicode);
+			Item.NetName = reader.ReadASCIIZ(readerOffset, NetNameOffset, NetNameOffsetUnicode);
 			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0)
-                Item.DeviceName = reader.ReadASCIIZ(readerOffset, DeviceNameOffset, DeviceNameOffsetUnicode);
+				Item.DeviceName = reader.ReadASCIIZ(readerOffset, DeviceNameOffset, DeviceNameOffsetUnicode);
 		}
-		
+
 		public int ComputedSize
 		{
 			get
 			{
 				var result = Marshal.SizeOf(CommonNetworkRelativeLinkSize) +
-				Marshal.SizeOf(typeof(int))*2 +
-				Marshal.SizeOf(NetNameOffset) +
-				Marshal.SizeOf(DeviceNameOffset) +
-                Encoding.Default.GetASCIIZSize(Item.NetName);
-				
-                // TODO: Handle unicode strings and offsets
-                // NetNameOffsetUnicode = 
-                // DeviceNameOffsetUnicode = 
-                // NetNameOffset > &H14
-				
+				             Marshal.SizeOf(typeof(int)) * 2 +
+				             Marshal.SizeOf(NetNameOffset) +
+				             Marshal.SizeOf(DeviceNameOffset) +
+				             Encoding.Default.GetASCIIZSize(Item.NetName);
+
+				// TODO: Handle unicode strings and offsets
+				// NetNameOffsetUnicode = 
+				// DeviceNameOffsetUnicode = 
+				// NetNameOffset > &H14
+
 				if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0)
 				{
-                    result += Encoding.Default.GetASCIIZSize(Item.DeviceName);
+					result += Encoding.Default.GetASCIIZSize(Item.DeviceName);
 				}
-				
+
 				return result;
 			}
 		}
-		
+
 		public void WriteTo(BinaryWriter writer)
 		{
 			CommonNetworkRelativeLinkSize = ComputedSize;
-            FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkSize >= MinimumCommonNetworkRelativeLinkSize);
+			FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkSize >= MinimumCommonNetworkRelativeLinkSize);
 
-            writer.Write(CommonNetworkRelativeLinkSize);
-			writer.Write((int) Item.CommonNetworkRelativeLinkFlags);
-			
+			writer.Write(CommonNetworkRelativeLinkSize);
+			writer.Write((int)Item.CommonNetworkRelativeLinkFlags);
+
 			NetNameOffset = Marshal.SizeOf(ComputedSize) +
-			Marshal.SizeOf(CommonNetworkRelativeLinkSize) +
-			Marshal.SizeOf(typeof(int)) +
-			Marshal.SizeOf(NetNameOffset) +
-			Marshal.SizeOf(DeviceNameOffset);
+			                Marshal.SizeOf(CommonNetworkRelativeLinkSize) +
+			                Marshal.SizeOf(typeof(int)) +
+			                Marshal.SizeOf(NetNameOffset) +
+			                Marshal.SizeOf(DeviceNameOffset);
 			writer.Write(NetNameOffset);
 
 			DeviceNameOffset = (Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidDevice) != 0
-				                   ? NetNameOffset + Encoding.Default.GetASCIIZSize(Item.NetName)
-				                   : 0;
+				? NetNameOffset + Encoding.Default.GetASCIIZSize(Item.NetName)
+				: 0;
 			writer.Write(DeviceNameOffset);
 
-            var nptvalue = 0;
+			var nptvalue = 0;
 			if ((Item.CommonNetworkRelativeLinkFlags & CommonNetworkRelativeLinkFlags.ValidNetType) != 0 &&
 			    Item.NetworkProviderType != null)
-				nptvalue = (int) Item.NetworkProviderType;
+				nptvalue = (int)Item.NetworkProviderType;
 			writer.Write(nptvalue);
 
-            // TODO: Handle unicode strings and offsets
-            // NetNameOffsetUnicode = 
-            // DeviceNameOffsetUnicode = 
-            // NetNameOffset > &H14
+			// TODO: Handle unicode strings and offsets
+			// NetNameOffsetUnicode = 
+			// DeviceNameOffsetUnicode = 
+			// NetNameOffset > &H14
 
-            writer.WriteASCIIZ(Item.NetName, Encoding.Default);
+			writer.WriteASCIIZ(Item.NetName, Encoding.Default);
 			if (DeviceNameOffset > 0)
-                writer.WriteASCIIZ(Item.DeviceName, Encoding.Default);
+				writer.WriteASCIIZ(Item.DeviceName, Encoding.Default);
 		}
 	}
 }

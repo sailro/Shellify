@@ -25,28 +25,27 @@ using System;
 
 namespace Shellify.IO
 {
-    public class SpecialFolderDataBlockHandler : BaseFolderIDDataBlockHandler<SpecialFolderDataBlock>
-    {
-	    private const int ExactBlockSize = 0x10;
+	public class SpecialFolderDataBlockHandler : BaseFolderIDDataBlockHandler<SpecialFolderDataBlock>
+	{
+		private const int ExactBlockSize = 0x10;
 
-        public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(typeof(int));
+		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(typeof(int));
 
-        public SpecialFolderDataBlockHandler(SpecialFolderDataBlock item, ShellLinkFile context)
-            : base(item, context)
-        {
-        }
+		public SpecialFolderDataBlockHandler(SpecialFolderDataBlock item, ShellLinkFile context)
+			: base(item, context)
+		{
+		}
 
-        protected override void ReadID(System.IO.BinaryReader reader)
-        {
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
-            Item.SpecialFolder = (Environment.SpecialFolder)reader.ReadInt32();
-        }
+		protected override void ReadID(System.IO.BinaryReader reader)
+		{
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			Item.SpecialFolder = (Environment.SpecialFolder)reader.ReadInt32();
+		}
 
-        protected override void WriteID(System.IO.BinaryWriter writer)
-        {
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize );
-            writer.Write((int)Item.SpecialFolder);
-        }
-
-    }
+		protected override void WriteID(System.IO.BinaryWriter writer)
+		{
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			writer.Write((int)Item.SpecialFolder);
+		}
+	}
 }

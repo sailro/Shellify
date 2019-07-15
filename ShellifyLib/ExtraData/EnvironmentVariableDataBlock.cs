@@ -23,11 +23,9 @@ namespace Shellify.ExtraData
 {
 	public class EnvironmentVariableDataBlock : BaseStringDataBlock
 	{
-		
 		public EnvironmentVariableDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.EnvironmentVariableDataBlock;
 		}
-		
 	}
 }

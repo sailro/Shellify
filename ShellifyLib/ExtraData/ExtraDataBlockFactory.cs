@@ -25,12 +25,11 @@ namespace Shellify.ExtraData
 {
 	public class ExtraDataBlockFactory
 	{
-		
 		public static ExtraDataBlock GetInstance(ExtraDataBlockSignature signature)
 		{
-            var typename = $"Shellify.ExtraData.{signature}";
-            var type = Type.GetType(typename);
-            return type == null ? new UnknownDataBlock() : (ExtraDataBlock)Activator.CreateInstance(type);
-		}		
+			var typename = $"Shellify.ExtraData.{signature}";
+			var type = Type.GetType(typename);
+			return type == null ? new UnknownDataBlock() : (ExtraDataBlock)Activator.CreateInstance(type);
+		}
 	}
 }

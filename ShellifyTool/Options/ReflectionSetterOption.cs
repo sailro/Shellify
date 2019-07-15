@@ -28,39 +28,38 @@ using System.Reflection;
 namespace Shellify.Tool.Options
 {
 	internal class ReflectionSetterOption : Option
-    {
-	    protected string[] PropertyPath { get; set; }
+	{
+		protected string[] PropertyPath { get; set; }
 
-        public ReflectionSetterOption(string tag, string description, IList<Command> applies, params string[] propertyPath)
-            : base(tag, description, 1, applies)
-        {
-            PropertyPath = propertyPath;
-        }
+		public ReflectionSetterOption(string tag, string description, IList<Command> applies, params string[] propertyPath)
+			: base(tag, description, 1, applies)
+		{
+			PropertyPath = propertyPath;
+		}
 
-        protected virtual object ChangeType(object source, Type targetType)
-        {
-            return Convert.ChangeType(source, targetType, CultureInfo.InvariantCulture);
-        }
+		protected virtual object ChangeType(object source, Type targetType)
+		{
+			return Convert.ChangeType(source, targetType, CultureInfo.InvariantCulture);
+		}
 
-        public override void Execute(ShellLinkFile context)
-        {
-            PropertyInfo pinfo = null;
-            var ptype = context.GetType();
-            object obj = context;
-            foreach (var item in PropertyPath)
-            {
-	            if (pinfo != null)
-		            obj = pinfo.GetValue(obj, null);
-	            
+		public override void Execute(ShellLinkFile context)
+		{
+			PropertyInfo pinfo = null;
+			var ptype = context.GetType();
+			object obj = context;
+			foreach (var item in PropertyPath)
+			{
+				if (pinfo != null)
+					obj = pinfo.GetValue(obj, null);
+
 				pinfo = ptype.GetProperty(item);
-				if (pinfo != null) 
+				if (pinfo != null)
 					ptype = pinfo.PropertyType;
-            }
+			}
 
-            var value = ChangeType(Argument, ptype);
+			var value = ChangeType(Argument, ptype);
 
-            pinfo?.SetValue(obj, value, null);
-        }
-
-    }
+			pinfo?.SetValue(obj, value, null);
+		}
+	}
 }

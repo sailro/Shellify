@@ -25,11 +25,9 @@ namespace Shellify.IO
 {
 	public class ShimDataBlockHandler : BaseRawDataBlockHandler<ShimDataBlock>
 	{
-
-        public ShimDataBlockHandler(ShimDataBlock item, ShellLinkFile context)
-            : base(item, context)
+		public ShimDataBlockHandler(ShimDataBlock item, ShellLinkFile context)
+			: base(item, context)
 		{
 		}
-		
 	}
 }

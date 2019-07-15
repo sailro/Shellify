@@ -26,34 +26,35 @@ using Shellify.IO;
 
 namespace Shellify.Test
 {
-    [TestClass]
-    public class LibHandlerTest
-    {
-	    public TestContext TestContext { get; set; }
+	[TestClass]
+	public class LibHandlerTest
+	{
+		public TestContext TestContext { get; set; }
 
-	    [TestMethod]
-        public void TestHandler()
-        {
-            foreach (ExtraDataBlockSignature signature in Enum.GetValues(typeof(ExtraDataBlockSignature)))
-            {
-                ExtraDataBlock block = null;
-                try
-                {
-                    block = ExtraDataBlockFactory.GetInstance(signature);
-                }
-                catch (Exception)
-                {
-                    Assert.Fail("Check ExtraDataBlockFactory with '{0}' signature", signature);
-                }
-                try
-                {
-                    ExtraDataBlockHandlerFactory.GetInstance(block, null);
-                }
-                catch (Exception)
-                {
-                    Assert.Fail("Check ExtraDataBlockHandlerFactory with '{0}' block type", block.GetType().Name);
-                }
-            }
-        }
-    }
+		[TestMethod]
+		public void TestHandler()
+		{
+			foreach (ExtraDataBlockSignature signature in Enum.GetValues(typeof(ExtraDataBlockSignature)))
+			{
+				ExtraDataBlock block = null;
+				try
+				{
+					block = ExtraDataBlockFactory.GetInstance(signature);
+				}
+				catch (Exception)
+				{
+					Assert.Fail("Check ExtraDataBlockFactory with '{0}' signature", signature);
+				}
+
+				try
+				{
+					ExtraDataBlockHandlerFactory.GetInstance(block, null);
+				}
+				catch (Exception)
+				{
+					Assert.Fail("Check ExtraDataBlockHandlerFactory with '{0}' block type", block.GetType().Name);
+				}
+			}
+		}
+	}
 }

@@ -25,11 +25,9 @@ namespace Shellify.IO
 {
 	public class DarwinDataBlockHandler : BaseStringDataBlockHandler<DarwinDataBlock>
 	{
-
-        public DarwinDataBlockHandler(DarwinDataBlock item, ShellLinkFile context)
-            : base(item, context)
+		public DarwinDataBlockHandler(DarwinDataBlock item, ShellLinkFile context)
+			: base(item, context)
 		{
 		}
-	
 	}
 }

@@ -28,15 +28,14 @@ namespace Shellify.IO
 {
 	public class ShItemIdHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
 	{
-		
 		private ShItemID Item { get; set; }
 		private ushort Size { get; set; }
-		
+
 		public ShItemIdHandler(ShItemID item)
 		{
 			Item = item;
 		}
-		
+
 		public void ReadFrom(BinaryReader reader)
 		{
 			Size = reader.ReadUInt16();
@@ -45,7 +44,7 @@ namespace Shellify.IO
 				Item.Data = reader.ReadBytes(Size - Marshal.SizeOf(Size));
 			}
 		}
-		
+
 		public int ComputedSize => (Item.Data?.Length ?? 0) + Marshal.SizeOf(Size);
 
 		public void WriteTo(BinaryWriter writer)

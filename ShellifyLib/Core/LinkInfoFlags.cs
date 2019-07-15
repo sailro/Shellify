@@ -23,11 +23,11 @@ using System;
 
 namespace Shellify.Core
 {
-    [Flags]
-    public enum LinkInfoFlags : uint
-    {
-        None = 0,
-        VolumeIDAndLocalBasePath = 1,
-        CommonNetworkRelativeLinkAndPathSuffix = 2,
-    }
+	[Flags]
+	public enum LinkInfoFlags : uint
+	{
+		None = 0,
+		VolumeIDAndLocalBasePath = 1,
+		CommonNetworkRelativeLinkAndPathSuffix = 2,
+	}
 }

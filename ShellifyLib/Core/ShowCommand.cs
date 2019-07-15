@@ -21,11 +21,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 namespace Shellify.Core
 {
-    public enum ShowCommand : uint
-    {
-        Normal = 1,
-        MinimizedNoActive = 7,
-        Maximized = 3,
-    }
-
+	public enum ShowCommand : uint
+	{
+		Normal = 1,
+		MinimizedNoActive = 7,
+		Maximized = 3,
+	}
 }

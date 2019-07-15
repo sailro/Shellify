@@ -25,46 +25,47 @@ using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
-    public class VistaAndAboveIDListDataBlockHandler : ExtraDataBlockHandler<VistaAndAboveIDListDataBlock>
+	public class VistaAndAboveIDListDataBlockHandler : ExtraDataBlockHandler<VistaAndAboveIDListDataBlock>
 	{
 		private const int MinimumBlockSize = 0xA;
 
-        public VistaAndAboveIDListDataBlockHandler(VistaAndAboveIDListDataBlock item, ShellLinkFile context)
-            : base(item, context)
-        {
-        }
+		public VistaAndAboveIDListDataBlockHandler(VistaAndAboveIDListDataBlock item, ShellLinkFile context)
+			: base(item, context)
+		{
+		}
 
-        public override int ComputedSize
-        {
-            get
-            {
-                var result = base.ComputedSize + Marshal.SizeOf(typeof(short));
-                foreach (var item in Item.ShItemIDs)
-                {
-                    result += Marshal.SizeOf(typeof(short));
-                    result += item.Data?.Length ?? 0;
-                }
-                return result;
-            }
-        }
+		public override int ComputedSize
+		{
+			get
+			{
+				var result = base.ComputedSize + Marshal.SizeOf(typeof(short));
+				foreach (var item in Item.ShItemIDs)
+				{
+					result += Marshal.SizeOf(typeof(short));
+					result += item.Data?.Length ?? 0;
+				}
 
-        public override void ReadFrom(BinaryReader reader)
-        {
-            base.ReadFrom(reader);
+				return result;
+			}
+		}
 
-            FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
+		public override void ReadFrom(BinaryReader reader)
+		{
+			base.ReadFrom(reader);
 
-            var handler = new IDListHandler(Item, false);
-            handler.ReadFrom(reader);
-        }
+			FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
 
-        public override void WriteTo(BinaryWriter writer)
-        {
-            base.WriteTo(writer);
+			var handler = new IDListHandler(Item, false);
+			handler.ReadFrom(reader);
+		}
 
-            FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
-            var handler = new IDListHandler(Item, false);
-            handler.WriteTo(writer);
-        }
-    }
+		public override void WriteTo(BinaryWriter writer)
+		{
+			base.WriteTo(writer);
+
+			FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
+			var handler = new IDListHandler(Item, false);
+			handler.WriteTo(writer);
+		}
+	}
 }

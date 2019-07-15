@@ -23,19 +23,18 @@ using System;
 
 namespace Shellify.Tool.Commands
 {
-    public class DisplayInfosCommand : Command
-    {
-        public DisplayInfosCommand(string tag, string description)
-            : base(tag, description, 1)
-        {
-        }
+	public class DisplayInfosCommand : Command
+	{
+		public DisplayInfosCommand(string tag, string description)
+			: base(tag, description, 1)
+		{
+		}
 
-        public override void Execute()
-        {
-            Context = ShellLinkFile.Load(Filename);
-            foreach (var option in Options) option.Execute(Context);
-            Console.WriteLine(Context);
-        }
-
-    }
+		public override void Execute()
+		{
+			Context = ShellLinkFile.Load(Filename);
+			foreach (var option in Options) option.Execute(Context);
+			Console.WriteLine(Context);
+		}
+	}
 }

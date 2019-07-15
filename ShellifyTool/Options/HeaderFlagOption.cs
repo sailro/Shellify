@@ -27,22 +27,21 @@ using Shellify.Core;
 namespace Shellify.Tool.Options
 {
 	internal class HeaderFlagOption : Option
-    {
-	    private LinkFlags Flag { get; }
+	{
+		private LinkFlags Flag { get; }
 
-        public HeaderFlagOption(string tag, string description, IList<Command> applies, LinkFlags flag)
-            : base(tag, description, 1, applies)
-        {
-            Flag = flag;
-        }
+		public HeaderFlagOption(string tag, string description, IList<Command> applies, LinkFlags flag)
+			: base(tag, description, 1, applies)
+		{
+			Flag = flag;
+		}
 
-        public override void Execute(ShellLinkFile context)
-        {
-            if (Convert.ToBoolean(Argument))
-                context.Header.LinkFlags |= Flag;
-            else
-                context.Header.LinkFlags &= ~Flag;
-        }
-
-    }
+		public override void Execute(ShellLinkFile context)
+		{
+			if (Convert.ToBoolean(Argument))
+				context.Header.LinkFlags |= Flag;
+			else
+				context.Header.LinkFlags &= ~Flag;
+		}
+	}
 }

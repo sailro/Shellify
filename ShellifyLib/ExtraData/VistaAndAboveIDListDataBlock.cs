@@ -27,29 +27,28 @@ namespace Shellify.ExtraData
 {
 	public class VistaAndAboveIDListDataBlock : ExtraDataBlock, IHasIDList
 	{
+		public IList<ShItemID> ShItemIDs { get; set; }
 
-        public IList<ShItemID> ShItemIDs { get; set; }
-		
 		public VistaAndAboveIDListDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.VistaAndAboveIDListDataBlock;
-            ShItemIDs = new List<ShItemID>();
-        }
+			ShItemIDs = new List<ShItemID>();
+		}
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.Append(base.ToString());
-            if (ShItemIDs != null)
-            {
-                foreach (var shitem in ShItemIDs)
-                {
-                    builder.AppendLine();
-                    builder.Append(shitem);
-                }
-            }
-            return builder.ToString();
-        }
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.Append(base.ToString());
+			if (ShItemIDs != null)
+			{
+				foreach (var shitem in ShItemIDs)
+				{
+					builder.AppendLine();
+					builder.Append(shitem);
+				}
+			}
 
-    }
+			return builder.ToString();
+		}
+	}
 }

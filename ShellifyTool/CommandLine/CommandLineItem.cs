@@ -23,26 +23,24 @@ using System.Collections.Generic;
 
 namespace Shellify.Tool.CommandLine
 {
-    public class CommandLineItem
-    {
+	public class CommandLineItem
+	{
+		public string Description { get; }
+		public string Tag { get; }
+		public int ExpectedArguments { get; }
+		public IList<string> Arguments { get; }
 
-        public string Description { get; }
-        public string Tag { get; }
-        public int ExpectedArguments { get; }
-        public IList<string> Arguments { get; }
+		protected CommandLineItem(string tag, string description, int expectedArguments)
+		{
+			Arguments = new List<string>();
+			Tag = tag;
+			Description = description;
+			ExpectedArguments = expectedArguments;
+		}
 
-        protected CommandLineItem(string tag, string description, int expectedArguments)
-        {
-            Arguments = new List<string>();
-            Tag = tag;
-            Description = description;
-            ExpectedArguments = expectedArguments;
-        }
-
-        public override string ToString()
-        {
-            return Tag;
-        }
-
-    }
+		public override string ToString()
+		{
+			return Tag;
+		}
+	}
 }

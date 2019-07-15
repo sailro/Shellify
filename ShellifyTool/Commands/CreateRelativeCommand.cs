@@ -24,27 +24,25 @@ using System.IO;
 
 namespace Shellify.Tool.Commands
 {
-    public class CreateRelativeCommand : CreateAbsoluteCommand
-    {
+	public class CreateRelativeCommand : CreateAbsoluteCommand
+	{
+		public CreateRelativeCommand(string tag, string description)
+			: base(tag, description)
+		{
+		}
 
-        public CreateRelativeCommand(string tag, string description)
-            : base(tag, description)
-        {
-        }
-
-        public override void Execute()
-        {
-            var baseDirectory = Path.GetDirectoryName(Filename);
-            if (string.IsNullOrEmpty(baseDirectory))
-                baseDirectory = ".";
+		public override void Execute()
+		{
+			var baseDirectory = Path.GetDirectoryName(Filename);
+			if (string.IsNullOrEmpty(baseDirectory))
+				baseDirectory = ".";
 
 			Console.WriteLine("Using {0} as base directory", baseDirectory);
 
-            Context = ShellLinkFile.CreateRelative(baseDirectory, Target);
-            foreach (var option in Options) option.Execute(Context);
-            Context.SaveAs(Filename);
-            CheckExists(Path.Combine(baseDirectory, Target), Filename);
-        }
-
-    }
+			Context = ShellLinkFile.CreateRelative(baseDirectory, Target);
+			foreach (var option in Options) option.Execute(Context);
+			Context.SaveAs(Filename);
+			CheckExists(Path.Combine(baseDirectory, Target), Filename);
+		}
+	}
 }

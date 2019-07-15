@@ -23,11 +23,9 @@ namespace Shellify.ExtraData
 {
 	public class UnknownDataBlock : BaseRawDataBlock
 	{
-		
 		public UnknownDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.UnknownDataBlock;
 		}
-	
 	}
 }

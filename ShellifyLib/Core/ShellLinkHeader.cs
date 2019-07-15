@@ -28,8 +28,8 @@ namespace Shellify.Core
 {
 	public class ShellLinkHeader
 	{
-        public const string LNKGuid = "00021401-0000-0000-c000-000000000046";
-		
+		public const string LNKGuid = "00021401-0000-0000-c000-000000000046";
+
 		public Guid Guid { get; set; }
 		public LinkFlags LinkFlags { get; set; }
 		public FileAttributes FileAttributes { get; set; }
@@ -41,30 +41,38 @@ namespace Shellify.Core
 		public ShowCommand ShowCommand { get; set; }
 		public Keys HotKey { get; set; }
 
-        public ShellLinkHeader()
-        {
-            Guid = new Guid(LNKGuid);
-            CreationTime = DateTime.Now;
-            AccessTime = DateTime.Now;
-            WriteTime = DateTime.Now;
-        }
+		public ShellLinkHeader()
+		{
+			Guid = new Guid(LNKGuid);
+			CreationTime = DateTime.Now;
+			AccessTime = DateTime.Now;
+			WriteTime = DateTime.Now;
+		}
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(">> Header");
-            builder.AppendFormat("Guid: {0}", Guid); builder.AppendLine();
-            builder.AppendFormat("LinkFlags: {0}", LinkFlags); builder.AppendLine();
-            builder.AppendFormat("FileAttributes: {0}", FileAttributes); builder.AppendLine();
-            builder.AppendFormat("CreationTime: {0}", CreationTime); builder.AppendLine();
-            builder.AppendFormat("AccessTime: {0}", AccessTime); builder.AppendLine();
-            builder.AppendFormat("WriteTime: {0}", WriteTime); builder.AppendLine();
-            builder.AppendFormat("FileSize: {0}", FileSize); builder.AppendLine();
-            builder.AppendFormat("IconIndex: {0}", IconIndex); builder.AppendLine();
-            builder.AppendFormat("ShowCommand: {0}", ShowCommand); builder.AppendLine();
-            builder.AppendFormat("HotKey: {0}", HotKey);
-            return builder.ToString();
-        }
-		
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(">> Header");
+			builder.AppendFormat("Guid: {0}", Guid);
+			builder.AppendLine();
+			builder.AppendFormat("LinkFlags: {0}", LinkFlags);
+			builder.AppendLine();
+			builder.AppendFormat("FileAttributes: {0}", FileAttributes);
+			builder.AppendLine();
+			builder.AppendFormat("CreationTime: {0}", CreationTime);
+			builder.AppendLine();
+			builder.AppendFormat("AccessTime: {0}", AccessTime);
+			builder.AppendLine();
+			builder.AppendFormat("WriteTime: {0}", WriteTime);
+			builder.AppendLine();
+			builder.AppendFormat("FileSize: {0}", FileSize);
+			builder.AppendLine();
+			builder.AppendFormat("IconIndex: {0}", IconIndex);
+			builder.AppendLine();
+			builder.AppendFormat("ShowCommand: {0}", ShowCommand);
+			builder.AppendLine();
+			builder.AppendFormat("HotKey: {0}", HotKey);
+			return builder.ToString();
+		}
 	}
 }

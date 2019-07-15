@@ -25,8 +25,6 @@ namespace Shellify.IO
 {
 	public interface IBinaryReadable
 	{
-		
 		void ReadFrom(BinaryReader reader);
-		
 	}
 }

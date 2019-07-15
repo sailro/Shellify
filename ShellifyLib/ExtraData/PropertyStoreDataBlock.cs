@@ -21,14 +21,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 namespace Shellify.ExtraData
 {
-	public class PropertyStoreDataBlock : BaseRawDataBlock 
+	public class PropertyStoreDataBlock : BaseRawDataBlock
 	{
-				
 		public PropertyStoreDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.PropertyStoreDataBlock;
 		}
-		
 	}
-	
 }

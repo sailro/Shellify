@@ -28,110 +28,109 @@ using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
-    public class ConsoleDataBlockHandler : ExtraDataBlockHandler<ConsoleDataBlock>
-    {
-	    private const int UnusedLength = 8;
-	    private const int FaceNameLength = 64;
-	    private const int ColorTableLength = 64;
-	    private const int ExactBlockSize = 0xCC;
+	public class ConsoleDataBlockHandler : ExtraDataBlockHandler<ConsoleDataBlock>
+	{
+		private const int UnusedLength = 8;
+		private const int FaceNameLength = 64;
+		private const int ColorTableLength = 64;
+		private const int ExactBlockSize = 0xCC;
 
-        public ConsoleDataBlockHandler(ConsoleDataBlock item, ShellLinkFile context)
-            : base(item, context)
-        {
-        }
+		public ConsoleDataBlockHandler(ConsoleDataBlock item, ShellLinkFile context)
+			: base(item, context)
+		{
+		}
 
-        public override int ComputedSize =>
-	        base.ComputedSize
-	        + Marshal.SizeOf(typeof(short)) * 8
-	        + UnusedLength 
-	        + Marshal.SizeOf(typeof(int))*6
-	        + Marshal.SizeOf(Item.FontWeight)
-	        + Marshal.SizeOf(Item.FontSize)
-	        + FaceNameLength
-	        + Marshal.SizeOf(Item.CursorSize)
-	        + Marshal.SizeOf(Item.HistoryBufferSize)
-	        + Marshal.SizeOf(Item.NumberOfHistoryBuffers)
-	        + ColorTableLength;
+		public override int ComputedSize =>
+			base.ComputedSize
+			+ Marshal.SizeOf(typeof(short)) * 8
+			+ UnusedLength
+			+ Marshal.SizeOf(typeof(int)) * 6
+			+ Marshal.SizeOf(Item.FontWeight)
+			+ Marshal.SizeOf(Item.FontSize)
+			+ FaceNameLength
+			+ Marshal.SizeOf(Item.CursorSize)
+			+ Marshal.SizeOf(Item.HistoryBufferSize)
+			+ Marshal.SizeOf(Item.NumberOfHistoryBuffers)
+			+ ColorTableLength;
 
-        public override void ReadFrom(System.IO.BinaryReader reader)
-        {
-            base.ReadFrom(reader);
+		public override void ReadFrom(System.IO.BinaryReader reader)
+		{
+			base.ReadFrom(reader);
 
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
 
-            Item.FillAttributes = (FillAttributes)reader.ReadUInt16();
-            Item.PopupFillAttributes = (FillAttributes)reader.ReadUInt16();
+			Item.FillAttributes = (FillAttributes)reader.ReadUInt16();
+			Item.PopupFillAttributes = (FillAttributes)reader.ReadUInt16();
 
-            Item.ScreenBufferSize = new Size(reader.ReadInt16(), reader.ReadInt16());
-            Item.WindowSize = new Size(reader.ReadInt16(), reader.ReadInt16());
-            Item.WindowOrigin = new Point(reader.ReadInt16(), reader.ReadInt16());
+			Item.ScreenBufferSize = new Size(reader.ReadInt16(), reader.ReadInt16());
+			Item.WindowSize = new Size(reader.ReadInt16(), reader.ReadInt16());
+			Item.WindowOrigin = new Point(reader.ReadInt16(), reader.ReadInt16());
 
-            reader.ReadBytes(UnusedLength);
+			reader.ReadBytes(UnusedLength);
 
-            //Item.FontSize = reader.ReadInt32();
-            reader.ReadInt16();
-            Item.FontSize = reader.ReadInt16();
+			//Item.FontSize = reader.ReadInt32();
+			reader.ReadInt16();
+			Item.FontSize = reader.ReadInt16();
 
-            Item.FontFamily = (ExtraData.FontFamily)reader.ReadUInt32();
-            Item.FontWeight = reader.ReadUInt32();
+			Item.FontFamily = (ExtraData.FontFamily)reader.ReadUInt32();
+			Item.FontWeight = reader.ReadUInt32();
 
-            // Keep unknown data padding to preserve valid file roundtrip
-            Item.FaceName = reader.ReadASCIIZF(Encoding.Unicode, FaceNameLength, out var padding);
-            Item.FaceNamePadding = padding;
+			// Keep unknown data padding to preserve valid file roundtrip
+			Item.FaceName = reader.ReadASCIIZF(Encoding.Unicode, FaceNameLength, out var padding);
+			Item.FaceNamePadding = padding;
 
-            Item.CursorSize = reader.ReadUInt32();
-            Item.FullScreen = reader.ReadUInt32() > 0;
-            Item.FastEdit = reader.ReadUInt32() > 0;
-            Item.InsertMode = reader.ReadUInt32() > 0;
-            Item.AutoPosition = reader.ReadUInt32() > 0;
+			Item.CursorSize = reader.ReadUInt32();
+			Item.FullScreen = reader.ReadUInt32() > 0;
+			Item.FastEdit = reader.ReadUInt32() > 0;
+			Item.InsertMode = reader.ReadUInt32() > 0;
+			Item.AutoPosition = reader.ReadUInt32() > 0;
 
-            Item.HistoryBufferSize = reader.ReadUInt32();
-            Item.NumberOfHistoryBuffers = reader.ReadUInt32();
-            Item.HistoryDuplicateAllowed = reader.ReadUInt32() > 0;
-            Item.ColorTable = reader.ReadBytes(ColorTableLength);
-        }
+			Item.HistoryBufferSize = reader.ReadUInt32();
+			Item.NumberOfHistoryBuffers = reader.ReadUInt32();
+			Item.HistoryDuplicateAllowed = reader.ReadUInt32() > 0;
+			Item.ColorTable = reader.ReadBytes(ColorTableLength);
+		}
 
-        public override void WriteTo(System.IO.BinaryWriter writer)
-        {
-            base.WriteTo(writer);
+		public override void WriteTo(System.IO.BinaryWriter writer)
+		{
+			base.WriteTo(writer);
 
-            FormatChecker.CheckExpression(() => Item.FaceName == null || Item.FaceName.Length < FaceNameLength);
-            FormatChecker.CheckExpression(() => Item.ColorTable != null && Item.ColorTable.Length == ColorTableLength);
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			FormatChecker.CheckExpression(() => Item.FaceName == null || Item.FaceName.Length < FaceNameLength);
+			FormatChecker.CheckExpression(() => Item.ColorTable != null && Item.ColorTable.Length == ColorTableLength);
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
 
-            writer.Write((ushort)Item.FillAttributes);
-            writer.Write((ushort)Item.PopupFillAttributes);
+			writer.Write((ushort)Item.FillAttributes);
+			writer.Write((ushort)Item.PopupFillAttributes);
 
-            writer.Write((short)Item.ScreenBufferSize.Width);
-            writer.Write((short)Item.ScreenBufferSize.Height);
-            writer.Write((short)Item.WindowSize.Width);
-            writer.Write((short)Item.WindowSize.Height);
-            writer.Write((short)Item.WindowOrigin.X);
-            writer.Write((short)Item.WindowOrigin.Y);
+			writer.Write((short)Item.ScreenBufferSize.Width);
+			writer.Write((short)Item.ScreenBufferSize.Height);
+			writer.Write((short)Item.WindowSize.Width);
+			writer.Write((short)Item.WindowSize.Height);
+			writer.Write((short)Item.WindowOrigin.X);
+			writer.Write((short)Item.WindowOrigin.Y);
 
-            writer.Write(new byte[UnusedLength]);
+			writer.Write(new byte[UnusedLength]);
 
-            //writer.Write(Item.FontSize);
-            writer.Write((short)0);
-            writer.Write((short)Item.FontSize);
+			//writer.Write(Item.FontSize);
+			writer.Write((short)0);
+			writer.Write((short)Item.FontSize);
 
-            writer.Write((uint)Item.FontFamily);
-            writer.Write(Item.FontWeight);
+			writer.Write((uint)Item.FontFamily);
+			writer.Write(Item.FontWeight);
 
-            writer.WriteASCIIZF(Item.FaceName, Encoding.Unicode, FaceNameLength, Item.FaceNamePadding);
+			writer.WriteASCIIZF(Item.FaceName, Encoding.Unicode, FaceNameLength, Item.FaceNamePadding);
 
-            writer.Write(Item.CursorSize);
-            writer.Write(Convert.ToInt32(Item.FullScreen));
-            writer.Write(Convert.ToInt32(Item.FastEdit));
-            writer.Write(Convert.ToInt32(Item.InsertMode));
-            writer.Write(Convert.ToInt32(Item.AutoPosition));
+			writer.Write(Item.CursorSize);
+			writer.Write(Convert.ToInt32(Item.FullScreen));
+			writer.Write(Convert.ToInt32(Item.FastEdit));
+			writer.Write(Convert.ToInt32(Item.InsertMode));
+			writer.Write(Convert.ToInt32(Item.AutoPosition));
 
-            writer.Write(Item.HistoryBufferSize);
-            writer.Write(Item.NumberOfHistoryBuffers);
-            writer.Write(Convert.ToInt32(Item.HistoryDuplicateAllowed));
+			writer.Write(Item.HistoryBufferSize);
+			writer.Write(Item.NumberOfHistoryBuffers);
+			writer.Write(Convert.ToInt32(Item.HistoryDuplicateAllowed));
 
-            writer.Write(Item.ColorTable);
-        }
-
-    }
+			writer.Write(Item.ColorTable);
+		}
+	}
 }

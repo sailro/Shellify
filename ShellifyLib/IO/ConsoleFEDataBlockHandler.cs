@@ -28,26 +28,25 @@ namespace Shellify.IO
 	{
 		private const int ExactBlockSize = 0xC;
 
-        public ConsoleFEDataBlockHandler(ConsoleFEDataBlock item, ShellLinkFile context)
-            : base(item, context)
+		public ConsoleFEDataBlockHandler(ConsoleFEDataBlock item, ShellLinkFile context)
+			: base(item, context)
 		{
 		}
-		
+
 		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Item.CodePage);
 
 		public override void ReadFrom(System.IO.BinaryReader reader)
 		{
 			base.ReadFrom(reader);
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
-            Item.CodePage = reader.ReadUInt32();
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			Item.CodePage = reader.ReadUInt32();
 		}
-		
+
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
 			base.WriteTo(writer);
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
-            writer.Write(Item.CodePage);
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			writer.Write(Item.CodePage);
 		}
-		
 	}
 }

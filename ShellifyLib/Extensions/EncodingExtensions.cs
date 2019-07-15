@@ -23,15 +23,14 @@ using System.Text;
 
 namespace Shellify.Extensions
 {
-    public static class EncodingExtensions
-    {
+	public static class EncodingExtensions
+	{
+		public static int GetASCIIZSize(this Encoding encoding, string value)
+		{
+			if (value == null)
+				return 1;
 
-        public static int GetASCIIZSize(this Encoding encoding, string value)
-        {
-            if (value == null)
-                return 1;
-
-            return encoding.GetByteCount(value) + 1;
-        }
-    }
+			return encoding.GetByteCount(value) + 1;
+		}
+	}
 }

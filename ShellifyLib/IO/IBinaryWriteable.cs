@@ -25,8 +25,6 @@ namespace Shellify.IO
 {
 	public interface IBinaryWriteable
 	{
-		
 		void WriteTo(BinaryWriter writer);
-		
-	}	
+	}
 }

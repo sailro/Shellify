@@ -25,29 +25,27 @@ using System;
 
 namespace Shellify.IO
 {
-    public class KnownFolderDataBlockHandler : BaseFolderIDDataBlockHandler<KnownFolderDataBlock>
-    {
-	    private const int ExactBlockSize = 0x1C;
+	public class KnownFolderDataBlockHandler : BaseFolderIDDataBlockHandler<KnownFolderDataBlock>
+	{
+		private const int ExactBlockSize = 0x1C;
 
-        public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Item.KnownFolder);
+		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Item.KnownFolder);
 
-        public KnownFolderDataBlockHandler(KnownFolderDataBlock item, ShellLinkFile context)
-            : base(item, context)
-        {
-        }
+		public KnownFolderDataBlockHandler(KnownFolderDataBlock item, ShellLinkFile context)
+			: base(item, context)
+		{
+		}
 
-        protected override void ReadID(System.IO.BinaryReader reader)
-        {
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
-            Item.KnownFolder = new Guid(reader.ReadBytes(Marshal.SizeOf(Item.KnownFolder)));
-        }
+		protected override void ReadID(System.IO.BinaryReader reader)
+		{
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			Item.KnownFolder = new Guid(reader.ReadBytes(Marshal.SizeOf(Item.KnownFolder)));
+		}
 
-        protected override void WriteID(System.IO.BinaryWriter writer)
-        {
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
-            writer.Write(Item.KnownFolder.ToByteArray());
-        }
-
-
-    }
+		protected override void WriteID(System.IO.BinaryWriter writer)
+		{
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			writer.Write(Item.KnownFolder.ToByteArray());
+		}
+	}
 }

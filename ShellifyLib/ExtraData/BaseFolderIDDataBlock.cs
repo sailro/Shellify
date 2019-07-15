@@ -26,22 +26,20 @@ namespace Shellify.ExtraData
 {
 	public abstract class BaseFolderIDDataBlock : ExtraDataBlock
 	{
+		public ShItemID ShItemID { get; set; }
 
-        public ShItemID ShItemID { get; set; }
-		
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.Append(base.ToString());
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.Append(base.ToString());
 
-            if (ShItemID != null)
-            {
-                builder.AppendLine();
-                builder.Append(ShItemID);
-            }
+			if (ShItemID != null)
+			{
+				builder.AppendLine();
+				builder.Append(ShItemID);
+			}
 
-            return builder.ToString();
-        }
-		
+			return builder.ToString();
+		}
 	}
 }

@@ -26,29 +26,27 @@ using Shellify.Tool.Commands;
 namespace Shellify.Tool.Options
 {
 	internal class EnumReflectionSetterOption : ReflectionSetterOption
-    {
-
+	{
 // ReSharper disable UnusedAutoPropertyAccessor.Local
-        Type EnumType { get; set; }
+		Type EnumType { get; set; }
 // ReSharper restore UnusedAutoPropertyAccessor.Local
 
-        public EnumReflectionSetterOption(string tag, string description, IList<Command> applies, Type enumType, params string[] propertyPath)
-            : base(tag, description, applies, propertyPath)
-        {
-            PropertyPath = propertyPath;
-            EnumType = enumType;
-        }
+		public EnumReflectionSetterOption(string tag, string description, IList<Command> applies, Type enumType, params string[] propertyPath)
+			: base(tag, description, applies, propertyPath)
+		{
+			PropertyPath = propertyPath;
+			EnumType = enumType;
+		}
 
-        protected override object ChangeType(object source, Type targetType)
-        {
-            return Enum.Parse(targetType, source.ToString());
-        }
+		protected override object ChangeType(object source, Type targetType)
+		{
+			return Enum.Parse(targetType, source.ToString());
+		}
 
-        public override void Execute(ShellLinkFile context)
-        {
-            Argument = Argument.Replace(" ",string.Empty);
-            base.Execute(context);
-        }
-
-    }
+		public override void Execute(ShellLinkFile context)
+		{
+			Argument = Argument.Replace(" ", string.Empty);
+			base.Execute(context);
+		}
+	}
 }

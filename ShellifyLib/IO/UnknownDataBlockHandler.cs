@@ -25,10 +25,8 @@ namespace Shellify.IO
 {
 	public class UnknownDataBlockHandler : BaseRawDataBlockHandler<UnknownDataBlock>
 	{
-		
 		public UnknownDataBlockHandler(UnknownDataBlock item, ShellLinkFile context) : base(item, context)
 		{
 		}
-		
 	}
 }

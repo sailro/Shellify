@@ -23,11 +23,9 @@ namespace Shellify.ExtraData
 {
 	public class IconEnvironmentDataBlock : BaseStringDataBlock
 	{
-		
 		public IconEnvironmentDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.IconEnvironmentDataBlock;
 		}
-		
 	}
 }

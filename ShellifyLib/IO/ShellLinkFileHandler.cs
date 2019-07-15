@@ -30,142 +30,140 @@ using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
-    public class ShellLinkFileHandler : IBinaryReadable, IBinaryWriteable
-    {
+	public class ShellLinkFileHandler : IBinaryReadable, IBinaryWriteable
+	{
+		private ShellLinkFile Item { get; }
 
-        private ShellLinkFile Item { get; }
+		public ShellLinkFileHandler(ShellLinkFile item)
+		{
+			Item = item;
+		}
 
-        public ShellLinkFileHandler(ShellLinkFile item)
-        {
-            Item = item;
-        }
+		private string ReadStringData(BinaryReader reader, LinkFlags mask)
+		{
+			var enc = (Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0 ? Encoding.Unicode : Encoding.Default;
+			return (Item.Header.LinkFlags & mask) != 0 ? reader.ReadSTDATA(enc) : null;
+		}
 
-        private string ReadStringData(BinaryReader reader, LinkFlags mask)
-        {
-            var enc = (Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0 ? Encoding.Unicode : Encoding.Default;
-            return (Item.Header.LinkFlags & mask) != 0 ? reader.ReadSTDATA(enc) : null;
-        }
+		public void ReadFrom(BinaryReader reader)
+		{
+			ReadHeaderSection(reader);
+			ReadIDListSection(reader);
+			ReadLinkInfoSection(reader);
+			ReadStringDataSection(reader);
+			ReadExtraDataSection(reader);
+		}
 
-        public void ReadFrom(BinaryReader reader)
-        {
-            ReadHeaderSection(reader);
-            ReadIDListSection(reader);
-            ReadLinkInfoSection(reader);
-            ReadStringDataSection(reader);
-            ReadExtraDataSection(reader);
-        }
+		public void WriteTo(BinaryWriter writer)
+		{
+			WriteHeaderSection(writer);
+			WriteIDListSection(writer);
+			WriteLinkInfoSection(writer);
+			WriteStringDataSection(writer);
+			WriteExtraDataSection(writer);
+		}
 
-        public void WriteTo(BinaryWriter writer)
-        {
-            WriteHeaderSection(writer);
-            WriteIDListSection(writer);
-            WriteLinkInfoSection(writer);
-            WriteStringDataSection(writer);
-            WriteExtraDataSection(writer);
-        }
+		private void ReadHeaderSection(BinaryReader reader)
+		{
+			Item.Header = new ShellLinkHeader();
+			var slhReader = new ShellLinkHeaderHandler(Item.Header);
+			slhReader.ReadFrom(reader);
+		}
 
-        private void ReadHeaderSection(BinaryReader reader)
-        {
-            Item.Header = new ShellLinkHeader();
-            var slhReader = new ShellLinkHeaderHandler(Item.Header);
-            slhReader.ReadFrom(reader);
-        }
+		private void ReadIDListSection(BinaryReader reader)
+		{
+			Item.ShItemIDs = new List<ShItemID>();
+			if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) == 0)
+				return;
 
-        private void ReadIDListSection(BinaryReader reader)
-        {
-            Item.ShItemIDs = new List<ShItemID>();
-            if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) == 0)
-	            return;
+			var idlhandler = new IDListHandler(Item, true);
+			idlhandler.ReadFrom(reader);
+		}
 
-            var idlhandler = new IDListHandler(Item, true);
-            idlhandler.ReadFrom(reader);
-        }
+		private void ReadLinkInfoSection(BinaryReader reader)
+		{
+			if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) == 0)
+				return;
 
-        private void ReadLinkInfoSection(BinaryReader reader)
-        {
-	        if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) == 0)
-		        return;
+			Item.LinkInfo = new LinkInfo();
+			var liReader = new LinkInfoHandler(Item.LinkInfo);
+			liReader.ReadFrom(reader);
+		}
 
-	        Item.LinkInfo = new LinkInfo();
-            var liReader = new LinkInfoHandler(Item.LinkInfo);
-            liReader.ReadFrom(reader);
-        }
+		private void ReadStringDataSection(BinaryReader reader)
+		{
+			Item.Name = ReadStringData(reader, LinkFlags.HasName);
+			Item.RelativePath = ReadStringData(reader, LinkFlags.HasRelativePath);
+			Item.WorkingDirectory = ReadStringData(reader, LinkFlags.HasWorkingDir);
+			Item.Arguments = ReadStringData(reader, LinkFlags.HasArguments);
+			Item.IconLocation = ReadStringData(reader, LinkFlags.HasIconLocation);
+		}
 
-        private void ReadStringDataSection(BinaryReader reader)
-        {
-            Item.Name = ReadStringData(reader, LinkFlags.HasName);
-            Item.RelativePath = ReadStringData(reader, LinkFlags.HasRelativePath);
-            Item.WorkingDirectory = ReadStringData(reader, LinkFlags.HasWorkingDir);
-            Item.Arguments = ReadStringData(reader, LinkFlags.HasArguments);
-            Item.IconLocation = ReadStringData(reader, LinkFlags.HasIconLocation);
-        }
+		private void ReadExtraDataSection(BinaryReader reader)
+		{
+			Item.ExtraDataBlocks = new List<ExtraDataBlock>();
+			while (reader.BaseStream.Position < reader.BaseStream.Length)
+			{
+				var blocksize = reader.ReadInt32();
+				if (blocksize < 0x4) // Terminal Block
+					break;
 
-        private void ReadExtraDataSection(BinaryReader reader)
-        {
-            Item.ExtraDataBlocks = new List<ExtraDataBlock>();
-            while (reader.BaseStream.Position < reader.BaseStream.Length)
-            {
-                var blocksize = reader.ReadInt32();
-                if (blocksize < 0x4) // Terminal Block
-                    break;
+				var signature = (ExtraDataBlockSignature)(reader.ReadInt32());
+				var block = ExtraDataBlockFactory.GetInstance(signature);
+				Item.ExtraDataBlocks.Add(block);
 
-                var signature = (ExtraDataBlockSignature)(reader.ReadInt32());
-                var block = ExtraDataBlockFactory.GetInstance(signature);
-                Item.ExtraDataBlocks.Add(block);
+				var blockReader = ExtraDataBlockHandlerFactory.GetInstance(block, Item);
+				reader.BaseStream.Seek(-Marshal.SizeOf(blocksize) - Marshal.SizeOf(typeof(int)), SeekOrigin.Current);
+				blockReader.ReadFrom(reader);
+			}
+		}
 
-                var blockReader = ExtraDataBlockHandlerFactory.GetInstance(block, Item);
-                reader.BaseStream.Seek(- Marshal.SizeOf(blocksize) - Marshal.SizeOf(typeof(int)), SeekOrigin.Current);
-                blockReader.ReadFrom(reader);
-            }
-        }
+		private void WriteHeaderSection(BinaryWriter writer)
+		{
+			var slhWriter = new ShellLinkHeaderHandler(Item.Header);
+			slhWriter.WriteTo(writer);
+		}
 
-        private void WriteHeaderSection(BinaryWriter writer)
-        {
-            var slhWriter = new ShellLinkHeaderHandler(Item.Header);
-            slhWriter.WriteTo(writer);
-        }
+		private void WriteIDListSection(BinaryWriter writer)
+		{
+			if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) == 0)
+				return;
 
-        private void WriteIDListSection(BinaryWriter writer)
-        {
-	        if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) == 0)
-		        return;
+			var idlhandler = new IDListHandler(Item, true);
+			idlhandler.WriteTo(writer);
+		}
 
-	        var idlhandler = new IDListHandler(Item, true);
-            idlhandler.WriteTo(writer);
-        }
+		private void WriteLinkInfoSection(BinaryWriter writer)
+		{
+			if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) == 0)
+				return;
 
-        private void WriteLinkInfoSection(BinaryWriter writer)
-        {
-	        if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) == 0)
-		        return;
+			var liWriter = new LinkInfoHandler(Item.LinkInfo);
+			liWriter.WriteTo(writer);
+		}
 
-	        var liWriter = new LinkInfoHandler(Item.LinkInfo);
-            liWriter.WriteTo(writer);
-        }
+		private void WriteStringDataSection(BinaryWriter writer)
+		{
+			WriteStringData(Item.Name, writer, LinkFlags.HasName);
+			WriteStringData(Item.RelativePath, writer, LinkFlags.HasRelativePath);
+			WriteStringData(Item.WorkingDirectory, writer, LinkFlags.HasWorkingDir);
+			WriteStringData(Item.Arguments, writer, LinkFlags.HasArguments);
+			WriteStringData(Item.IconLocation, writer, LinkFlags.HasIconLocation);
+		}
 
-        private void WriteStringDataSection(BinaryWriter writer)
-        {
-            WriteStringData(Item.Name, writer, LinkFlags.HasName);
-            WriteStringData(Item.RelativePath, writer, LinkFlags.HasRelativePath);
-            WriteStringData(Item.WorkingDirectory, writer, LinkFlags.HasWorkingDir);
-            WriteStringData(Item.Arguments, writer, LinkFlags.HasArguments);
-            WriteStringData(Item.IconLocation, writer, LinkFlags.HasIconLocation);
-        }
-
-        private void WriteExtraDataSection(BinaryWriter writer)
-        {
-	        foreach (var blockWriter in Item.ExtraDataBlocks.Select(block => ExtraDataBlockHandlerFactory.GetInstance(block, Item)))
-		        blockWriter.WriteTo(writer);
+		private void WriteExtraDataSection(BinaryWriter writer)
+		{
+			foreach (var blockWriter in Item.ExtraDataBlocks.Select(block => ExtraDataBlockHandlerFactory.GetInstance(block, Item)))
+				blockWriter.WriteTo(writer);
 
 			writer.Write(0);
-        }
+		}
 
-	    private void WriteStringData(string value, BinaryWriter writer, LinkFlags mask)
-        {
-            var enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
-            if ((Item.Header.LinkFlags & mask) != 0)
-                writer.WriteSTDATA(value, enc);
-        }
-
-    }
+		private void WriteStringData(string value, BinaryWriter writer, LinkFlags mask)
+		{
+			var enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
+			if ((Item.Header.LinkFlags & mask) != 0)
+				writer.WriteSTDATA(value, enc);
+		}
+	}
 }

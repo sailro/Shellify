@@ -29,60 +29,60 @@ using Shellify.Tool.Commands;
 
 namespace Shellify.Test
 {
-    [TestClass]
-    public class ToolParserTest
-    {
-	    public TestContext TestContext { get; set; }
+	[TestClass]
+	public class ToolParserTest
+	{
+		public TestContext TestContext { get; set; }
 
-	    [TestMethod]
-        public void TestToolParser()
-        {
-            try
-            {
-                CommandLineParser.Parse(new[] { "foo" });
-                Assert.Fail("Exception required");
-            }
-            catch (Exception e)
-            {
-                Assert.IsInstanceOfType(e, typeof(CommandLineParseException));
-            }
+		[TestMethod]
+		public void TestToolParser()
+		{
+			try
+			{
+				CommandLineParser.Parse(new[] {"foo"});
+				Assert.Fail("Exception required");
+			}
+			catch (Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(CommandLineParseException));
+			}
 
-            var dic = (DisplayInfosCommand)(ProgramContext.Commands.ToList().First(c => c is DisplayInfosCommand));
-            CommandLineParser.Parse(new[] { dic.Tag, "filename" });
+			var dic = (DisplayInfosCommand)(ProgramContext.Commands.ToList().First(c => c is DisplayInfosCommand));
+			CommandLineParser.Parse(new[] {dic.Tag, "filename"});
 
-            try
-            {
-                CommandLineParser.Parse(new[] { dic.Tag, "-foo", "filename" });
-                Assert.Fail("Exception required");
-            }
-            catch (Exception e)
-            {
-                Assert.IsInstanceOfType(e, typeof(CommandLineParseException));
-            }
+			try
+			{
+				CommandLineParser.Parse(new[] {dic.Tag, "-foo", "filename"});
+				Assert.Fail("Exception required");
+			}
+			catch (Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(CommandLineParseException));
+			}
 
-            try
-            {
-                dic.Arguments.Clear();
-                var cmd = CommandLineParser.Parse(new[] { dic.Tag, "filename.foo" });
-                cmd.Execute();
-                Assert.Fail("Exception required");
-            }
-            catch (Exception e)
-            {
-                Assert.IsInstanceOfType(e, typeof(FileNotFoundException));
-            }
+			try
+			{
+				dic.Arguments.Clear();
+				var cmd = CommandLineParser.Parse(new[] {dic.Tag, "filename.foo"});
+				cmd.Execute();
+				Assert.Fail("Exception required");
+			}
+			catch (Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(FileNotFoundException));
+			}
 
-            try
-            {
-                dic.Arguments.Clear();
-                var cmd = CommandLineParser.Parse(new[] { dic.Tag, @"..\..\..\Shellify.sln" });
-                cmd.Execute();
-                Assert.Fail("Exception required");
-            }
-            catch (Exception e)
-            {
-                Assert.IsInstanceOfType(e, typeof(MalformedException));
-            }
-        }
-    }
+			try
+			{
+				dic.Arguments.Clear();
+				var cmd = CommandLineParser.Parse(new[] {dic.Tag, @"..\..\..\Shellify.sln"});
+				cmd.Execute();
+				Assert.Fail("Exception required");
+			}
+			catch (Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(MalformedException));
+			}
+		}
+	}
 }

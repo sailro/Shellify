@@ -24,19 +24,17 @@ using System;
 
 namespace Shellify.IO
 {
-    public static class ExtraDataBlockHandlerFactory
-    {
-
-        public static ExtraDataBlockHandler GetInstance(ExtraDataBlock item, ShellLinkFile context)
-        {
-            var typename = $"Shellify.IO.{item.GetType().Name}Handler";
-	        var type = Type.GetType(typename);
+	public static class ExtraDataBlockHandlerFactory
+	{
+		public static ExtraDataBlockHandler GetInstance(ExtraDataBlock item, ShellLinkFile context)
+		{
+			var typename = $"Shellify.IO.{item.GetType().Name}Handler";
+			var type = Type.GetType(typename);
 
 			if (type == null)
 				throw new ArgumentException(typename);
 
-            return (ExtraDataBlockHandler)Activator.CreateInstance(type, new object[] { item, context});
-        }
-
-    }
+			return (ExtraDataBlockHandler)Activator.CreateInstance(type, new object[] {item, context});
+		}
+	}
 }

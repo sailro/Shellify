@@ -24,26 +24,26 @@ using Shellify.Extensions;
 
 namespace Shellify.ExtraData
 {
-	public abstract class BaseRawDataBlock: ExtraDataBlock
+	public abstract class BaseRawDataBlock : ExtraDataBlock
 	{
-		
 		public byte[] Raw { get; set; }
-		
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            if (Raw != null)
-            {
-                builder.AppendFormat("Data length: {0}", Raw.Length); builder.AppendLine();
-                builder.AppendFormat("Hash: {0}", Raw.ComputeHash());
-            }
-            else
-            {
-                builder.Append("No data");
-            }
-            return builder.ToString();
-        }
-		
+
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(base.ToString());
+			if (Raw != null)
+			{
+				builder.AppendFormat("Data length: {0}", Raw.Length);
+				builder.AppendLine();
+				builder.AppendFormat("Hash: {0}", Raw.ComputeHash());
+			}
+			else
+			{
+				builder.Append("No data");
+			}
+
+			return builder.ToString();
+		}
 	}
 }

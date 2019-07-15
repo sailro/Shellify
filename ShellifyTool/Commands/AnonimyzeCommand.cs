@@ -25,41 +25,40 @@ using Shellify.ExtraData;
 
 namespace Shellify.Tool.Commands
 {
-    public class AnonimyzeCommand : Command
-    {
+	public class AnonimyzeCommand : Command
+	{
+		public AnonimyzeCommand(string tag, string description)
+			: base(tag, description, 1)
+		{
+		}
 
-        public AnonimyzeCommand(string tag, string description)
-            : base(tag, description, 1)
-        {
-        }
+		public override void Execute()
+		{
+			Context = ShellLinkFile.Load(Filename);
 
-        public override void Execute()
-        {
-            Context = ShellLinkFile.Load(Filename);
+			Context.Header.LinkFlags &= ~LinkFlags.EnableTargetMetaData;
+			Context.Header.LinkFlags |= LinkFlags.ForceNoLinkTrack;
 
-            Context.Header.LinkFlags &= ~LinkFlags.EnableTargetMetaData;
-            Context.Header.LinkFlags |= LinkFlags.ForceNoLinkTrack;
+			if (Context.LinkInfo != null)
+			{
+				if (Context.LinkInfo.VolumeID != null)
+				{
+					Context.LinkInfo.VolumeID.DriveSerialNumber = 0;
+					Context.LinkInfo.VolumeID.VolumeLabel = null;
+				}
 
-            if (Context.LinkInfo != null)
-            {
-                if (Context.LinkInfo.VolumeID != null)
-                {
-                    Context.LinkInfo.VolumeID.DriveSerialNumber = 0;
-                    Context.LinkInfo.VolumeID.VolumeLabel = null;
-                }
-                if (Context.LinkInfo.CommonNetworkRelativeLink != null)
-                {
-                    Context.LinkInfo.CommonNetworkRelativeLink.DeviceName = null;
-                    Context.LinkInfo.CommonNetworkRelativeLink.NetworkProviderType = null;
-                }
-            }
+				if (Context.LinkInfo.CommonNetworkRelativeLink != null)
+				{
+					Context.LinkInfo.CommonNetworkRelativeLink.DeviceName = null;
+					Context.LinkInfo.CommonNetworkRelativeLink.NetworkProviderType = null;
+				}
+			}
 
-            var blocks = Context.ExtraDataBlocks.Where(block => ! (block is TrackerDataBlock || block is PropertyStoreDataBlock)).ToList();
-	        Context.ExtraDataBlocks = blocks;
+			var blocks = Context.ExtraDataBlocks.Where(block => !(block is TrackerDataBlock || block is PropertyStoreDataBlock)).ToList();
+			Context.ExtraDataBlocks = blocks;
 
-            foreach (var option in Options) option.Execute(Context);
-            Context.SaveAs(Filename);
-        }
-
-    }
+			foreach (var option in Options) option.Execute(Context);
+			Context.SaveAs(Filename);
+		}
+	}
 }

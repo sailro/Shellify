@@ -23,12 +23,11 @@ using System;
 
 namespace Shellify.Core
 {
-    [Flags]
-    public enum CommonNetworkRelativeLinkFlags : uint
-    {
-        None = 0,
-        ValidDevice = 1,
-        ValidNetType = 2,
-    }
-
+	[Flags]
+	public enum CommonNetworkRelativeLinkFlags : uint
+	{
+		None = 0,
+		ValidDevice = 1,
+		ValidNetType = 2,
+	}
 }

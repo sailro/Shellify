@@ -28,49 +28,50 @@ using Shellify.Tool.Commands;
 
 namespace Shellify.Test
 {
-    [TestClass]
-    public class ToolCommandsTest
-    {
-	    public TestContext TestContext { get; set; }
+	[TestClass]
+	public class ToolCommandsTest
+	{
+		public TestContext TestContext { get; set; }
 
-	    [TestMethod]
-        public void TestToolCommands()
-        {
-            var crc = new CreateRelativeCommand(string.Empty, string.Empty);
-            var cac = new CreateAbsoluteCommand(string.Empty, string.Empty);
-            var uc = new UpdateCommand(string.Empty, string.Empty);
+		[TestMethod]
+		public void TestToolCommands()
+		{
+			var crc = new CreateRelativeCommand(string.Empty, string.Empty);
+			var cac = new CreateAbsoluteCommand(string.Empty, string.Empty);
+			var uc = new UpdateCommand(string.Empty, string.Empty);
 
-            var tmpFile = Path.GetTempFileName();
+			var tmpFile = Path.GetTempFileName();
 
-            crc.Arguments.Add(tmpFile);
-            crc.Arguments.Add("ShellifyTool.exe");
-            crc.Execute();
-            crc.Arguments[1] = @"c:\foo";
-            try
-            {
-                crc.Execute();
-            }
-            catch (Exception e)
-            {
-                Assert.IsInstanceOfType(e, typeof(ArgumentException));
-            }
-            crc.Arguments[1] = @"foo";
-            crc.Execute();
+			crc.Arguments.Add(tmpFile);
+			crc.Arguments.Add("ShellifyTool.exe");
+			crc.Execute();
+			crc.Arguments[1] = @"c:\foo";
+			try
+			{
+				crc.Execute();
+			}
+			catch (Exception e)
+			{
+				Assert.IsInstanceOfType(e, typeof(ArgumentException));
+			}
 
-            cac.Arguments.Add(tmpFile);
-            cac.Arguments.Add("ShellifyTool.exe");
-            cac.Execute();
-            cac.Arguments[1] = @"foo";
-            cac.Execute();
-            cac.Arguments[1] = ".";
-            cac.Execute();
+			crc.Arguments[1] = @"foo";
+			crc.Execute();
 
-            var on = ProgramContext.Options.ToList().First(o => o.Tag == "name");
-            on.Arguments.Add(string.Empty);
+			cac.Arguments.Add(tmpFile);
+			cac.Arguments.Add("ShellifyTool.exe");
+			cac.Execute();
+			cac.Arguments[1] = @"foo";
+			cac.Execute();
+			cac.Arguments[1] = ".";
+			cac.Execute();
 
-            uc.Arguments.Add(tmpFile);
-            uc.Options.Add(on);
-            uc.Execute();
-        }
-    }
+			var on = ProgramContext.Options.ToList().First(o => o.Tag == "name");
+			on.Arguments.Add(string.Empty);
+
+			uc.Arguments.Add(tmpFile);
+			uc.Options.Add(on);
+			uc.Execute();
+		}
+	}
 }

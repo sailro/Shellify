@@ -34,67 +34,66 @@ namespace Shellify.IO
 		private ShellLinkHeader Item { get; set; }
 		private int HeaderSize { get; set; }
 		private const int ReservedSize = 10;
-		
+
 		public ShellLinkHeaderHandler(ShellLinkHeader item)
 		{
 			Item = item;
 		}
-		
+
 		public void ReadFrom(BinaryReader reader)
 		{
 			HeaderSize = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => HeaderSize == ExactHeaderSize);
+			FormatChecker.CheckExpression(() => HeaderSize == ExactHeaderSize);
 
 			Item.Guid = new Guid(reader.ReadBytes(16));
-            FormatChecker.CheckExpression(() => Item.Guid.ToString().Equals(ShellLinkHeader.LNKGuid) );
+			FormatChecker.CheckExpression(() => Item.Guid.ToString().Equals(ShellLinkHeader.LNKGuid));
 
-			Item.LinkFlags = (LinkFlags) (reader.ReadInt32());
-			Item.FileAttributes = (FileAttributes) (reader.ReadInt32());
-			
+			Item.LinkFlags = (LinkFlags)(reader.ReadInt32());
+			Item.FileAttributes = (FileAttributes)(reader.ReadInt32());
+
 			Item.CreationTime = DateTime.FromFileTime(reader.ReadInt64());
 			Item.AccessTime = DateTime.FromFileTime(reader.ReadInt64());
 			Item.WriteTime = DateTime.FromFileTime(reader.ReadInt64());
 			Item.FileSize = reader.ReadInt32();
 			Item.IconIndex = reader.ReadInt32();
-			
-			Item.ShowCommand = (ShowCommand) reader.ReadInt32();
-			Item.HotKey = (Keys) reader.ReadInt16();
-			
+
+			Item.ShowCommand = (ShowCommand)reader.ReadInt32();
+			Item.HotKey = (Keys)reader.ReadInt16();
+
 			reader.ReadBytes(ReservedSize); // Reserved
 		}
-		
+
 		public void WriteTo(BinaryWriter writer)
 		{
 			HeaderSize = Marshal.SizeOf(HeaderSize) +
-			Marshal.SizeOf(Item.Guid) +
-			Marshal.SizeOf(Item.FileSize) +
-			Marshal.SizeOf(Item.IconIndex) +
-			1 * Marshal.SizeOf(typeof(short)) +
-			3 * Marshal.SizeOf(typeof(int)) +
-			3 * Marshal.SizeOf(typeof(long)) +
-			ReservedSize;
+			             Marshal.SizeOf(Item.Guid) +
+			             Marshal.SizeOf(Item.FileSize) +
+			             Marshal.SizeOf(Item.IconIndex) +
+			             1 * Marshal.SizeOf(typeof(short)) +
+			             3 * Marshal.SizeOf(typeof(int)) +
+			             3 * Marshal.SizeOf(typeof(long)) +
+			             ReservedSize;
 
-            FormatChecker.CheckExpression(() => HeaderSize == ExactHeaderSize);
-            FormatChecker.CheckExpression(() => Item.Guid.ToString().Equals(ShellLinkHeader.LNKGuid));
-            
-            writer.Write(HeaderSize);
+			FormatChecker.CheckExpression(() => HeaderSize == ExactHeaderSize);
+			FormatChecker.CheckExpression(() => Item.Guid.ToString().Equals(ShellLinkHeader.LNKGuid));
+
+			writer.Write(HeaderSize);
 			writer.Write(Item.Guid.ToByteArray());
-			writer.Write((int) Item.LinkFlags);
-			writer.Write((int) Item.FileAttributes);
-			
+			writer.Write((int)Item.LinkFlags);
+			writer.Write((int)Item.FileAttributes);
+
 			writer.Write(Item.CreationTime.ToFileTime());
 			writer.Write(Item.AccessTime.ToFileTime());
 			writer.Write(Item.WriteTime.ToFileTime());
-			
+
 			writer.Write(Item.FileSize);
 			writer.Write(Item.IconIndex);
-			
-			writer.Write((int) Item.ShowCommand);
-			writer.Write((short) Item.HotKey);
-			
+
+			writer.Write((int)Item.ShowCommand);
+			writer.Write((short)Item.HotKey);
+
 			var reserved = new byte[ReservedSize];
 			writer.Write(reserved); // Reserved
 		}
-		
 	}
 }

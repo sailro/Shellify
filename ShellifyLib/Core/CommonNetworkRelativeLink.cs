@@ -25,61 +25,63 @@ namespace Shellify.Core
 {
 	public class CommonNetworkRelativeLink
 	{
-		
 		public CommonNetworkRelativeLinkFlags CommonNetworkRelativeLinkFlags { get; set; }
 		public string NetName { get; set; }
 
 		private NetworkProviderType? _networkProviderType;
-        public NetworkProviderType? NetworkProviderType
-        {
-            get => _networkProviderType;
-            set
-            {
-                _networkProviderType = value;
-                UpdateHeaderFlags(!value.HasValue, CommonNetworkRelativeLinkFlags.ValidNetType);
-            }
-        }
 
-        private string _deviceName;
-        public string DeviceName
-        {
-            get => _deviceName;
-            set
-            {
-                _deviceName = value;
-                UpdateHeaderFlags(value, CommonNetworkRelativeLinkFlags.ValidDevice);
-            }
-        }
+		public NetworkProviderType? NetworkProviderType
+		{
+			get => _networkProviderType;
+			set
+			{
+				_networkProviderType = value;
+				UpdateHeaderFlags(!value.HasValue, CommonNetworkRelativeLinkFlags.ValidNetType);
+			}
+		}
 
-        private void UpdateHeaderFlags(object item, CommonNetworkRelativeLinkFlags flag)
-        {
-	        UpdateHeaderFlags(item is string s && string.IsNullOrEmpty(s) || (item == null), flag);
-        }
+		private string _deviceName;
 
-        private void UpdateHeaderFlags(bool resetcondition, CommonNetworkRelativeLinkFlags flag)
-        {
-            if (resetcondition)
-            {
-                CommonNetworkRelativeLinkFlags &= ~flag;
-            }
-            else
-            {
-                CommonNetworkRelativeLinkFlags |= flag;
-            }
-        }
+		public string DeviceName
+		{
+			get => _deviceName;
+			set
+			{
+				_deviceName = value;
+				UpdateHeaderFlags(value, CommonNetworkRelativeLinkFlags.ValidDevice);
+			}
+		}
+
+		private void UpdateHeaderFlags(object item, CommonNetworkRelativeLinkFlags flag)
+		{
+			UpdateHeaderFlags(item is string s && string.IsNullOrEmpty(s) || (item == null), flag);
+		}
+
+		private void UpdateHeaderFlags(bool resetcondition, CommonNetworkRelativeLinkFlags flag)
+		{
+			if (resetcondition)
+			{
+				CommonNetworkRelativeLinkFlags &= ~flag;
+			}
+			else
+			{
+				CommonNetworkRelativeLinkFlags |= flag;
+			}
+		}
 
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(">> CommonNetworkRelativeLink");
-            builder.AppendFormat("Flags: {0}", CommonNetworkRelativeLinkFlags); builder.AppendLine();
-            builder.AppendFormat("NetworkProviderType: {0}", NetworkProviderType); builder.AppendLine();
-            builder.AppendFormat("NetName: {0}", NetName); builder.AppendLine();
-            builder.AppendFormat("DeviceName: {0}", DeviceName);
-            return builder.ToString();
-        }
-
-	
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(">> CommonNetworkRelativeLink");
+			builder.AppendFormat("Flags: {0}", CommonNetworkRelativeLinkFlags);
+			builder.AppendLine();
+			builder.AppendFormat("NetworkProviderType: {0}", NetworkProviderType);
+			builder.AppendLine();
+			builder.AppendFormat("NetName: {0}", NetName);
+			builder.AppendLine();
+			builder.AppendFormat("DeviceName: {0}", DeviceName);
+			return builder.ToString();
+		}
 	}
 }

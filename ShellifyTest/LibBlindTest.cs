@@ -26,33 +26,33 @@ using Shellify.ExtraData;
 
 namespace Shellify.Test
 {
-    [TestClass]
-    public class LibBlindTest
-    {
-	    public TestContext TestContext { get; set; }
+	[TestClass]
+	public class LibBlindTest
+	{
+		public TestContext TestContext { get; set; }
 
-	    [TestMethod]
-        public void TestBlindWrite()
-        {
-            BlindWrite();
-        }
+		[TestMethod]
+		public void TestBlindWrite()
+		{
+			BlindWrite();
+		}
 
-        private static string BlindWrite()
-        {
-            var tmpFile = Path.GetTempFileName();
-            var slf = new ShellLinkFile();
+		private static string BlindWrite()
+		{
+			var tmpFile = Path.GetTempFileName();
+			var slf = new ShellLinkFile();
 
-            foreach (var block in from ExtraDataBlockSignature signature in System.Enum.GetValues(typeof(ExtraDataBlockSignature)) where signature != ExtraDataBlockSignature.UnknownDataBlock select ExtraDataBlockFactory.GetInstance(signature))
-	            slf.ExtraDataBlocks.Add(block);
+			foreach (var block in from ExtraDataBlockSignature signature in System.Enum.GetValues(typeof(ExtraDataBlockSignature)) where signature != ExtraDataBlockSignature.UnknownDataBlock select ExtraDataBlockFactory.GetInstance(signature))
+				slf.ExtraDataBlocks.Add(block);
 
-            slf.SaveAs(tmpFile);
-            return tmpFile;
-        }
+			slf.SaveAs(tmpFile);
+			return tmpFile;
+		}
 
-        [TestMethod]
-        public void TestBlindRead()
-        {
-	        ShellLinkFile.Load(BlindWrite());
-        }
-    }
+		[TestMethod]
+		public void TestBlindRead()
+		{
+			ShellLinkFile.Load(BlindWrite());
+		}
+	}
 }

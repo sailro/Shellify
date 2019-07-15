@@ -23,12 +23,11 @@ namespace Shellify.ExtraData
 {
 	public class ShimDataBlock : BaseRawDataBlock
 	{
-        public string LayerName { get; set; }
-		
+		public string LayerName { get; set; }
+
 		public ShimDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.ShimDataBlock;
 		}
-		
 	}
 }

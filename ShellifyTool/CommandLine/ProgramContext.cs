@@ -30,96 +30,125 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.CommandLine
 {
-    public static class ProgramContext
-    {
+	public static class ProgramContext
+	{
+		public static IList<Command> Commands { get; }
+		private static IList<Command> WriteCommands { get; }
+		public static IList<Option> Options { get; }
 
-        public static IList<Command> Commands { get; }
-        private static IList<Command> WriteCommands { get; }
-        public static IList<Option> Options { get; }
+		private static string DumpEnum(Type enumType)
+		{
+			var builder = new StringBuilder();
 
-        private static string DumpEnum(Type enumType) {
-            var builder = new StringBuilder();
+			foreach (object item in Enum.GetNames(enumType))
+			{
+				if (builder.Length > 0)
+					builder.Append(",");
 
-            foreach(object item in Enum.GetNames(enumType)) {
-                if (builder.Length > 0) 
-                    builder.Append(",");
-                
-                builder.Append(item);
-            }
+				builder.Append(item);
+			}
 
-            return builder.ToString();
-        }
+			return builder.ToString();
+		}
 
-        static ProgramContext()
-        {
-            Command anonymize = new AnonimyzeCommand("A", "Anonymize .LNK file (remove all tracking data).");
-            Command createAbsolute = new CreateAbsoluteCommand("C", "Create absolute .LNK file.");
-            Command displayInfos = new DisplayInfosCommand("D", "Display .LNK file information.");
-            Command createRelative = new CreateRelativeCommand("R", "Create relative .LNK file.");
-            Command update = new UpdateCommand("U", "Update .LNK file.");
+		static ProgramContext()
+		{
+			Command anonymize = new AnonimyzeCommand("A", "Anonymize .LNK file (remove all tracking data).");
+			Command createAbsolute = new CreateAbsoluteCommand("C", "Create absolute .LNK file.");
+			Command displayInfos = new DisplayInfosCommand("D", "Display .LNK file information.");
+			Command createRelative = new CreateRelativeCommand("R", "Create relative .LNK file.");
+			Command update = new UpdateCommand("U", "Update .LNK file.");
 
-            var allcommands = new List<Command> { anonymize, createAbsolute, displayInfos, createRelative, update };
-            var writecommands = new List<Command> { anonymize, createAbsolute, createRelative, update };
-            Commands = allcommands.AsReadOnly();
-            WriteCommands = writecommands.AsReadOnly();
+			var allcommands = new List<Command>
+			{
+				anonymize,
+				createAbsolute,
+				displayInfos,
+				createRelative,
+				update
+			};
+			var writecommands = new List<Command> {anonymize, createAbsolute, createRelative, update};
+			Commands = allcommands.AsReadOnly();
+			WriteCommands = writecommands.AsReadOnly();
 
-            var atime = CreateDateTimeOption("atime", "Header", "AccessTime");
-            var ctime = CreateDateTimeOption("ctime", "Header", "CreationTime");
-            var wtime = CreateDateTimeOption("wtime", "Header", "WriteTime");
+			var atime = CreateDateTimeOption("atime", "Header", "AccessTime");
+			var ctime = CreateDateTimeOption("ctime", "Header", "CreationTime");
+			var wtime = CreateDateTimeOption("wtime", "Header", "WriteTime");
 
-            var fsize = CreateOption("fsize", "Header", "FileSize");
-            var iidx = CreateOption("iidx", "Header", "IconIndex");
-            var iloc = CreateOption("iloc", "IconLocation");
-            var name = CreateOption("name", "Name");
-            var rpath = CreateOption("rpath", "RelativePath");
-            var wdir = CreateOption("wdir", "WorkingDirectory");
-            var args = CreateOption("args", "Arguments");
+			var fsize = CreateOption("fsize", "Header", "FileSize");
+			var iidx = CreateOption("iidx", "Header", "IconIndex");
+			var iloc = CreateOption("iloc", "IconLocation");
+			var name = CreateOption("name", "Name");
+			var rpath = CreateOption("rpath", "RelativePath");
+			var wdir = CreateOption("wdir", "WorkingDirectory");
+			var args = CreateOption("args", "Arguments");
 
-            var fattr = CreateEnumOption("fattr", typeof(FileAttributes), "Header", "FileAttributes");
-            var swin = CreateEnumOption("scmd", typeof(ShowCommand), "Header", "ShowCommand");
+			var fattr = CreateEnumOption("fattr", typeof(FileAttributes), "Header", "FileAttributes");
+			var swin = CreateEnumOption("scmd", typeof(ShowCommand), "Header", "ShowCommand");
 
-            var dlpt = CreateHeaderFlagOption("dlpt", LinkFlags.DisableLinkPathTracking);
-            var dkft = CreateHeaderFlagOption("dkft", LinkFlags.DisableKnownFolderTracking);
-            var dkfa = CreateHeaderFlagOption("dkfa", LinkFlags.DisableKnownFolderAlias);
-            var fnli = CreateHeaderFlagOption("fnli", LinkFlags.ForceNoLinkInfo);
-            var fnlt = CreateHeaderFlagOption("fnlt", LinkFlags.ForceNoLinkTrack);
-            var npa = CreateHeaderFlagOption("npa", LinkFlags.NoPidlAlias);
-            var risp = CreateHeaderFlagOption("risp", LinkFlags.RunInSeparateProcess);
-            var rau = CreateHeaderFlagOption("rau", LinkFlags.RunAsUser);
+			var dlpt = CreateHeaderFlagOption("dlpt", LinkFlags.DisableLinkPathTracking);
+			var dkft = CreateHeaderFlagOption("dkft", LinkFlags.DisableKnownFolderTracking);
+			var dkfa = CreateHeaderFlagOption("dkfa", LinkFlags.DisableKnownFolderAlias);
+			var fnli = CreateHeaderFlagOption("fnli", LinkFlags.ForceNoLinkInfo);
+			var fnlt = CreateHeaderFlagOption("fnlt", LinkFlags.ForceNoLinkTrack);
+			var npa = CreateHeaderFlagOption("npa", LinkFlags.NoPidlAlias);
+			var risp = CreateHeaderFlagOption("risp", LinkFlags.RunInSeparateProcess);
+			var rau = CreateHeaderFlagOption("rau", LinkFlags.RunAsUser);
 
-            var alloptions = new List<Option> { atime, ctime, wtime, fsize, iidx, iloc, name, rpath, wdir, args, fattr, swin, dlpt, dkft, dkfa, fnli, fnlt, npa, risp, rau};
-            Options = alloptions.AsReadOnly();
-        }
+			var alloptions = new List<Option>
+			{
+				atime,
+				ctime,
+				wtime,
+				fsize,
+				iidx,
+				iloc,
+				name,
+				rpath,
+				wdir,
+				args,
+				fattr,
+				swin,
+				dlpt,
+				dkft,
+				dkfa,
+				fnli,
+				fnlt,
+				npa,
+				risp,
+				rau
+			};
+			Options = alloptions.AsReadOnly();
+		}
 
-        private static Option CreateHeaderFlagOption(string tag, LinkFlags flag)
-        {
-            string description = $"Set/Unset {flag} flag (true/false).";
-            return new HeaderFlagOption(tag, description, WriteCommands, flag);
-        }
+		private static Option CreateHeaderFlagOption(string tag, LinkFlags flag)
+		{
+			string description = $"Set/Unset {flag} flag (true/false).";
+			return new HeaderFlagOption(tag, description, WriteCommands, flag);
+		}
 
-        private static Option CreateOption(string tag, params string[] propertyPath)
-        {
-            string description = $"Set {propertyPath[propertyPath.Length - 1]}.";
-            return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
-        }
+		private static Option CreateOption(string tag, params string[] propertyPath)
+		{
+			string description = $"Set {propertyPath[propertyPath.Length - 1]}.";
+			return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
+		}
 
-        private static Option CreateDateTimeOption(string tag, params string[] propertyPath)
-        {
-            var info = new DateTimeFormatInfo();
-            var description = $"Set {propertyPath[propertyPath.Length - 1]} (\"{info.ShortDatePattern} {info.ShortTimePattern}\").";
-            return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
-        }
+		private static Option CreateDateTimeOption(string tag, params string[] propertyPath)
+		{
+			var info = new DateTimeFormatInfo();
+			var description = $"Set {propertyPath[propertyPath.Length - 1]} (\"{info.ShortDatePattern} {info.ShortTimePattern}\").";
+			return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
+		}
 
-        private static Option CreateEnumOption(string tag, Type enumType, params string[] propertyPath)
-        {
-            var flags = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
+		private static Option CreateEnumOption(string tag, Type enumType, params string[] propertyPath)
+		{
+			var flags = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
 
-            var description = $"Set {propertyPath[propertyPath.Length - 1]} ({DumpEnum(enumType)}).";
-            if (flags) 
-                description = string.Concat(description, " Values can be combined.");
+			var description = $"Set {propertyPath[propertyPath.Length - 1]} ({DumpEnum(enumType)}).";
+			if (flags)
+				description = string.Concat(description, " Values can be combined.");
 
-            return new EnumReflectionSetterOption(tag, description, WriteCommands, enumType, propertyPath);
-        }
-
-    }
+			return new EnumReflectionSetterOption(tag, description, WriteCommands, enumType, propertyPath);
+		}
+	}
 }

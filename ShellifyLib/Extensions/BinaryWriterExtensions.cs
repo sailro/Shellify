@@ -27,51 +27,48 @@ using System.Text;
 
 namespace Shellify.Extensions
 {
-    public static class BinaryWriterExtensions
-    {
+	public static class BinaryWriterExtensions
+	{
+		public static void WriteSTDATA(this BinaryWriter writer, string value, Encoding encoding)
+		{
+			var charcount = Convert.ToInt16(value.Length);
+			writer.Write(charcount);
+			writer.Write(encoding.GetBytes(value));
+		}
 
-        public static void WriteSTDATA(this BinaryWriter writer, string value, Encoding encoding)
-        {
-            var charcount = Convert.ToInt16(value.Length);
-            writer.Write(charcount);
-            writer.Write(encoding.GetBytes(value));
-        }
-
-        public static void WriteASCIIZ(this BinaryWriter writer, string value, Encoding encoding)
-        {
-            if (value != null)
-                writer.Write(encoding.GetBytes(value));
+		public static void WriteASCIIZ(this BinaryWriter writer, string value, Encoding encoding)
+		{
+			if (value != null)
+				writer.Write(encoding.GetBytes(value));
 
 			writer.Write((byte)0);
-        }
+		}
 
-        public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length)
-        {
-            var bytes = new List<byte>(encoding.GetBytes(value ?? string.Empty));
+		public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length)
+		{
+			var bytes = new List<byte>(encoding.GetBytes(value ?? string.Empty));
 
-            while (bytes.Count < length)
-                bytes.Add(0);
+			while (bytes.Count < length)
+				bytes.Add(0);
 
-            writer.Write(bytes.Take(length).ToArray());
-        }
+			writer.Write(bytes.Take(length).ToArray());
+		}
 
-        public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length, byte[] padding)
-        {
-            var bytes = new List<byte>(encoding.GetBytes(value ?? string.Empty));
+		public static void WriteASCIIZF(this BinaryWriter writer, string value, Encoding encoding, int length, byte[] padding)
+		{
+			var bytes = new List<byte>(encoding.GetBytes(value ?? string.Empty));
 
-            if (padding != null)
-            {
-                var padindex = 0;
-                while ((bytes.Count < length) && (padindex < padding.Length))
-                    bytes.Add(padding[padindex++]);
-            }
+			if (padding != null)
+			{
+				var padindex = 0;
+				while ((bytes.Count < length) && (padindex < padding.Length))
+					bytes.Add(padding[padindex++]);
+			}
 
-            while (bytes.Count < length)
-                bytes.Add(0);
+			while (bytes.Count < length)
+				bytes.Add(0);
 
-            writer.Write(bytes.Take(length).ToArray());
-        }
-
-
-    }
+			writer.Write(bytes.Take(length).ToArray());
+		}
+	}
 }

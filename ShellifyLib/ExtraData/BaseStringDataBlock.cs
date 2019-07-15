@@ -24,35 +24,39 @@ using Shellify.Extensions;
 
 namespace Shellify.ExtraData
 {
-	public abstract class BaseStringDataBlock: ExtraDataBlock
+	public abstract class BaseStringDataBlock : ExtraDataBlock
 	{
-
-        public byte[] ValuePadding { get; set; }
-        public byte[] ValueUnicodePadding { get; set; }
+		public byte[] ValuePadding { get; set; }
+		public byte[] ValueUnicodePadding { get; set; }
 		public string Value { get; set; }
-        public string ValueUnicode { get; set; }
-		
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            builder.AppendFormat("Value: {0}", Value); builder.AppendLine();
+		public string ValueUnicode { get; set; }
 
-            if (ValuePadding != null)
-            {
-                builder.AppendFormat("Value padding length: {0}", ValuePadding.Length); builder.AppendLine();
-                builder.AppendFormat("Value padding Hash: {0}", ValuePadding.ComputeHash()); builder.AppendLine();
-            }
-            builder.AppendFormat("ValueUnicode: {0}", ValueUnicode);
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(base.ToString());
+			builder.AppendFormat("Value: {0}", Value);
+			builder.AppendLine();
 
-            if (ValueUnicodePadding != null)
-            {
-                builder.AppendLine();
-                builder.AppendFormat("ValueUnicode padding length: {0}", ValueUnicodePadding.Length); builder.AppendLine();
-                builder.AppendFormat("ValueUnicode padding Hash: {0}", ValueUnicodePadding.ComputeHash());
-            }
-            return builder.ToString();
-        }
-		
+			if (ValuePadding != null)
+			{
+				builder.AppendFormat("Value padding length: {0}", ValuePadding.Length);
+				builder.AppendLine();
+				builder.AppendFormat("Value padding Hash: {0}", ValuePadding.ComputeHash());
+				builder.AppendLine();
+			}
+
+			builder.AppendFormat("ValueUnicode: {0}", ValueUnicode);
+
+			if (ValueUnicodePadding != null)
+			{
+				builder.AppendLine();
+				builder.AppendFormat("ValueUnicode padding length: {0}", ValueUnicodePadding.Length);
+				builder.AppendLine();
+				builder.AppendFormat("ValueUnicode padding Hash: {0}", ValueUnicodePadding.ComputeHash());
+			}
+
+			return builder.ToString();
+		}
 	}
 }

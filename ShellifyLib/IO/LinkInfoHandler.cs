@@ -31,7 +31,7 @@ namespace Shellify.IO
 	public class LinkInfoHandler : IBinaryReadable, IBinaryWriteable
 	{
 		private const int MinimumLinkInfoHeaderSize = 0x1C;
-		
+
 		private LinkInfo Item { get; set; }
 		private int LinkInfoSize { get; set; }
 		private int LinkInfoHeaderSize { get; set; }
@@ -39,150 +39,149 @@ namespace Shellify.IO
 		private int LocalBasePathOffset { get; set; }
 		private int CommonNetworkRelativeLinkOffset { get; set; }
 		private int CommonPathSuffixOffset { get; set; }
-		
+
 		private int? LocalBasePathOffsetUnicode { get; set; } // Optional
 		private int? CommonPathSuffixOffsetUnicode { get; set; } // Optional
-		
+
 		public LinkInfoHandler(LinkInfo item)
 		{
 			Item = item;
 		}
 
-        private static void EnsurePosition(BinaryReader reader, long baseOffset, int offset)
-        {
-            var delta = (int)(baseOffset + offset - reader.BaseStream.Position);
-            if (delta > 0)
-                reader.ReadBytes(delta);
-            else if (delta < 0)
-                throw new ArgumentException();
+		private static void EnsurePosition(BinaryReader reader, long baseOffset, int offset)
+		{
+			var delta = (int)(baseOffset + offset - reader.BaseStream.Position);
+			if (delta > 0)
+				reader.ReadBytes(delta);
+			else if (delta < 0)
+				throw new ArgumentException();
 		}
-		
+
 		public void ReadFrom(BinaryReader reader)
 		{
 			var readerOffset = reader.BaseStream.Position;
-			
+
 			LinkInfoSize = reader.ReadInt32();
 			LinkInfoHeaderSize = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => LinkInfoHeaderSize < LinkInfoSize);
+			FormatChecker.CheckExpression(() => LinkInfoHeaderSize < LinkInfoSize);
 
-            Item.LinkInfoFlags = (LinkInfoFlags) (reader.ReadInt32());
-			
+			Item.LinkInfoFlags = (LinkInfoFlags)(reader.ReadInt32());
+
 			VolumeIDOffset = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => VolumeIDOffset < LinkInfoSize);
-            
-            LocalBasePathOffset = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => LocalBasePathOffset < LinkInfoSize);
-            
-            CommonNetworkRelativeLinkOffset = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkOffset < LinkInfoSize);
-            
-            CommonPathSuffixOffset = reader.ReadInt32();
-            FormatChecker.CheckExpression(() => CommonPathSuffixOffset < LinkInfoSize);
+			FormatChecker.CheckExpression(() => VolumeIDOffset < LinkInfoSize);
 
-            if (LinkInfoHeaderSize > MinimumLinkInfoHeaderSize)
-            {
-                LocalBasePathOffsetUnicode = reader.ReadInt32();
-                FormatChecker.CheckExpression(() => LocalBasePathOffsetUnicode < LinkInfoSize);
+			LocalBasePathOffset = reader.ReadInt32();
+			FormatChecker.CheckExpression(() => LocalBasePathOffset < LinkInfoSize);
 
-                CommonPathSuffixOffsetUnicode = reader.ReadInt32();
-                FormatChecker.CheckExpression(() => CommonPathSuffixOffsetUnicode < LinkInfoSize);
-            }
-            else
-                FormatChecker.CheckExpression(() => LinkInfoHeaderSize == MinimumLinkInfoHeaderSize);
-			
+			CommonNetworkRelativeLinkOffset = reader.ReadInt32();
+			FormatChecker.CheckExpression(() => CommonNetworkRelativeLinkOffset < LinkInfoSize);
+
+			CommonPathSuffixOffset = reader.ReadInt32();
+			FormatChecker.CheckExpression(() => CommonPathSuffixOffset < LinkInfoSize);
+
+			if (LinkInfoHeaderSize > MinimumLinkInfoHeaderSize)
+			{
+				LocalBasePathOffsetUnicode = reader.ReadInt32();
+				FormatChecker.CheckExpression(() => LocalBasePathOffsetUnicode < LinkInfoSize);
+
+				CommonPathSuffixOffsetUnicode = reader.ReadInt32();
+				FormatChecker.CheckExpression(() => CommonPathSuffixOffsetUnicode < LinkInfoSize);
+			}
+			else
+				FormatChecker.CheckExpression(() => LinkInfoHeaderSize == MinimumLinkInfoHeaderSize);
+
 			if ((Item.LinkInfoFlags & LinkInfoFlags.VolumeIDAndLocalBasePath) != 0)
 			{
-                EnsurePosition(reader, readerOffset, VolumeIDOffset);
+				EnsurePosition(reader, readerOffset, VolumeIDOffset);
 				Item.VolumeID = new VolumeID();
 				var vidReader = new VolumeIDHandler(Item.VolumeID);
 				vidReader.ReadFrom(reader);
-                Item.LocalBasePath = reader.ReadASCIIZ(readerOffset, LocalBasePathOffset, LocalBasePathOffsetUnicode);
-			} 
-            
-            if ((Item.LinkInfoFlags & LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix) != 0)
+				Item.LocalBasePath = reader.ReadASCIIZ(readerOffset, LocalBasePathOffset, LocalBasePathOffsetUnicode);
+			}
+
+			if ((Item.LinkInfoFlags & LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix) != 0)
 			{
-                EnsurePosition(reader, readerOffset, CommonNetworkRelativeLinkOffset);
+				EnsurePosition(reader, readerOffset, CommonNetworkRelativeLinkOffset);
 				Item.CommonNetworkRelativeLink = new CommonNetworkRelativeLink();
 				var cnrlReader = new CommonNetworkRelativeLinkHandler(Item.CommonNetworkRelativeLink);
 				cnrlReader.ReadFrom(reader);
 			}
 
-            Item.CommonPathSuffix = reader.ReadASCIIZ(readerOffset, CommonPathSuffixOffset, CommonPathSuffixOffsetUnicode);
+			Item.CommonPathSuffix = reader.ReadASCIIZ(readerOffset, CommonPathSuffixOffset, CommonPathSuffixOffsetUnicode);
 		}
-		
+
 		public void WriteTo(BinaryWriter writer)
 		{
-            var padding = new byte[]{};
+			var padding = new byte[] { };
 
-            LinkInfoHeaderSize = Marshal.SizeOf(LinkInfoSize) +
-			Marshal.SizeOf(LinkInfoHeaderSize) +
-			Marshal.SizeOf(typeof(int)) +
-			Marshal.SizeOf(VolumeIDOffset) +
-			Marshal.SizeOf(LocalBasePathOffset) +
-			Marshal.SizeOf(CommonNetworkRelativeLinkOffset) +
-			Marshal.SizeOf(CommonPathSuffixOffset);
+			LinkInfoHeaderSize = Marshal.SizeOf(LinkInfoSize) +
+			                     Marshal.SizeOf(LinkInfoHeaderSize) +
+			                     Marshal.SizeOf(typeof(int)) +
+			                     Marshal.SizeOf(VolumeIDOffset) +
+			                     Marshal.SizeOf(LocalBasePathOffset) +
+			                     Marshal.SizeOf(CommonNetworkRelativeLinkOffset) +
+			                     Marshal.SizeOf(CommonPathSuffixOffset);
 
-            LinkInfoSize = LinkInfoHeaderSize + Encoding.Default.GetASCIIZSize(Item.CommonPathSuffix);
-			
+			LinkInfoSize = LinkInfoHeaderSize + Encoding.Default.GetASCIIZSize(Item.CommonPathSuffix);
+
 			VolumeIDHandler vidWriter = null;
-            CommonNetworkRelativeLinkHandler cnrWriter = null;
+			CommonNetworkRelativeLinkHandler cnrWriter = null;
 
-            VolumeIDOffset = 0;
-            LocalBasePathOffset = 0;
-            CommonNetworkRelativeLinkOffset = 0;
-            var nextBlockOffset = LinkInfoHeaderSize;
+			VolumeIDOffset = 0;
+			LocalBasePathOffset = 0;
+			CommonNetworkRelativeLinkOffset = 0;
+			var nextBlockOffset = LinkInfoHeaderSize;
 
-            if ((Item.LinkInfoFlags & (LinkInfoFlags.VolumeIDAndLocalBasePath | LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix)) == (LinkInfoFlags.VolumeIDAndLocalBasePath | LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
-            {
-                padding = new byte[] {0};
-                LinkInfoSize += padding.Length;
-            }
+			if ((Item.LinkInfoFlags & (LinkInfoFlags.VolumeIDAndLocalBasePath | LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix)) == (LinkInfoFlags.VolumeIDAndLocalBasePath | LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
+			{
+				padding = new byte[] {0};
+				LinkInfoSize += padding.Length;
+			}
 
-            if ((Item.LinkInfoFlags & LinkInfoFlags.VolumeIDAndLocalBasePath) != 0)
+			if ((Item.LinkInfoFlags & LinkInfoFlags.VolumeIDAndLocalBasePath) != 0)
 			{
 				vidWriter = new VolumeIDHandler(Item.VolumeID);
-                LinkInfoSize += vidWriter.ComputedSize + Encoding.Default.GetASCIIZSize(Item.LocalBasePath);
-                VolumeIDOffset = nextBlockOffset;
+				LinkInfoSize += vidWriter.ComputedSize + Encoding.Default.GetASCIIZSize(Item.LocalBasePath);
+				VolumeIDOffset = nextBlockOffset;
 				LocalBasePathOffset = VolumeIDOffset + vidWriter.ComputedSize;
-                CommonPathSuffixOffset = LocalBasePathOffset + Encoding.Default.GetASCIIZSize(Item.LocalBasePath);
-                nextBlockOffset = CommonPathSuffixOffset + padding.Length;
-			} 
-            
-            if ((Item.LinkInfoFlags & LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix) != 0)
+				CommonPathSuffixOffset = LocalBasePathOffset + Encoding.Default.GetASCIIZSize(Item.LocalBasePath);
+				nextBlockOffset = CommonPathSuffixOffset + padding.Length;
+			}
+
+			if ((Item.LinkInfoFlags & LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix) != 0)
 			{
 				cnrWriter = new CommonNetworkRelativeLinkHandler(Item.CommonNetworkRelativeLink);
-                LinkInfoSize += cnrWriter.ComputedSize;
-                CommonNetworkRelativeLinkOffset = nextBlockOffset;
+				LinkInfoSize += cnrWriter.ComputedSize;
+				CommonNetworkRelativeLinkOffset = nextBlockOffset;
 				CommonPathSuffixOffset = CommonNetworkRelativeLinkOffset + cnrWriter.ComputedSize;
 			}
 
-            writer.Write(LinkInfoSize);
-            writer.Write(LinkInfoHeaderSize);
-            writer.Write((int)Item.LinkInfoFlags);
+			writer.Write(LinkInfoSize);
+			writer.Write(LinkInfoHeaderSize);
+			writer.Write((int)Item.LinkInfoFlags);
 
 			writer.Write(VolumeIDOffset);
 			writer.Write(LocalBasePathOffset);
 			writer.Write(CommonNetworkRelativeLinkOffset);
 			writer.Write(CommonPathSuffixOffset);
-			
-            // TODO: Handle unicode strings and offsets
+
+			// TODO: Handle unicode strings and offsets
 			// LocalBasePathOffsetUnicode = 
 			// CommonPathSuffixOffsetUnicode = 
-            // LinkInfoHeaderSize >= &H24 
-			
+			// LinkInfoHeaderSize >= &H24 
+
 			if (vidWriter != null)
 			{
 				vidWriter.WriteTo(writer);
-                writer.WriteASCIIZ(Item.LocalBasePath, Encoding.Default);
+				writer.WriteASCIIZ(Item.LocalBasePath, Encoding.Default);
 			}
 
 			if (padding.Length > 0)
-                writer.Write(padding);
+				writer.Write(padding);
 
 			cnrWriter?.WriteTo(writer);
 
 			writer.WriteASCIIZ(Item.CommonPathSuffix, Encoding.Default);
-			
 		}
 	}
 }

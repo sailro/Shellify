@@ -20,24 +20,24 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System.Text;
+
 namespace Shellify.ExtraData
 {
 	public class ConsoleFEDataBlock : ExtraDataBlock
 	{
-        public uint CodePage { get; set; }
-		
+		public uint CodePage { get; set; }
+
 		public ConsoleFEDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.ConsoleFEDataBlock;
 		}
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            builder.AppendFormat("CodePage: {0}", CodePage);
-            return builder.ToString();
-        }
-		
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(base.ToString());
+			builder.AppendFormat("CodePage: {0}", CodePage);
+			return builder.ToString();
+		}
 	}
 }

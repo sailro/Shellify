@@ -24,30 +24,29 @@ using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
-	public abstract class BaseRawDataBlockHandler<T> : ExtraDataBlockHandler<T> where T: BaseRawDataBlock
+	public abstract class BaseRawDataBlockHandler<T> : ExtraDataBlockHandler<T> where T : BaseRawDataBlock
 	{
 		private const int MinimumBlockSize = 0x8;
 
 		protected BaseRawDataBlockHandler(T item, ShellLinkFile context) : base(item, context)
 		{
 		}
-		
+
 		public override int ComputedSize => base.ComputedSize + (Item.Raw?.Length ?? 0);
 
 		public override void ReadFrom(BinaryReader reader)
 		{
 			base.ReadFrom(reader);
-            FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
+			FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
 			Item.Raw = reader.ReadBytes(BlockSize - base.ComputedSize);
 		}
-		
+
 		public override void WriteTo(BinaryWriter writer)
 		{
 			base.WriteTo(writer);
-            FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
-            if (Item.Raw != null)
+			FormatChecker.CheckExpression(() => BlockSize >= MinimumBlockSize);
+			if (Item.Raw != null)
 				writer.Write(Item.Raw);
 		}
-		
 	}
 }

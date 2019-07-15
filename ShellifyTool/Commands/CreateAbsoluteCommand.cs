@@ -24,29 +24,27 @@ using System.IO;
 
 namespace Shellify.Tool.Commands
 {
-    public class CreateAbsoluteCommand : Command
-    {
+	public class CreateAbsoluteCommand : Command
+	{
+		public CreateAbsoluteCommand(string tag, string description)
+			: base(tag, description, 2)
+		{
+		}
 
-        public CreateAbsoluteCommand(string tag, string description)
-            : base(tag, description, 2)
-        {
-        }
+		protected static void CheckExists(string target, string filename)
+		{
+			if (!File.Exists(target) && !Directory.Exists(target))
+				Console.WriteLine("WARN: {0} doesn't exist", target);
+			else
+				Console.WriteLine("{0} => {1}", filename, target);
+		}
 
-        protected static void CheckExists(string target, string filename)
-        {
-            if (!File.Exists(target) && !Directory.Exists(target))
-                Console.WriteLine("WARN: {0} doesn't exist", target);
-            else
-                Console.WriteLine("{0} => {1}", filename, target);
-        }
-
-        public override void Execute()
-        {
-            Context = ShellLinkFile.CreateAbsolute(Target);
-            foreach (var option in Options) option.Execute(Context);
-            Context.SaveAs(Filename);
-            CheckExists(Target, Filename);
-        }
-
-    }
+		public override void Execute()
+		{
+			Context = ShellLinkFile.CreateAbsolute(Target);
+			foreach (var option in Options) option.Execute(Context);
+			Context.SaveAs(Filename);
+			CheckExists(Target, Filename);
+		}
+	}
 }

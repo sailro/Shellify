@@ -24,16 +24,14 @@ using System.Linq.Expressions;
 
 namespace Shellify.IO
 {
-    public static class FormatChecker
+	public static class FormatChecker
 	{
-
-        public static void CheckExpression(Expression<Func<bool>> expression)
-        {
-            if (!expression.Compile()())
-            {
-                throw new MalformedException(string.Concat("Bad file format, expecting ", expression.ToString().Replace("() => ", string.Empty)));
-            }
-        }
-
+		public static void CheckExpression(Expression<Func<bool>> expression)
+		{
+			if (!expression.Compile()())
+			{
+				throw new MalformedException(string.Concat("Bad file format, expecting ", expression.ToString().Replace("() => ", string.Empty)));
+			}
+		}
 	}
 }

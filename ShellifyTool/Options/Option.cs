@@ -25,24 +25,25 @@ using Shellify.Tool.Commands;
 
 namespace Shellify.Tool.Options
 {
-    public abstract class Option : CommandLineItem
-    {
-	    protected string Argument
-        {
-            get => Arguments.Count > 0 ? Arguments[0] : null;
-            set
-            {
-                if (Arguments.Count > 0)
-                    Arguments[0] = value;
-            }
-        }
-        public IList<Command> Applies { get; }
-        public abstract void Execute(ShellLinkFile context);
+	public abstract class Option : CommandLineItem
+	{
+		protected string Argument
+		{
+			get => Arguments.Count > 0 ? Arguments[0] : null;
+			set
+			{
+				if (Arguments.Count > 0)
+					Arguments[0] = value;
+			}
+		}
 
-	    protected Option(string tag, string description, int expectedArguments, IList<Command> applies)
-            : base(tag, description, expectedArguments)
-        {
-            Applies = applies;
-        }
-    }
+		public IList<Command> Applies { get; }
+		public abstract void Execute(ShellLinkFile context);
+
+		protected Option(string tag, string description, int expectedArguments, IList<Command> applies)
+			: base(tag, description, expectedArguments)
+		{
+			Applies = applies;
+		}
+	}
 }

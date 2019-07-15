@@ -25,11 +25,9 @@ namespace Shellify.IO
 {
 	public class EnvironmentVariableDataBlockHandler : BaseStringDataBlockHandler<EnvironmentVariableDataBlock>
 	{
-
-        public EnvironmentVariableDataBlockHandler(EnvironmentVariableDataBlock item, ShellLinkFile context)
-            : base(item, context)
+		public EnvironmentVariableDataBlockHandler(EnvironmentVariableDataBlock item, ShellLinkFile context)
+			: base(item, context)
 		{
 		}
-
 	}
 }

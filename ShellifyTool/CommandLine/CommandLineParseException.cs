@@ -23,13 +23,11 @@ using System;
 
 namespace Shellify.Tool.CommandLine
 {
-    public class CommandLineParseException : Exception
-    {
-
-        public CommandLineParseException(string message)
-            : base(message)
-        {
-        }
-
-    }
+	public class CommandLineParseException : Exception
+	{
+		public CommandLineParseException(string message)
+			: base(message)
+		{
+		}
+	}
 }

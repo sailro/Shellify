@@ -23,8 +23,8 @@ using System.Collections.Generic;
 
 namespace Shellify.Core
 {
-    public interface IHasIDList
-    {
-        IList<ShItemID> ShItemIDs { get; set; }
-    }
+	public interface IHasIDList
+	{
+		IList<ShItemID> ShItemIDs { get; set; }
+	}
 }

@@ -31,195 +31,204 @@ namespace Shellify
 {
 	public class ShellLinkFile : IHasIDList
 	{
-
-        public ShellLinkHeader Header { get; set; }
+		public ShellLinkHeader Header { get; set; }
 		public IList<ExtraDataBlock> ExtraDataBlocks { get; set; }
 		public IList<ShItemID> ShItemIDs { get; set; }
 
-        private LinkInfo _linkInfo;
-        public LinkInfo LinkInfo
-        {
-            get => _linkInfo;
-            set
-            {
-                _linkInfo = value;
-                UpdateHeaderFlags(value, LinkFlags.HasLinkInfo);
-            }
-        }
+		private LinkInfo _linkInfo;
 
-        private string _name;
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                UpdateHeaderFlags(value, LinkFlags.HasName);
-            }
-        }
+		public LinkInfo LinkInfo
+		{
+			get => _linkInfo;
+			set
+			{
+				_linkInfo = value;
+				UpdateHeaderFlags(value, LinkFlags.HasLinkInfo);
+			}
+		}
 
-        private string _relativePath;
-        public string RelativePath
-        {
-            get => _relativePath;
-            set
-            {
-                _relativePath = value;
-                UpdateHeaderFlags(value, LinkFlags.HasRelativePath);
-            }
-        }
+		private string _name;
 
-        private string _workingDirectory;
-        public string WorkingDirectory
-        {
-            get => _workingDirectory;
-            set
-            {
-                _workingDirectory = value;
-                UpdateHeaderFlags(value, LinkFlags.HasWorkingDir);
-            }
-        }
+		public string Name
+		{
+			get => _name;
+			set
+			{
+				_name = value;
+				UpdateHeaderFlags(value, LinkFlags.HasName);
+			}
+		}
 
-        private string _arguments;
-        public string Arguments
-        {
-            get => _arguments;
-            set
-            {
-                _arguments = value;
-                UpdateHeaderFlags(value, LinkFlags.HasArguments);
-            }
-        }
+		private string _relativePath;
 
-        private string _iconLocation;
-        public string IconLocation 
-        {
-            get => _iconLocation;
-            set
-            {
-                _iconLocation = value;
-                UpdateHeaderFlags(value, LinkFlags.HasIconLocation);
-            }
-        }
+		public string RelativePath
+		{
+			get => _relativePath;
+			set
+			{
+				_relativePath = value;
+				UpdateHeaderFlags(value, LinkFlags.HasRelativePath);
+			}
+		}
 
-        public ShellLinkFile()
-        {
-            Header = new ShellLinkHeader();
-            ExtraDataBlocks = new List<ExtraDataBlock>();
-            ShItemIDs = new List<ShItemID>();
-        }
+		private string _workingDirectory;
 
-        private void UpdateHeaderFlags(object item, LinkFlags flag)
-        {
-            if (item is string s && string.IsNullOrEmpty(s) || item == null)
-            {
-                Header.LinkFlags &= ~flag;
-            }
-            else
-            {
-                Header.LinkFlags |= flag;
-            }
-        }
+		public string WorkingDirectory
+		{
+			get => _workingDirectory;
+			set
+			{
+				_workingDirectory = value;
+				UpdateHeaderFlags(value, LinkFlags.HasWorkingDir);
+			}
+		}
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            if (Header != null) builder.AppendLine(Header.ToString());
-            if (LinkInfo != null) builder.AppendLine(LinkInfo.ToString());
+		private string _arguments;
+
+		public string Arguments
+		{
+			get => _arguments;
+			set
+			{
+				_arguments = value;
+				UpdateHeaderFlags(value, LinkFlags.HasArguments);
+			}
+		}
+
+		private string _iconLocation;
+
+		public string IconLocation
+		{
+			get => _iconLocation;
+			set
+			{
+				_iconLocation = value;
+				UpdateHeaderFlags(value, LinkFlags.HasIconLocation);
+			}
+		}
+
+		public ShellLinkFile()
+		{
+			Header = new ShellLinkHeader();
+			ExtraDataBlocks = new List<ExtraDataBlock>();
+			ShItemIDs = new List<ShItemID>();
+		}
+
+		private void UpdateHeaderFlags(object item, LinkFlags flag)
+		{
+			if (item is string s && string.IsNullOrEmpty(s) || item == null)
+			{
+				Header.LinkFlags &= ~flag;
+			}
+			else
+			{
+				Header.LinkFlags |= flag;
+			}
+		}
+
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			if (Header != null) builder.AppendLine(Header.ToString());
+			if (LinkInfo != null) builder.AppendLine(LinkInfo.ToString());
 
 			if (ExtraDataBlocks != null)
-            {
-                foreach (var block in ExtraDataBlocks)
-                    builder.AppendLine(block.ToString());
-            }
+			{
+				foreach (var block in ExtraDataBlocks)
+					builder.AppendLine(block.ToString());
+			}
 
-            if (ShItemIDs != null)
-            {
-                foreach (var shitem in ShItemIDs)
-                    builder.AppendLine(shitem.ToString());
-            }
+			if (ShItemIDs != null)
+			{
+				foreach (var shitem in ShItemIDs)
+					builder.AppendLine(shitem.ToString());
+			}
 
 			builder.AppendLine(">>File");
-            builder.AppendFormat("Name: {0}", Name); builder.AppendLine();
-            builder.AppendFormat("RelativePath: {0}", RelativePath); builder.AppendLine();
-            builder.AppendFormat("WorkingDirectory: {0}", WorkingDirectory); builder.AppendLine();
-            builder.AppendFormat("Arguments: {0}", Arguments); builder.AppendLine();
-            builder.AppendFormat("IconLocation: {0}", IconLocation); builder.AppendLine();
-            return builder.ToString();
-        }
+			builder.AppendFormat("Name: {0}", Name);
+			builder.AppendLine();
+			builder.AppendFormat("RelativePath: {0}", RelativePath);
+			builder.AppendLine();
+			builder.AppendFormat("WorkingDirectory: {0}", WorkingDirectory);
+			builder.AppendLine();
+			builder.AppendFormat("Arguments: {0}", Arguments);
+			builder.AppendLine();
+			builder.AppendFormat("IconLocation: {0}", IconLocation);
+			builder.AppendLine();
+			return builder.ToString();
+		}
 
 		public static ShellLinkFile Load(string filename)
 		{
 			var result = new ShellLinkFile();
-            using (var stream = new FileStream(filename, FileMode.Open))
-            {
-                using (var binaryReader = new BinaryReader(stream))
-                {
-                    var reader = new ShellLinkFileHandler(result);
-                    reader.ReadFrom(binaryReader);
-                    return result;
-                }
-            }
+			using (var stream = new FileStream(filename, FileMode.Open))
+			{
+				using (var binaryReader = new BinaryReader(stream))
+				{
+					var reader = new ShellLinkFileHandler(result);
+					reader.ReadFrom(binaryReader);
+					return result;
+				}
+			}
 		}
 
 		private static FileSystemInfo SetFileSystemInfo(ShellLinkFile slf, string target)
-        {
-	        var targetInfo = Directory.Exists(target) ? (FileSystemInfo) new DirectoryInfo(target) : new FileInfo(target);
+		{
+			var targetInfo = Directory.Exists(target) ? (FileSystemInfo)new DirectoryInfo(target) : new FileInfo(target);
 
-	        if (!targetInfo.Exists)
-		        return targetInfo;
+			if (!targetInfo.Exists)
+				return targetInfo;
 
-	        slf.Header.FileAttributes = targetInfo.Attributes;
-	        slf.Header.AccessTime = targetInfo.LastAccessTime;
-	        slf.Header.CreationTime = targetInfo.CreationTime;
-	        slf.Header.WriteTime = targetInfo.LastWriteTime;
+			slf.Header.FileAttributes = targetInfo.Attributes;
+			slf.Header.AccessTime = targetInfo.LastAccessTime;
+			slf.Header.CreationTime = targetInfo.CreationTime;
+			slf.Header.WriteTime = targetInfo.LastWriteTime;
 
-	        if (targetInfo is FileInfo info)
-		        slf.Header.FileSize = Convert.ToInt32(info.Length);
+			if (targetInfo is FileInfo info)
+				slf.Header.FileSize = Convert.ToInt32(info.Length);
 
-	        return targetInfo;
-        }
+			return targetInfo;
+		}
 
-        public static ShellLinkFile CreateRelative(string baseDirectory, string relativeTarget)
-        {
-            if (Path.IsPathRooted(relativeTarget))
-                throw new ArgumentException("Target must be relative to base directory !!!");
+		public static ShellLinkFile CreateRelative(string baseDirectory, string relativeTarget)
+		{
+			if (Path.IsPathRooted(relativeTarget))
+				throw new ArgumentException("Target must be relative to base directory !!!");
 
-            var result = new ShellLinkFile();
+			var result = new ShellLinkFile();
 
-            SetFileSystemInfo(result, Path.Combine(baseDirectory, relativeTarget));
-            result.Header.ShowCommand = ShowCommand.Normal;
+			SetFileSystemInfo(result, Path.Combine(baseDirectory, relativeTarget));
+			result.Header.ShowCommand = ShowCommand.Normal;
 
-            result.RelativePath = relativeTarget;
-            result.WorkingDirectory = ".";
+			result.RelativePath = relativeTarget;
+			result.WorkingDirectory = ".";
 
-            return result;
-        }
+			return result;
+		}
 
-        public static ShellLinkFile CreateAbsolute(string target)
-        {
-            var result = new ShellLinkFile();
+		public static ShellLinkFile CreateAbsolute(string target)
+		{
+			var result = new ShellLinkFile();
 
-            var targetInfo = SetFileSystemInfo(result, target);
-            result.Header.ShowCommand = ShowCommand.Normal;
+			var targetInfo = SetFileSystemInfo(result, target);
+			result.Header.ShowCommand = ShowCommand.Normal;
 
-            result.RelativePath = targetInfo.FullName;
-	        result.WorkingDirectory = targetInfo is FileInfo info ? info.DirectoryName : targetInfo.FullName;
+			result.RelativePath = targetInfo.FullName;
+			result.WorkingDirectory = targetInfo is FileInfo info ? info.DirectoryName : targetInfo.FullName;
 
-	        return result;
-        }
+			return result;
+		}
 
-        public void SaveAs(string filename)
-        {
-            using (var stream = new FileStream(filename, FileMode.Create))
-            {
-                using (var binaryWriter = new BinaryWriter(stream))
-                {
-                    var writer = new ShellLinkFileHandler(this);
-                    writer.WriteTo(binaryWriter);
-                }
-            }
-        }
-		
+		public void SaveAs(string filename)
+		{
+			using (var stream = new FileStream(filename, FileMode.Create))
+			{
+				using (var binaryWriter = new BinaryWriter(stream))
+				{
+					var writer = new ShellLinkFileHandler(this);
+					writer.WriteTo(binaryWriter);
+				}
+			}
+		}
 	}
 }

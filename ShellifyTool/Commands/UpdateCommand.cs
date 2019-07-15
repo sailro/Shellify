@@ -21,20 +21,18 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 namespace Shellify.Tool.Commands
 {
-    public class UpdateCommand : Command
-    {
+	public class UpdateCommand : Command
+	{
+		public UpdateCommand(string tag, string description)
+			: base(tag, description, 1)
+		{
+		}
 
-        public UpdateCommand(string tag, string description)
-            : base(tag, description, 1)
-        {
-        }
-
-        public override void Execute()
-        {
-            Context = ShellLinkFile.Load(Filename);
-            foreach (var option in Options) option.Execute(Context);
-            Context.SaveAs(Filename);
-        }
-
-    }
+		public override void Execute()
+		{
+			Context = ShellLinkFile.Load(Filename);
+			foreach (var option in Options) option.Execute(Context);
+			Context.SaveAs(Filename);
+		}
+	}
 }

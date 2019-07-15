@@ -23,8 +23,6 @@ namespace Shellify.IO
 {
 	public interface ISizeComputable
 	{
-
-        int ComputedSize { get; }
-		
+		int ComputedSize { get; }
 	}
 }

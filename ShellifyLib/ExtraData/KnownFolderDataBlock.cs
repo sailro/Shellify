@@ -24,24 +24,21 @@ using System;
 
 namespace Shellify.ExtraData
 {
-    public class KnownFolderDataBlock : BaseFolderIDDataBlock
+	public class KnownFolderDataBlock : BaseFolderIDDataBlock
 	{
+		public Guid KnownFolder { get; set; }
 
-        public Guid KnownFolder { get; set; }
-
-        public KnownFolderDataBlock()
+		public KnownFolderDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.KnownFolderDataBlock;
 		}
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            builder.AppendFormat("KnownFolder: {0}", KnownFolder);
-            return builder.ToString();
-        }
-
-		
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(base.ToString());
+			builder.AppendFormat("KnownFolder: {0}", KnownFolder);
+			return builder.ToString();
+		}
 	}
 }

@@ -26,23 +26,24 @@ namespace Shellify.Core
 {
 	public class ShItemID
 	{
-		
 		public byte[] Data { get; set; }
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(">> ShItemId");
-            if (Data != null)
-            {
-                builder.AppendFormat("Data length: {0}", Data.Length); builder.AppendLine();
-                builder.AppendFormat("Hash: {0}", Data.ComputeHash());
-            }
-            else
-            {
-                builder.Append("No data");
-            }
-            return builder.ToString();
-        }
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(">> ShItemId");
+			if (Data != null)
+			{
+				builder.AppendFormat("Data length: {0}", Data.Length);
+				builder.AppendLine();
+				builder.AppendFormat("Hash: {0}", Data.ComputeHash());
+			}
+			else
+			{
+				builder.Append("No data");
+			}
+
+			return builder.ToString();
+		}
 	}
 }

@@ -26,72 +26,71 @@ using System.Text;
 
 namespace Shellify.Extensions
 {
-    public static class BinaryReaderExtensions
-    {
+	public static class BinaryReaderExtensions
+	{
+		public static string ReadSTDATA(this BinaryReader reader, Encoding encoding)
+		{
+			int charcount = reader.ReadUInt16();
+			var bytecount = charcount * encoding.GetByteCount(" ");
+			return encoding.GetString(reader.ReadBytes(bytecount));
+		}
 
-        public static string ReadSTDATA(this BinaryReader reader, Encoding encoding)
-        {
-            int charcount = reader.ReadUInt16();
-            var bytecount = charcount * encoding.GetByteCount(" ");
-            return encoding.GetString(reader.ReadBytes(bytecount));
-        }
+		public static string ReadASCIIZ(this BinaryReader reader, long baseOffset, long defaultOffset, long? unicodeOffset)
+		{
+			var offset = defaultOffset;
+			var encoding = Encoding.Default;
+			if (unicodeOffset.HasValue)
+			{
+				offset = unicodeOffset.Value;
+				encoding = Encoding.Unicode;
+			}
 
-        public static string ReadASCIIZ(this BinaryReader reader, long baseOffset, long defaultOffset, long? unicodeOffset)
-        {
-            var offset = defaultOffset;
-            var encoding = Encoding.Default;
-            if (unicodeOffset.HasValue)
-            {
-                offset = unicodeOffset.Value;
-                encoding = Encoding.Unicode;
-            }
-            return ReadASCIIZ(reader, encoding, reader.BaseStream.Position - baseOffset - offset);
-        }
+			return ReadASCIIZ(reader, encoding, reader.BaseStream.Position - baseOffset - offset);
+		}
 
-        private static string ReadASCIIZ(this BinaryReader reader, Encoding encoding, long offset)
-        {
-            reader.BaseStream.Seek(offset, SeekOrigin.Current);
-            return ReadASCIIZ(reader, encoding);
-        }
+		private static string ReadASCIIZ(this BinaryReader reader, Encoding encoding, long offset)
+		{
+			reader.BaseStream.Seek(offset, SeekOrigin.Current);
+			return ReadASCIIZ(reader, encoding);
+		}
 
-        private static string ReadASCIIZ(this BinaryReader reader, Encoding encoding)
-        {
-            var bytes = new List<byte>();
-            byte[] read;
-            var bytecount = encoding.GetByteCount(" ");
+		private static string ReadASCIIZ(this BinaryReader reader, Encoding encoding)
+		{
+			var bytes = new List<byte>();
+			byte[] read;
+			var bytecount = encoding.GetByteCount(" ");
 
-            while ( (read = reader.ReadBytes(bytecount)).First() != 0 )
-            {
-                bytes.AddRange(read);
-            }
+			while ((read = reader.ReadBytes(bytecount)).First() != 0)
+			{
+				bytes.AddRange(read);
+			}
 
-            return encoding.GetString(bytes.ToArray());
-        }
+			return encoding.GetString(bytes.ToArray());
+		}
 
-        public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length)
-        {
-	        return ReadASCIIZF(reader, encoding, length, out _);
-        }
+		public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length)
+		{
+			return ReadASCIIZF(reader, encoding, length, out _);
+		}
 
-        public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length, out byte[] padding)
-        {
-            var bytes = reader.ReadBytes(length);
-            var bytecount = encoding.GetByteCount(" ");
-            var nullsequence = new byte[bytecount];
+		public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length, out byte[] padding)
+		{
+			var bytes = reader.ReadBytes(length);
+			var bytecount = encoding.GetByteCount(" ");
+			var nullsequence = new byte[bytecount];
 
-            var split = bytes.IndexOf(nullsequence);
-            if (split <= 0)
-            {
-                padding = bytes.ToArray();
-                return string.Empty;
-            }
-	        
-			var stringdata = bytes.Take(split -1 + bytecount).ToArray();
-	        var temp = bytes.ToList();
-	        temp.RemoveRange(0, split - 1 + bytecount);
-	        padding = temp.ToArray();
-	        return encoding.GetString(stringdata);
-        }
+			var split = bytes.IndexOf(nullsequence);
+			if (split <= 0)
+			{
+				padding = bytes.ToArray();
+				return string.Empty;
+			}
 
-    }
+			var stringdata = bytes.Take(split - 1 + bytecount).ToArray();
+			var temp = bytes.ToList();
+			temp.RemoveRange(0, split - 1 + bytecount);
+			padding = temp.ToArray();
+			return encoding.GetString(stringdata);
+		}
+	}
 }

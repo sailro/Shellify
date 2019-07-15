@@ -23,13 +23,11 @@ using System;
 
 namespace Shellify.IO
 {
-    public class MalformedException : Exception
-    {
-
-        public MalformedException(string message)
-            : base(message)
-        {
-        }
-
-    }
+	public class MalformedException : Exception
+	{
+		public MalformedException(string message)
+			: base(message)
+		{
+		}
+	}
 }

@@ -24,39 +24,38 @@ using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
-    public abstract class ExtraDataBlockHandler : IBinaryReadable, IBinaryWriteable
+	public abstract class ExtraDataBlockHandler : IBinaryReadable, IBinaryWriteable
 	{
 		public abstract void ReadFrom(System.IO.BinaryReader reader);
 		public abstract void WriteTo(System.IO.BinaryWriter writer);
 	}
 
-    public abstract class ExtraDataBlockHandler<T> : ExtraDataBlockHandler, ISizeComputable where T : ExtraDataBlock
+	public abstract class ExtraDataBlockHandler<T> : ExtraDataBlockHandler, ISizeComputable where T : ExtraDataBlock
 	{
 		protected T Item { get; }
 		protected int BlockSize { get; private set; }
-        protected ShellLinkFile Context { get; }
+		protected ShellLinkFile Context { get; }
 
 		public virtual int ComputedSize => Marshal.SizeOf(BlockSize) + Marshal.SizeOf(typeof(int));
 
 		protected ExtraDataBlockHandler(T item, ShellLinkFile context)
 		{
 			Item = item;
-            Context = context;
+			Context = context;
 		}
-		
+
 		public override void ReadFrom(System.IO.BinaryReader reader)
 		{
 			BlockSize = reader.ReadInt32();
-            Item.Signature = (ExtraDataBlockSignature) (reader.ReadInt32());
+			Item.Signature = (ExtraDataBlockSignature)(reader.ReadInt32());
 		}
-		
+
 		public override void WriteTo(System.IO.BinaryWriter writer)
 		{
-            FormatChecker.CheckExpression(() => Item.Signature != ExtraDataBlockSignature.UnknownDataBlock);
-            BlockSize = ComputedSize;
-            writer.Write(BlockSize);
-			writer.Write((int) Item.Signature);
+			FormatChecker.CheckExpression(() => Item.Signature != ExtraDataBlockSignature.UnknownDataBlock);
+			BlockSize = ComputedSize;
+			writer.Write(BlockSize);
+			writer.Write((int)Item.Signature);
 		}
-	
 	}
 }

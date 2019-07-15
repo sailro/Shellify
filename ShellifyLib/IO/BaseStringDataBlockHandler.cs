@@ -26,43 +26,42 @@ using System.Text;
 
 namespace Shellify.IO
 {
-	public abstract class BaseStringDataBlockHandler<T> : ExtraDataBlockHandler<T> where T: BaseStringDataBlock
+	public abstract class BaseStringDataBlockHandler<T> : ExtraDataBlockHandler<T> where T : BaseStringDataBlock
 	{
 		private const int ValueSize = 260;
 		private const int ValueSizeUnicode = 520;
 		private const int ExactBlockSize = 0x314;
 
 		protected BaseStringDataBlockHandler(T item, ShellLinkFile context)
-            : base(item, context)
+			: base(item, context)
 		{
 		}
-		
+
 		public override int ComputedSize => base.ComputedSize + ValueSize + ValueSizeUnicode;
 
 		public override void ReadFrom(BinaryReader reader)
 		{
 			base.ReadFrom(reader);
 
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
 
-            Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out var padding);
-            Item.ValuePadding = padding;
+			Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out var padding);
+			Item.ValuePadding = padding;
 
-            Item.ValueUnicode = reader.ReadASCIIZF(Encoding.Unicode, ValueSizeUnicode, out padding);
-            Item.ValueUnicodePadding = padding;
-        }
+			Item.ValueUnicode = reader.ReadASCIIZF(Encoding.Unicode, ValueSizeUnicode, out padding);
+			Item.ValueUnicodePadding = padding;
+		}
 
 		public override void WriteTo(BinaryWriter writer)
 		{
-            base.WriteTo(writer);
+			base.WriteTo(writer);
 
-            FormatChecker.CheckExpression(() => Item.Value == null || Item.Value.Length < ValueSize);
-            FormatChecker.CheckExpression(() => Item.ValueUnicode == null || Item.ValueUnicode.Length < ValueSizeUnicode);
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize); 
-            
-            writer.WriteASCIIZF(Item.Value, Encoding.Default, ValueSize, Item.ValuePadding);
-            writer.WriteASCIIZF(Item.ValueUnicode, Encoding.Unicode, ValueSizeUnicode, Item.ValueUnicodePadding);
-        }
-		
+			FormatChecker.CheckExpression(() => Item.Value == null || Item.Value.Length < ValueSize);
+			FormatChecker.CheckExpression(() => Item.ValueUnicode == null || Item.ValueUnicode.Length < ValueSizeUnicode);
+			FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+
+			writer.WriteASCIIZF(Item.Value, Encoding.Default, ValueSize, Item.ValuePadding);
+			writer.WriteASCIIZF(Item.ValueUnicode, Encoding.Unicode, ValueSizeUnicode, Item.ValueUnicodePadding);
+		}
 	}
 }

@@ -26,21 +26,21 @@ namespace Shellify.Core
 {
 	public class VolumeID
 	{
-		
 		public DriveType DriveType { get; set; }
 		public int DriveSerialNumber { get; set; }
 		public string VolumeLabel { get; set; }
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(">> VolumeID");
-            builder.AppendFormat("DriveType: {0}", DriveType); builder.AppendLine();
-            builder.AppendFormat("DriveSerialNumber: {0:x}", DriveSerialNumber); builder.AppendLine();
-            builder.AppendFormat("VolumeLabel: {0}", VolumeLabel); 
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(">> VolumeID");
+			builder.AppendFormat("DriveType: {0}", DriveType);
+			builder.AppendLine();
+			builder.AppendFormat("DriveSerialNumber: {0:x}", DriveSerialNumber);
+			builder.AppendLine();
+			builder.AppendFormat("VolumeLabel: {0}", VolumeLabel);
 
-            return builder.ToString();
-        }
-
+			return builder.ToString();
+		}
 	}
 }

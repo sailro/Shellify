@@ -27,57 +27,57 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Test
 {
-    [TestClass]
-    public class ToolOptionsTest
-    {
-	    // ReSharper disable once UnusedAutoPropertyAccessor.Global
-	    // ReSharper disable once MemberCanBePrivate.Global
-	    public TestContext TestContext { get; set; }
+	[TestClass]
+	public class ToolOptionsTest
+	{
+		// ReSharper disable once UnusedAutoPropertyAccessor.Global
+		// ReSharper disable once MemberCanBePrivate.Global
+		public TestContext TestContext { get; set; }
 
-        private static void TestOption(ShellLinkFile context, Option option, string argument)
-        {
-            option.Arguments.Clear();
-            for (var i = 0; i < option.ExpectedArguments; i++)
-                option.Arguments.Add(argument);
+		private static void TestOption(ShellLinkFile context, Option option, string argument)
+		{
+			option.Arguments.Clear();
+			for (var i = 0; i < option.ExpectedArguments; i++)
+				option.Arguments.Add(argument);
 
 			// As we use Reflection to alter properties, just check if properties names are correct.
-            option.Execute(context);
-        }
+			option.Execute(context);
+		}
 
-        [TestMethod]
-        public void TestToolOptions()
-        {
-            var info = new DateTimeFormatInfo();
-            string[] testargs = { "0", "string", new DateTime().ToString($"{info.ShortDatePattern} {info.ShortTimePattern}", CultureInfo.InvariantCulture), "true" };
+		[TestMethod]
+		public void TestToolOptions()
+		{
+			var info = new DateTimeFormatInfo();
+			string[] testargs = {"0", "string", new DateTime().ToString($"{info.ShortDatePattern} {info.ShortTimePattern}", CultureInfo.InvariantCulture), "true"};
 
-            var slf = new ShellLinkFile();
-            foreach (var option in ProgramContext.Options)
-            {
-                var argindex = 0;
-                bool retry;
-                do
-                {
-                    retry = false;
-                    try
-                    {
-                        TestOption(slf, option, testargs[argindex]);
-                    }
-                    catch (FormatException)
-                    {
-	                    if (argindex >= testargs.Length - 1)
-		                    throw;
+			var slf = new ShellLinkFile();
+			foreach (var option in ProgramContext.Options)
+			{
+				var argindex = 0;
+				bool retry;
+				do
+				{
+					retry = false;
+					try
+					{
+						TestOption(slf, option, testargs[argindex]);
+					}
+					catch (FormatException)
+					{
+						if (argindex >= testargs.Length - 1)
+							throw;
 
-	                    TestContext.WriteLine("Option '{0}' fail for argument '{1}', testing '{2}'", option,
-	                                                   testargs[argindex], testargs[argindex + 1]);
-	                    retry = true;
-	                    argindex++;
-                    }
-                    catch (Exception)
-                    {
-                        Assert.Fail("Check option '{0}', type {1}", option, option.GetType().Name);
-                    }
-                } while (retry);
-            }
-        }
-    }
+						TestContext.WriteLine("Option '{0}' fail for argument '{1}', testing '{2}'", option,
+							testargs[argindex], testargs[argindex + 1]);
+						retry = true;
+						argindex++;
+					}
+					catch (Exception)
+					{
+						Assert.Fail("Check option '{0}', type {1}", option, option.GetType().Name);
+					}
+				} while (retry);
+			}
+		}
+	}
 }

@@ -25,51 +25,50 @@ using Shellify.ExtraData;
 
 namespace Shellify.IO
 {
-    public abstract class BaseFolderIDDataBlockHandler<T> : ExtraDataBlockHandler<T> where T:BaseFolderIDDataBlock 
-    {
+	public abstract class BaseFolderIDDataBlockHandler<T> : ExtraDataBlockHandler<T> where T : BaseFolderIDDataBlock
+	{
+		private int Offset { get; set; }
 
-        private int Offset { get; set; }
+		protected BaseFolderIDDataBlockHandler(T item, ShellLinkFile context)
+			: base(item, context)
+		{
+		}
 
-	    protected BaseFolderIDDataBlockHandler(T item, ShellLinkFile context)
-            : base(item, context)
-        {
-        }
+		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Offset);
 
-        public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Offset);
+		public override void ReadFrom(System.IO.BinaryReader reader)
+		{
+			base.ReadFrom(reader);
+			ReadID(reader);
+			Offset = reader.ReadInt32();
 
-        public override void ReadFrom(System.IO.BinaryReader reader)
-        {
-            base.ReadFrom(reader);
-            ReadID(reader);
-            Offset = reader.ReadInt32();
+			var computedOffset = 0;
+			foreach (var shitemid in Context.ShItemIDs)
+			{
+				if (computedOffset == Offset)
+				{
+					Item.ShItemID = shitemid;
+					break;
+				}
 
-            var computedOffset = 0;
-            foreach (var shitemid in Context.ShItemIDs)
-            {
-                if (computedOffset == Offset)
-                {
-                    Item.ShItemID = shitemid;
-                    break;
-                }
-                var handler = new ShItemIdHandler(shitemid);
-                computedOffset += handler.ComputedSize;
-            }
-        }
+				var handler = new ShItemIdHandler(shitemid);
+				computedOffset += handler.ComputedSize;
+			}
+		}
 
-        public override void WriteTo(System.IO.BinaryWriter writer)
-        {
-            Offset = 0;
-            foreach (var handler in Context.ShItemIDs.TakeWhile(shitemid => Item.ShItemID != shitemid).Select(shitemid => new ShItemIdHandler(shitemid)))
-	            Offset += handler.ComputedSize;
+		public override void WriteTo(System.IO.BinaryWriter writer)
+		{
+			Offset = 0;
+			foreach (var handler in Context.ShItemIDs.TakeWhile(shitemid => Item.ShItemID != shitemid).Select(shitemid => new ShItemIdHandler(shitemid)))
+				Offset += handler.ComputedSize;
 
-            base.WriteTo(writer);
-            WriteID(writer);
-            writer.Write(Offset);
-        }
+			base.WriteTo(writer);
+			WriteID(writer);
+			writer.Write(Offset);
+		}
 
-        protected abstract void ReadID(System.IO.BinaryReader reader);
+		protected abstract void ReadID(System.IO.BinaryReader reader);
 
-        protected abstract void WriteID(System.IO.BinaryWriter writer);
-
-    }
+		protected abstract void WriteID(System.IO.BinaryWriter writer);
+	}
 }

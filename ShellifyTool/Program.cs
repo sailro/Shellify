@@ -25,122 +25,123 @@ using System.Text;
 
 namespace Shellify.Tool
 {
-    public class Program
-    {
-	    private const string DemoValue = "value";
-	    private const string OptionTagDescriptionSeparator = " - ";
+	public class Program
+	{
+		private const string DemoValue = "value";
+		private const string OptionTagDescriptionSeparator = " - ";
 
-        public static void Main(string[] args)
-        {
-            try
-            {
-                Console.WriteLine("ShellifyTool v{0} by Sebastien Lebreton", typeof(Program).Assembly.GetName().Version.ToString(2));
-                Console.WriteLine();
-                var command = CommandLineParser.Parse(args);
-                if (command != null)
-                    command.Execute();
-                else
-                    DisplayUsage();
-            }
-            catch (CommandLineParseException e)
-            {
-                DisplayUsage();
-                Console.WriteLine();
-                Console.WriteLine(string.Concat("ERROR: ", e.Message));
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(string.Concat("ERROR: ", e.Message));
-            }
-        }
+		public static void Main(string[] args)
+		{
+			try
+			{
+				Console.WriteLine("ShellifyTool v{0} by Sebastien Lebreton", typeof(Program).Assembly.GetName().Version.ToString(2));
+				Console.WriteLine();
+				var command = CommandLineParser.Parse(args);
+				if (command != null)
+					command.Execute();
+				else
+					DisplayUsage();
+			}
+			catch (CommandLineParseException e)
+			{
+				DisplayUsage();
+				Console.WriteLine();
+				Console.WriteLine(string.Concat("ERROR: ", e.Message));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(string.Concat("ERROR: ", e.Message));
+			}
+		}
 
-        private static int ComputeOptionWidth()
-        {
-            var result = 0;
-
-	        foreach (var option in ProgramContext.Options)
-            {
-                var value = option.Tag.Length + CommandLineParser.OptionPrefix.Length;
-	            
-				if (option.ExpectedArguments > 0)
-		            value += CommandLineParser.OptionArgumentSeparator.Length + DemoValue.Length;
-	            
-				result = Math.Max(result, value);
-            }
-
-            return result;
-        }
-
-        private static void DisplayUsage()
-        {
-            Console.WriteLine("Usage: ShellifyTool <Command> [Options...] filename [target]");
-            Console.WriteLine();
-            Console.WriteLine("Commands:");
-	        
-			foreach (var command in ProgramContext.Commands)
-		        Console.WriteLine("{0}: {1}", command.Tag, command.Description);
-
-	        var optionWidth = ComputeOptionWidth();
-            Console.WriteLine();
-            Console.WriteLine("Options:");
+		private static int ComputeOptionWidth()
+		{
+			var result = 0;
 
 			foreach (var option in ProgramContext.Options)
-            {
-                var builder = new StringBuilder();
-                builder.AppendFormat("{0}{1}", CommandLineParser.OptionPrefix, option.Tag);
+			{
+				var value = option.Tag.Length + CommandLineParser.OptionPrefix.Length;
 
 				if (option.ExpectedArguments > 0)
-                {
-                    builder.Append(CommandLineParser.OptionArgumentSeparator);
-                    builder.Append("value");
-                }
+					value += CommandLineParser.OptionArgumentSeparator.Length + DemoValue.Length;
+
+				result = Math.Max(result, value);
+			}
+
+			return result;
+		}
+
+		private static void DisplayUsage()
+		{
+			Console.WriteLine("Usage: ShellifyTool <Command> [Options...] filename [target]");
+			Console.WriteLine();
+			Console.WriteLine("Commands:");
+
+			foreach (var command in ProgramContext.Commands)
+				Console.WriteLine("{0}: {1}", command.Tag, command.Description);
+
+			var optionWidth = ComputeOptionWidth();
+			Console.WriteLine();
+			Console.WriteLine("Options:");
+
+			foreach (var option in ProgramContext.Options)
+			{
+				var builder = new StringBuilder();
+				builder.AppendFormat("{0}{1}", CommandLineParser.OptionPrefix, option.Tag);
+
+				if (option.ExpectedArguments > 0)
+				{
+					builder.Append(CommandLineParser.OptionArgumentSeparator);
+					builder.Append("value");
+				}
 
 				while (builder.Length < optionWidth)
-		            builder.Append(" ");
+					builder.Append(" ");
 
 				builder.Append(OptionTagDescriptionSeparator);
-                builder.Append(option.Description);
-                Console.WriteLine(NormalizeBuilder(builder, optionWidth));
-            }
-        }
+				builder.Append(option.Description);
+				Console.WriteLine(NormalizeBuilder(builder, optionWidth));
+			}
+		}
 
-        private static string NormalizeBuilder(StringBuilder builder, int optionWidth)
-        {
-            var result = builder.ToString();
-            const char separator = ',';
-            var currentWidth = 0;
-            const int windowWidth = 80; // Console.WindowWidth no implemented in mono...
+		private static string NormalizeBuilder(StringBuilder builder, int optionWidth)
+		{
+			var result = builder.ToString();
+			const char separator = ',';
+			var currentWidth = 0;
+			const int windowWidth = 80; // Console.WindowWidth no implemented in mono...
 
-            if (builder.Length <= windowWidth) 
-	            return result;
+			if (builder.Length <= windowWidth)
+				return result;
 
-            var splits = result.Split(separator);
-            builder.Length = 0;
-            foreach (var split in splits)
-            {
-	            if (builder.Length > 0)
-	            {
-		            builder.Append(separator);
-		            currentWidth++;
-	            }
-	            if (currentWidth + split.Length >= windowWidth)
-	            {
-		            builder.AppendLine();
-		            currentWidth = 0;
-		            while (currentWidth < optionWidth + OptionTagDescriptionSeparator.Length)
-		            {
-			            builder.Append(" ");
-			            currentWidth++;
-		            }
-	            }
-	            builder.Append(split);
-	            currentWidth += split.Length;
-            }
-            result = builder.ToString();
+			var splits = result.Split(separator);
+			builder.Length = 0;
+			foreach (var split in splits)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(separator);
+					currentWidth++;
+				}
 
-            return result;
-        }
+				if (currentWidth + split.Length >= windowWidth)
+				{
+					builder.AppendLine();
+					currentWidth = 0;
+					while (currentWidth < optionWidth + OptionTagDescriptionSeparator.Length)
+					{
+						builder.Append(" ");
+						currentWidth++;
+					}
+				}
 
-    }
-	
+				builder.Append(split);
+				currentWidth += split.Length;
+			}
+
+			result = builder.ToString();
+
+			return result;
+		}
+	}
 }

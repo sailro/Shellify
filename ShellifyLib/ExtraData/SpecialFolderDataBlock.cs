@@ -26,21 +26,19 @@ namespace Shellify.ExtraData
 {
 	public class SpecialFolderDataBlock : BaseFolderIDDataBlock
 	{
+		public Environment.SpecialFolder SpecialFolder { get; set; }
 
-        public Environment.SpecialFolder SpecialFolder { get; set; }
-		
 		public SpecialFolderDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.SpecialFolderDataBlock;
 		}
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(base.ToString());
-            builder.AppendFormat("SpecialFolder: {0}", SpecialFolder);
-            return builder.ToString();
-        }
-		
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(base.ToString());
+			builder.AppendFormat("SpecialFolder: {0}", SpecialFolder);
+			return builder.ToString();
+		}
 	}
 }

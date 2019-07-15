@@ -25,34 +25,33 @@ namespace Shellify.Core
 {
 	public class LinkInfo
 	{
-		
 		public LinkInfoFlags LinkInfoFlags { get; set; }
 		public VolumeID VolumeID { get; set; }
 		public string LocalBasePath { get; set; }
 		public CommonNetworkRelativeLink CommonNetworkRelativeLink { get; set; }
 		public string CommonPathSuffix { get; set; }
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(">> LinkInfo");
-            builder.AppendFormat("Flags: {0}", LinkInfoFlags); builder.AppendLine();
-            builder.AppendFormat("LocalBasePath: {0}", LocalBasePath); builder.AppendLine();
-            builder.AppendFormat("CommonPathSuffix: {0}", CommonPathSuffix); builder.AppendLine();
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendLine(">> LinkInfo");
+			builder.AppendFormat("Flags: {0}", LinkInfoFlags);
+			builder.AppendLine();
+			builder.AppendFormat("LocalBasePath: {0}", LocalBasePath);
+			builder.AppendLine();
+			builder.AppendFormat("CommonPathSuffix: {0}", CommonPathSuffix);
+			builder.AppendLine();
 
-            if (VolumeID != null) 
-	            builder.Append(VolumeID);
+			if (VolumeID != null)
+				builder.Append(VolumeID);
 
-            if (CommonNetworkRelativeLink != null)
-            {
-                if (VolumeID != null) builder.AppendLine();
-                builder.Append(CommonNetworkRelativeLink);
-            }
+			if (CommonNetworkRelativeLink != null)
+			{
+				if (VolumeID != null) builder.AppendLine();
+				builder.Append(CommonNetworkRelativeLink);
+			}
 
-            return builder.ToString();
-        }
-		
+			return builder.ToString();
+		}
 	}
-	
-	
 }

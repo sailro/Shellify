@@ -21,13 +21,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 namespace Shellify.ExtraData
 {
-    public class DarwinDataBlock : BaseStringDataBlock
+	public class DarwinDataBlock : BaseStringDataBlock
 	{
-		
 		public DarwinDataBlock()
 		{
 			Signature = ExtraDataBlockSignature.DarwinDataBlock;
 		}
-		
 	}
 }

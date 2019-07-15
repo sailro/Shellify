@@ -25,16 +25,15 @@ namespace Shellify.ExtraData
 {
 	public abstract class ExtraDataBlock
 	{
-	
 		public ExtraDataBlockSignature Signature { get; set; }
 
-        public override string ToString()
-        {
-            var builder = new StringBuilder();
-            builder.AppendFormat(">> {0}", GetType().Name);
-            builder.AppendLine();
-            builder.AppendFormat("Signature: {0:x}", Signature);
-            return builder.ToString();
-        }
-    }
+		public override string ToString()
+		{
+			var builder = new StringBuilder();
+			builder.AppendFormat(">> {0}", GetType().Name);
+			builder.AppendLine();
+			builder.AppendFormat("Signature: {0:x}", Signature);
+			return builder.ToString();
+		}
+	}
 }

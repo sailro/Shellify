@@ -21,13 +21,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 namespace Shellify.ExtraData
 {
-    public enum FontFamily
-    {
-        DontCare=0x0,
-        Roman=0x10,
-        Swiss=0x20,
-        Modern=0x30,
-        Script=0x40,
-        Decorative=0x50
-    }
+	public enum FontFamily
+	{
+		DontCare = 0x0,
+		Roman = 0x10,
+		Swiss = 0x20,
+		Modern = 0x30,
+		Script = 0x40,
+		Decorative = 0x50
+	}
 }

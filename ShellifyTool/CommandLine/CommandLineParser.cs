@@ -25,86 +25,84 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.CommandLine
 {
-    public static class CommandLineParser
-    {
+	public static class CommandLineParser
+	{
+		public const string OptionPrefix = "-";
+		public const string OptionArgumentSeparator = "=";
 
-        public const string OptionPrefix = "-";
-        public const string OptionArgumentSeparator = "=";
+		private static void CheckItem(CommandLineItem item)
+		{
+			if (item == null)
+				return;
 
-        private static void CheckItem(CommandLineItem item)
-        {
-	        if (item == null) 
-		        return;
+			if (item.ExpectedArguments != item.Arguments.Count)
+			{
+				throw new CommandLineParseException($"'{item}' expects {item.ExpectedArguments} argument(s)");
+			}
+		}
 
-	        if (item.ExpectedArguments != item.Arguments.Count)
-	        {
-		        throw new CommandLineParseException($"'{item}' expects {item.ExpectedArguments} argument(s)");
-	        }
-        }
+		private static Command ParseCommand(string item)
+		{
+			var command = ProgramContext.Commands.FirstOrDefault(c => c.Tag.Equals(item, System.StringComparison.InvariantCultureIgnoreCase));
 
-        private static Command ParseCommand(string item)
-        {
-            var command = ProgramContext.Commands.FirstOrDefault(c => c.Tag.Equals(item, System.StringComparison.InvariantCultureIgnoreCase));
+			if (command == null)
+				throw new CommandLineParseException($"Unknown command {item}");
 
-	        if (command == null)
-                throw new CommandLineParseException($"Unknown command {item}");
+			return command;
+		}
 
-            return command;
-        }
+		private static Option ParseOption(Command command, string item)
+		{
+			Option option = null;
 
-        private static Option ParseOption(Command command, string item)
-        {
-            Option option = null;
+			foreach (var o in ProgramContext.Options)
+			{
+				var tokens = item.Split(OptionArgumentSeparator.ToCharArray()[0]);
+				var oname = tokens[0];
 
-            foreach (var o in ProgramContext.Options)
-            {
-                var tokens = item.Split(OptionArgumentSeparator.ToCharArray()[0]);
-                var oname = tokens[0];
+				if (!oname.Equals(string.Concat(OptionPrefix, o.Tag), System.StringComparison.InvariantCultureIgnoreCase))
+					continue;
 
-	            if (!oname.Equals(string.Concat(OptionPrefix, o.Tag), System.StringComparison.InvariantCultureIgnoreCase))
-		            continue;
+				if (!o.Applies.Contains(command))
+					throw new CommandLineParseException($"'{o}' option is not available for '{command}' command");
 
-	            if (!o.Applies.Contains(command))
-		            throw new CommandLineParseException($"'{o}' option is not available for '{command}' command");
-
-	            if (tokens.Length > 1)
-		            o.Arguments.Add(tokens[1]);
+				if (tokens.Length > 1)
+					o.Arguments.Add(tokens[1]);
 
 				option = o;
-	            break;
-            }
+				break;
+			}
 
-	        if (option == null)
-		        throw new CommandLineParseException($"Unknown option {item}");
+			if (option == null)
+				throw new CommandLineParseException($"Unknown option {item}");
 
 			CheckItem(option);
-	        return option;
-        }
+			return option;
+		}
 
-        public static Command Parse(string[] args)
-        {
-            Command command = null;
+		public static Command Parse(string[] args)
+		{
+			Command command = null;
 
-            foreach (var item in args)
-            {
-                if (command == null)
-                    command = ParseCommand(item);
-                else
-                {
-                    if (item.StartsWith(OptionPrefix))
-                    {
-                        var option = ParseOption(command, item);
-                        if (!command.Options.Contains(option))
-                            command.Options.Add(option);
-                    }
-                    else
-                        command.Arguments.Add(item);
-                }
-            }
+			foreach (var item in args)
+			{
+				if (command == null)
+					command = ParseCommand(item);
+				else
+				{
+					if (item.StartsWith(OptionPrefix))
+					{
+						var option = ParseOption(command, item);
+						if (!command.Options.Contains(option))
+							command.Options.Add(option);
+					}
+					else
+						command.Arguments.Add(item);
+				}
+			}
 
-            CheckItem(command);
-            return command;
-        }
-
-    }
+			CheckItem(command);
+			return command;
+		}
+	}
 }
