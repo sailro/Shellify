@@ -30,12 +30,12 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.CommandLine
 {
-    public class ProgramContext
+    public static class ProgramContext
     {
 
-        public static IList<Command> Commands { get; private set; }
-        public static IList<Command> WriteCommands { get; private set; }
-        public static IList<Option> Options { get; private set; }
+        public static IList<Command> Commands { get; }
+        private static IList<Command> WriteCommands { get; }
+        public static IList<Option> Options { get; }
 
         private static string DumpEnum(Type enumType) {
             var builder = new StringBuilder();
@@ -93,20 +93,20 @@ namespace Shellify.Tool.CommandLine
 
         private static Option CreateHeaderFlagOption(string tag, LinkFlags flag)
         {
-            string description = string.Format("Set/Unset {0} flag (true/false).", flag);
+            string description = $"Set/Unset {flag} flag (true/false).";
             return new HeaderFlagOption(tag, description, WriteCommands, flag);
         }
 
         private static Option CreateOption(string tag, params string[] propertyPath)
         {
-            string description = string.Format("Set {0}.", propertyPath[propertyPath.Length - 1]);
+            string description = $"Set {propertyPath[propertyPath.Length - 1]}.";
             return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
         }
 
         private static Option CreateDateTimeOption(string tag, params string[] propertyPath)
         {
             var info = new DateTimeFormatInfo();
-            var description = string.Format("Set {0} (\"{1} {2}\").", propertyPath[propertyPath.Length - 1], info.ShortDatePattern, info.ShortTimePattern);
+            var description = $"Set {propertyPath[propertyPath.Length - 1]} (\"{info.ShortDatePattern} {info.ShortTimePattern}\").";
             return new ReflectionSetterOption(tag, description, WriteCommands, propertyPath);
         }
 
@@ -114,7 +114,7 @@ namespace Shellify.Tool.CommandLine
         {
             var flags = enumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
 
-            var description = string.Format("Set {0} ({1}).", propertyPath[propertyPath.Length - 1], DumpEnum(enumType));
+            var description = $"Set {propertyPath[propertyPath.Length - 1]} ({DumpEnum(enumType)}).";
             if (flags) 
                 description = string.Concat(description, " Values can be combined.");
 

@@ -46,14 +46,8 @@ namespace Shellify.IO
 			}
 		}
 		
-		public int ComputedSize
-		{
-			get
-			{
-				return ((Item.Data != null) ? Item.Data.Length : 0) + Marshal.SizeOf(Size);
-			}
-		}
-		
+		public int ComputedSize => (Item.Data?.Length ?? 0) + Marshal.SizeOf(Size);
+
 		public void WriteTo(BinaryWriter writer)
 		{
 			Size = Convert.ToUInt16(ComputedSize);

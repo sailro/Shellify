@@ -33,7 +33,7 @@ namespace Shellify.IO
     public class ShellLinkFileHandler : IBinaryReadable, IBinaryWriteable
     {
 
-        private ShellLinkFile Item { get; set; }
+        private ShellLinkFile Item { get; }
 
         public ShellLinkFileHandler(ShellLinkFile item)
         {
@@ -42,7 +42,7 @@ namespace Shellify.IO
 
         private string ReadStringData(BinaryReader reader, LinkFlags mask)
         {
-            var enc = ((Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0) ? Encoding.Unicode : Encoding.Default;
+            var enc = (Item.Header.LinkFlags & LinkFlags.IsUnicode) != 0 ? Encoding.Unicode : Encoding.Default;
             return (Item.Header.LinkFlags & mask) != 0 ? reader.ReadSTDATA(enc) : null;
         }
 
@@ -74,21 +74,21 @@ namespace Shellify.IO
         private void ReadIDListSection(BinaryReader reader)
         {
             Item.ShItemIDs = new List<ShItemID>();
-            if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) != 0)
-            {
-                var idlhandler = new IDListHandler(Item, true);
-                idlhandler.ReadFrom(reader);
-            }
+            if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) == 0)
+	            return;
+
+            var idlhandler = new IDListHandler(Item, true);
+            idlhandler.ReadFrom(reader);
         }
 
         private void ReadLinkInfoSection(BinaryReader reader)
         {
-            if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) != 0)
-            {
-                Item.LinkInfo = new LinkInfo();
-                var liReader = new LinkInfoHandler(Item.LinkInfo);
-                liReader.ReadFrom(reader);
-            }
+	        if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) == 0)
+		        return;
+
+	        Item.LinkInfo = new LinkInfo();
+            var liReader = new LinkInfoHandler(Item.LinkInfo);
+            liReader.ReadFrom(reader);
         }
 
         private void ReadStringDataSection(BinaryReader reader)
@@ -105,7 +105,7 @@ namespace Shellify.IO
             Item.ExtraDataBlocks = new List<ExtraDataBlock>();
             while (reader.BaseStream.Position < reader.BaseStream.Length)
             {
-                int blocksize = reader.ReadInt32();
+                var blocksize = reader.ReadInt32();
                 if (blocksize < 0x4) // Terminal Block
                     break;
 
@@ -127,20 +127,20 @@ namespace Shellify.IO
 
         private void WriteIDListSection(BinaryWriter writer)
         {
-            if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) != 0)
-            {
-                var idlhandler = new IDListHandler(Item, true);
-                idlhandler.WriteTo(writer);
-            }
+	        if ((Item.Header.LinkFlags & LinkFlags.HasLinkTargetIDList) == 0)
+		        return;
+
+	        var idlhandler = new IDListHandler(Item, true);
+            idlhandler.WriteTo(writer);
         }
 
         private void WriteLinkInfoSection(BinaryWriter writer)
         {
-            if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) != 0)
-            {
-                var liWriter = new LinkInfoHandler(Item.LinkInfo);
-                liWriter.WriteTo(writer);
-            }
+	        if ((Item.Header.LinkFlags & LinkFlags.HasLinkInfo) == 0)
+		        return;
+
+	        var liWriter = new LinkInfoHandler(Item.LinkInfo);
+            liWriter.WriteTo(writer);
         }
 
         private void WriteStringDataSection(BinaryWriter writer)

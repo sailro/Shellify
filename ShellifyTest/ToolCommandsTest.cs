@@ -31,10 +31,6 @@ namespace Shellify.Test
     [TestClass]
     public class ToolCommandsTest
     {
-	    /// <summary>
-	    ///Gets or sets the test context which provides
-	    ///information about and functionality for the current test run.
-	    ///</summary>
 	    public TestContext TestContext { get; set; }
 
 	    [TestMethod]

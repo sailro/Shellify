@@ -26,21 +26,15 @@ namespace Shellify.IO
 {
 	public class ConsoleFEDataBlockHandler : ExtraDataBlockHandler<ConsoleFEDataBlock>
 	{
-        public const int ExactBlockSize = 0xC;
+		private const int ExactBlockSize = 0xC;
 
         public ConsoleFEDataBlockHandler(ConsoleFEDataBlock item, ShellLinkFile context)
             : base(item, context)
 		{
 		}
 		
-		public override int ComputedSize
-		{
-			get
-			{
-				return base.ComputedSize + Marshal.SizeOf(Item.CodePage);
-			}
-		}
-		
+		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Item.CodePage);
+
 		public override void ReadFrom(System.IO.BinaryReader reader)
 		{
 			base.ReadFrom(reader);

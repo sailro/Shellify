@@ -27,7 +27,7 @@ namespace Shellify.IO
 {
     public class VistaAndAboveIDListDataBlockHandler : ExtraDataBlockHandler<VistaAndAboveIDListDataBlock>
 	{
-        public const int MinimumBlockSize = 0xA;
+		private const int MinimumBlockSize = 0xA;
 
         public VistaAndAboveIDListDataBlockHandler(VistaAndAboveIDListDataBlock item, ShellLinkFile context)
             : base(item, context)
@@ -42,7 +42,7 @@ namespace Shellify.IO
                 foreach (var item in Item.ShItemIDs)
                 {
                     result += Marshal.SizeOf(typeof(short));
-                    result += item.Data == null ? 0 : item.Data.Length;
+                    result += item.Data?.Length ?? 0;
                 }
                 return result;
             }

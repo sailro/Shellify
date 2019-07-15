@@ -27,15 +27,9 @@ namespace Shellify.IO
 {
     public class KnownFolderDataBlockHandler : BaseFolderIDDataBlockHandler<KnownFolderDataBlock>
     {
-        public const int ExactBlockSize = 0x1C;
+	    private const int ExactBlockSize = 0x1C;
 
-        public override int ComputedSize
-        {
-            get
-            {
-                return base.ComputedSize + Marshal.SizeOf(Item.KnownFolder);
-            }
-        }
+        public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Item.KnownFolder);
 
         public KnownFolderDataBlockHandler(KnownFolderDataBlock item, ShellLinkFile context)
             : base(item, context)

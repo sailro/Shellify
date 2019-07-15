@@ -28,8 +28,8 @@ namespace Shellify.Tool.Commands
     public abstract class Command : CommandLineItem
     {
 
-        public IList<Option> Options { get; set; }
-        public ShellLinkFile Context { get; set; }
+        public IList<Option> Options { get; }
+        protected ShellLinkFile Context { get; set; }
 
         public abstract void Execute();
 
@@ -39,15 +39,8 @@ namespace Shellify.Tool.Commands
             Options = new List<Option>();
         }
 
-        public string Filename
-        {
-            get { return Arguments.Count > 0 ? Arguments[0] : null; }
-        }
+	    protected string Filename => Arguments.Count > 0 ? Arguments[0] : null;
 
-        public string Target
-        {
-            get { return Arguments.Count > 1 ? Arguments[1] : null; }
-        }
-
+	    protected string Target => Arguments.Count > 1 ? Arguments[1] : null;
     }
 }

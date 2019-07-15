@@ -26,20 +26,14 @@ namespace Shellify.IO
 {
 	public abstract class BaseRawDataBlockHandler<T> : ExtraDataBlockHandler<T> where T: BaseRawDataBlock
 	{
-        public const int MinimumBlockSize = 0x8;
+		private const int MinimumBlockSize = 0x8;
 
 		protected BaseRawDataBlockHandler(T item, ShellLinkFile context) : base(item, context)
 		{
 		}
 		
-		public override int ComputedSize
-		{
-			get
-			{
-				return base.ComputedSize + ((Item.Raw != null) ? Item.Raw.Length : 0);
-			}
-		}
-		
+		public override int ComputedSize => base.ComputedSize + (Item.Raw?.Length ?? 0);
+
 		public override void ReadFrom(BinaryReader reader)
 		{
 			base.ReadFrom(reader);

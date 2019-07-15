@@ -32,10 +32,7 @@ namespace Shellify.Core
 		private NetworkProviderType? _networkProviderType;
         public NetworkProviderType? NetworkProviderType
         {
-            get
-            {
-                return _networkProviderType;
-            }
+            get => _networkProviderType;
             set
             {
                 _networkProviderType = value;
@@ -46,10 +43,7 @@ namespace Shellify.Core
         private string _deviceName;
         public string DeviceName
         {
-            get
-            {
-                return _deviceName;
-            }
+            get => _deviceName;
             set
             {
                 _deviceName = value;
@@ -59,7 +53,7 @@ namespace Shellify.Core
 
         private void UpdateHeaderFlags(object item, CommonNetworkRelativeLinkFlags flag)
         {
-            UpdateHeaderFlags(((item is string) && string.IsNullOrEmpty(item as string)) || (item == null), flag);
+	        UpdateHeaderFlags(item is string s && string.IsNullOrEmpty(s) || (item == null), flag);
         }
 
         private void UpdateHeaderFlags(bool resetcondition, CommonNetworkRelativeLinkFlags flag)
@@ -77,7 +71,7 @@ namespace Shellify.Core
 
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine(">> CommonNetworkRelativeLink");
             builder.AppendFormat("Flags: {0}", CommonNetworkRelativeLinkFlags); builder.AppendLine();
             builder.AppendFormat("NetworkProviderType: {0}", NetworkProviderType); builder.AppendLine();

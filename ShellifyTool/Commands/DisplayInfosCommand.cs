@@ -20,7 +20,6 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
-using Shellify.Tool.Options;
 
 namespace Shellify.Tool.Commands
 {
@@ -34,7 +33,7 @@ namespace Shellify.Tool.Commands
         public override void Execute()
         {
             Context = ShellLinkFile.Load(Filename);
-            foreach (Option option in Options) option.Execute(Context);
+            foreach (var option in Options) option.Execute(Context);
             Console.WriteLine(Context);
         }
 

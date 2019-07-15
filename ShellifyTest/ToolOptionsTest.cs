@@ -30,23 +30,9 @@ namespace Shellify.Test
     [TestClass]
     public class ToolOptionsTest
     {
-	    private TestContext _testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return _testContextInstance;
-            }
-            set
-            {
-                _testContextInstance = value;
-            }
-        }
+	    // ReSharper disable once UnusedAutoPropertyAccessor.Global
+	    // ReSharper disable once MemberCanBePrivate.Global
+	    public TestContext TestContext { get; set; }
 
         private static void TestOption(ShellLinkFile context, Option option, string argument)
         {
@@ -62,10 +48,10 @@ namespace Shellify.Test
         public void TestToolOptions()
         {
             var info = new DateTimeFormatInfo();
-            string[] testargs = { "0", "string", new DateTime().ToString(string.Format("{0} {1}",info.ShortDatePattern, info.ShortTimePattern), CultureInfo.InvariantCulture), "true" };
+            string[] testargs = { "0", "string", new DateTime().ToString($"{info.ShortDatePattern} {info.ShortTimePattern}", CultureInfo.InvariantCulture), "true" };
 
             var slf = new ShellLinkFile();
-            foreach (Option option in ProgramContext.Options)
+            foreach (var option in ProgramContext.Options)
             {
                 var argindex = 0;
                 bool retry;
@@ -81,7 +67,7 @@ namespace Shellify.Test
 	                    if (argindex >= testargs.Length - 1)
 		                    throw;
 
-	                    _testContextInstance.WriteLine("Option '{0}' fail for argument '{1}', testing '{2}'", option,
+	                    TestContext.WriteLine("Option '{0}' fail for argument '{1}', testing '{2}'", option,
 	                                                   testargs[argindex], testargs[argindex + 1]);
 	                    retry = true;
 	                    argindex++;

@@ -29,29 +29,23 @@ namespace Shellify.IO
 {
     public class TrackerDataBlockHandler : ExtraDataBlockHandler<TrackerDataBlock>
     {
-        public const int ExactBlockSize = 0x60;
-        public const int MinimumLength = 0x58;
+	    private const int ExactBlockSize = 0x60;
+	    private const int MinimumLength = 0x58;
 
-        public int Length { get; set; }
-        public const int MachineIDLength = 16;
+	    private int Length { get; set; }
+	    private const int MachineIDLength = 16;
 
         public TrackerDataBlockHandler(TrackerDataBlock item, ShellLinkFile context)
             : base(item, context)
         {
         }
 
-        public override int ComputedSize
-        {
-            get
-            {
-                int result = base.ComputedSize +
-                             Marshal.SizeOf(Length) +
-                             Marshal.SizeOf(Item.Version) +
-                             MachineIDLength +
-                             Marshal.SizeOf(typeof(Guid)) * 4; 
-                return result;
-            }
-        }
+        public override int ComputedSize =>
+	        base.ComputedSize +
+	        Marshal.SizeOf(Length) +
+	        Marshal.SizeOf(Item.Version) +
+	        MachineIDLength +
+	        Marshal.SizeOf(typeof(Guid)) * 4;
 
         public override void ReadFrom(System.IO.BinaryReader reader)
         {

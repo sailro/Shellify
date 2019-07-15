@@ -30,7 +30,7 @@ namespace Shellify.IO
 {
 	public class LinkInfoHandler : IBinaryReadable, IBinaryWriteable
 	{
-        public const int MinimumLinkInfoHeaderSize = 0x1C;
+		private const int MinimumLinkInfoHeaderSize = 0x1C;
 		
 		private LinkInfo Item { get; set; }
 		private int LinkInfoSize { get; set; }
@@ -48,7 +48,7 @@ namespace Shellify.IO
 			Item = item;
 		}
 
-        private void EnsurePosition(BinaryReader reader, long baseOffset, int offset)
+        private static void EnsurePosition(BinaryReader reader, long baseOffset, int offset)
         {
             var delta = (int)(baseOffset + offset - reader.BaseStream.Position);
             if (delta > 0)
@@ -130,7 +130,7 @@ namespace Shellify.IO
             VolumeIDOffset = 0;
             LocalBasePathOffset = 0;
             CommonNetworkRelativeLinkOffset = 0;
-            int nextBlockOffset = LinkInfoHeaderSize;
+            var nextBlockOffset = LinkInfoHeaderSize;
 
             if ((Item.LinkInfoFlags & (LinkInfoFlags.VolumeIDAndLocalBasePath | LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix)) == (LinkInfoFlags.VolumeIDAndLocalBasePath | LinkInfoFlags.CommonNetworkRelativeLinkAndPathSuffix))
             {
@@ -179,8 +179,7 @@ namespace Shellify.IO
 			if (padding.Length > 0)
                 writer.Write(padding);
 
-			if (cnrWriter != null)
-				cnrWriter.WriteTo(writer);
+			cnrWriter?.WriteTo(writer);
 
 			writer.WriteASCIIZ(Item.CommonPathSuffix, Encoding.Default);
 			

@@ -35,13 +35,7 @@ namespace Shellify.IO
         {
         }
 
-        public override int ComputedSize
-        {
-            get
-            {
-                return base.ComputedSize + Marshal.SizeOf(Offset);
-            }
-        }
+        public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Offset);
 
         public override void ReadFrom(System.IO.BinaryReader reader)
         {

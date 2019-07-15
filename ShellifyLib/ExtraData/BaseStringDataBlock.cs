@@ -37,12 +37,14 @@ namespace Shellify.ExtraData
             var builder = new StringBuilder();
             builder.AppendLine(base.ToString());
             builder.AppendFormat("Value: {0}", Value); builder.AppendLine();
+
             if (ValuePadding != null)
             {
                 builder.AppendFormat("Value padding length: {0}", ValuePadding.Length); builder.AppendLine();
                 builder.AppendFormat("Value padding Hash: {0}", ValuePadding.ComputeHash()); builder.AppendLine();
             }
             builder.AppendFormat("ValueUnicode: {0}", ValueUnicode);
+
             if (ValueUnicodePadding != null)
             {
                 builder.AppendLine();

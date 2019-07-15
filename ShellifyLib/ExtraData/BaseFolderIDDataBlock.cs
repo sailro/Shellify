@@ -33,11 +33,13 @@ namespace Shellify.ExtraData
         {
             var builder = new StringBuilder();
             builder.Append(base.ToString());
+
             if (ShItemID != null)
             {
                 builder.AppendLine();
                 builder.Append(ShItemID);
             }
+
             return builder.ToString();
         }
 		

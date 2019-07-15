@@ -26,7 +26,7 @@ namespace Shellify.IO
     public class MalformedException : Exception
     {
 
-        public MalformedException(String message)
+        public MalformedException(string message)
             : base(message)
         {
         }

@@ -26,12 +26,12 @@ namespace Shellify.Tool.CommandLine
     public class CommandLineItem
     {
 
-        public string Description { get; set; }
-        public string Tag { get; set; }
-        public int ExpectedArguments { get; set; }
-        public IList<string> Arguments { get; set; }
+        public string Description { get; }
+        public string Tag { get; }
+        public int ExpectedArguments { get; }
+        public IList<string> Arguments { get; }
 
-        public CommandLineItem(string tag, string description, int expectedArguments)
+        protected CommandLineItem(string tag, string description, int expectedArguments)
         {
             Arguments = new List<string>();
             Tag = tag;

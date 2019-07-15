@@ -19,7 +19,6 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
-using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -27,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("ShellifyTest")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Shellify")]
-[assembly: AssemblyCopyright("Copyright © 2010-2013 Sebastien LEBRETON")]
+[assembly: AssemblyCopyright("Copyright © 2010-2019 Sebastien Lebreton")]
 [assembly: AssemblyTrademark("")]
 
 [assembly: ComVisible(false)]

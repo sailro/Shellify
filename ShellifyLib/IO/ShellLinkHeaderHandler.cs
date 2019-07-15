@@ -29,7 +29,7 @@ namespace Shellify.IO
 {
 	public class ShellLinkHeaderHandler : IBinaryReadable, IBinaryWriteable
 	{
-        public const int ExactHeaderSize = 0x4C;
+		private const int ExactHeaderSize = 0x4C;
 
 		private ShellLinkHeader Item { get; set; }
 		private int HeaderSize { get; set; }

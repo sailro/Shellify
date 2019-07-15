@@ -30,7 +30,7 @@ namespace Shellify.Extensions
     public static class BinaryWriterExtensions
     {
 
-        static public void WriteSTDATA(this BinaryWriter writer, string value, Encoding encoding)
+        public static void WriteSTDATA(this BinaryWriter writer, string value, Encoding encoding)
         {
             var charcount = Convert.ToInt16(value.Length);
             writer.Write(charcount);

@@ -48,13 +48,13 @@ namespace Shellify.Extensions
             return ReadASCIIZ(reader, encoding, reader.BaseStream.Position - baseOffset - offset);
         }
 
-        public static string ReadASCIIZ(this BinaryReader reader, Encoding encoding, long offset)
+        private static string ReadASCIIZ(this BinaryReader reader, Encoding encoding, long offset)
         {
             reader.BaseStream.Seek(offset, SeekOrigin.Current);
             return ReadASCIIZ(reader, encoding);
         }
 
-        public static string ReadASCIIZ(this BinaryReader reader, Encoding encoding)
+        private static string ReadASCIIZ(this BinaryReader reader, Encoding encoding)
         {
             var bytes = new List<byte>();
             byte[] read;
@@ -70,8 +70,7 @@ namespace Shellify.Extensions
 
         public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length)
         {
-            byte[] padding;
-            return ReadASCIIZF(reader, encoding, length, out padding);
+	        return ReadASCIIZF(reader, encoding, length, out _);
         }
 
         public static string ReadASCIIZF(this BinaryReader reader, Encoding encoding, int length, out byte[] padding)

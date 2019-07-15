@@ -25,7 +25,7 @@ using Shellify.Tool.Commands;
 
 namespace Shellify.Tool.Options
 {
-    class EnumReflectionSetterOption : ReflectionSetterOption
+	internal class EnumReflectionSetterOption : ReflectionSetterOption
     {
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -39,7 +39,7 @@ namespace Shellify.Tool.Options
             EnumType = enumType;
         }
 
-        public override object ChangeType(object source, Type targetType)
+        protected override object ChangeType(object source, Type targetType)
         {
             return Enum.Parse(targetType, source.ToString());
         }

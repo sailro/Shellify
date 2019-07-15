@@ -27,7 +27,7 @@ namespace Shellify.IO
     public static class FormatChecker
 	{
 
-        public static void CheckExpression(Expression<Func<Boolean>> expression)
+        public static void CheckExpression(Expression<Func<bool>> expression)
         {
             if (!expression.Compile()())
             {

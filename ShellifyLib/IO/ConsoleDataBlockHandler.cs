@@ -30,34 +30,28 @@ namespace Shellify.IO
 {
     public class ConsoleDataBlockHandler : ExtraDataBlockHandler<ConsoleDataBlock>
     {
-
-        public const int UnusedLength = 8;
-        public const int FaceNameLength = 64;
-        public const int ColorTableLength = 64;
-        public const int ExactBlockSize = 0xCC;
+	    private const int UnusedLength = 8;
+	    private const int FaceNameLength = 64;
+	    private const int ColorTableLength = 64;
+	    private const int ExactBlockSize = 0xCC;
 
         public ConsoleDataBlockHandler(ConsoleDataBlock item, ShellLinkFile context)
             : base(item, context)
         {
         }
 
-        public override int ComputedSize
-        {
-            get
-            {
-                return base.ComputedSize
-                    + Marshal.SizeOf(typeof(short)) * 8
-                    + UnusedLength 
-                    + Marshal.SizeOf(typeof(int))*6
-                    + Marshal.SizeOf(Item.FontWeight)
-                    + Marshal.SizeOf(Item.FontSize)
-                    + FaceNameLength
-                    + Marshal.SizeOf(Item.CursorSize)
-                    + Marshal.SizeOf(Item.HistoryBufferSize)
-                    + Marshal.SizeOf(Item.NumberOfHistoryBuffers)
-                    + ColorTableLength ;
-            }
-        }
+        public override int ComputedSize =>
+	        base.ComputedSize
+	        + Marshal.SizeOf(typeof(short)) * 8
+	        + UnusedLength 
+	        + Marshal.SizeOf(typeof(int))*6
+	        + Marshal.SizeOf(Item.FontWeight)
+	        + Marshal.SizeOf(Item.FontSize)
+	        + FaceNameLength
+	        + Marshal.SizeOf(Item.CursorSize)
+	        + Marshal.SizeOf(Item.HistoryBufferSize)
+	        + Marshal.SizeOf(Item.NumberOfHistoryBuffers)
+	        + ColorTableLength;
 
         public override void ReadFrom(System.IO.BinaryReader reader)
         {
@@ -82,8 +76,7 @@ namespace Shellify.IO
             Item.FontWeight = reader.ReadUInt32();
 
             // Keep unknown data padding to preserve valid file roundtrip
-            byte[] padding;
-            Item.FaceName = reader.ReadASCIIZF(Encoding.Unicode, FaceNameLength, out padding);
+            Item.FaceName = reader.ReadASCIIZF(Encoding.Unicode, FaceNameLength, out var padding);
             Item.FaceNamePadding = padding;
 
             Item.CursorSize = reader.ReadUInt32();

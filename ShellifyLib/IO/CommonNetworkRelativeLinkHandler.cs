@@ -29,7 +29,7 @@ namespace Shellify.IO
 {
     public class CommonNetworkRelativeLinkHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
 	{
-        public const int MinimumCommonNetworkRelativeLinkSize = 0x14;
+		private const int MinimumCommonNetworkRelativeLinkSize = 0x14;
 		
 		private CommonNetworkRelativeLink Item { get; set; }
 		private int CommonNetworkRelativeLinkSize { get; set; }

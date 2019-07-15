@@ -27,20 +27,16 @@ namespace Shellify.Tool.Options
 {
     public abstract class Option : CommandLineItem
     {
-
-        public string Argument
+	    protected string Argument
         {
-            get
-            {
-                return Arguments.Count > 0 ? Arguments[0] : null;
-            }
+            get => Arguments.Count > 0 ? Arguments[0] : null;
             set
             {
                 if (Arguments.Count > 0)
                     Arguments[0] = value;
             }
         }
-        public IList<Command> Applies { get; set; }
+        public IList<Command> Applies { get; }
         public abstract void Execute(ShellLinkFile context);
 
 	    protected Option(string tag, string description, int expectedArguments, IList<Command> applies)

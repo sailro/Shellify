@@ -42,7 +42,7 @@ namespace Shellify.ExtraData
             builder.Append(base.ToString());
             if (ShItemIDs != null)
             {
-                foreach (ShItemID shitem in ShItemIDs)
+                foreach (var shitem in ShItemIDs)
                 {
                     builder.AppendLine();
                     builder.Append(shitem);

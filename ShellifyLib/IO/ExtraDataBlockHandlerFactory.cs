@@ -24,12 +24,12 @@ using System;
 
 namespace Shellify.IO
 {
-    public class ExtraDataBlockHandlerFactory
+    public static class ExtraDataBlockHandlerFactory
     {
 
         public static ExtraDataBlockHandler GetInstance(ExtraDataBlock item, ShellLinkFile context)
         {
-            var typename = string.Format("Shellify.IO.{0}Handler", item.GetType().Name);
+            var typename = $"Shellify.IO.{item.GetType().Name}Handler";
 	        var type = Type.GetType(typename);
 
 			if (type == null)

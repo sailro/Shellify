@@ -39,10 +39,7 @@ namespace Shellify
         private LinkInfo _linkInfo;
         public LinkInfo LinkInfo
         {
-            get
-            {
-                return _linkInfo;
-            }
+            get => _linkInfo;
             set
             {
                 _linkInfo = value;
@@ -53,10 +50,7 @@ namespace Shellify
         private string _name;
         public string Name
         {
-            get
-            {
-                return _name;
-            }
+            get => _name;
             set
             {
                 _name = value;
@@ -67,10 +61,7 @@ namespace Shellify
         private string _relativePath;
         public string RelativePath
         {
-            get
-            {
-                return _relativePath;
-            }
+            get => _relativePath;
             set
             {
                 _relativePath = value;
@@ -81,10 +72,7 @@ namespace Shellify
         private string _workingDirectory;
         public string WorkingDirectory
         {
-            get
-            {
-                return _workingDirectory;
-            }
+            get => _workingDirectory;
             set
             {
                 _workingDirectory = value;
@@ -95,10 +83,7 @@ namespace Shellify
         private string _arguments;
         public string Arguments
         {
-            get
-            {
-                return _arguments;
-            }
+            get => _arguments;
             set
             {
                 _arguments = value;
@@ -109,10 +94,7 @@ namespace Shellify
         private string _iconLocation;
         public string IconLocation 
         {
-            get
-            {
-                return _iconLocation;
-            }
+            get => _iconLocation;
             set
             {
                 _iconLocation = value;
@@ -129,7 +111,7 @@ namespace Shellify
 
         private void UpdateHeaderFlags(object item, LinkFlags flag)
         {
-            if (((item is string) && string.IsNullOrEmpty(item as string)) || (item == null))
+            if (item is string s && string.IsNullOrEmpty(s) || item == null)
             {
                 Header.LinkFlags &= ~flag;
             }
@@ -180,20 +162,22 @@ namespace Shellify
             }
 		}
 
-        public static FileSystemInfo SetFileSystemInfo(ShellLinkFile slf, string target)
+		private static FileSystemInfo SetFileSystemInfo(ShellLinkFile slf, string target)
         {
 	        var targetInfo = Directory.Exists(target) ? (FileSystemInfo) new DirectoryInfo(target) : new FileInfo(target);
 
-	        if (targetInfo.Exists)
-            {
-                slf.Header.FileAttributes = targetInfo.Attributes;
-                slf.Header.AccessTime = targetInfo.LastAccessTime;
-                slf.Header.CreationTime = targetInfo.CreationTime;
-                slf.Header.WriteTime = targetInfo.LastWriteTime;
-                if (targetInfo is FileInfo)
-                    slf.Header.FileSize = Convert.ToInt32((targetInfo as FileInfo).Length);
-            }
-            return targetInfo;
+	        if (!targetInfo.Exists)
+		        return targetInfo;
+
+	        slf.Header.FileAttributes = targetInfo.Attributes;
+	        slf.Header.AccessTime = targetInfo.LastAccessTime;
+	        slf.Header.CreationTime = targetInfo.CreationTime;
+	        slf.Header.WriteTime = targetInfo.LastWriteTime;
+
+	        if (targetInfo is FileInfo info)
+		        slf.Header.FileSize = Convert.ToInt32(info.Length);
+
+	        return targetInfo;
         }
 
         public static ShellLinkFile CreateRelative(string baseDirectory, string relativeTarget)
@@ -220,7 +204,7 @@ namespace Shellify
             result.Header.ShowCommand = ShowCommand.Normal;
 
             result.RelativePath = targetInfo.FullName;
-	        result.WorkingDirectory = targetInfo is FileInfo ? (targetInfo as FileInfo).DirectoryName : targetInfo.FullName;
+	        result.WorkingDirectory = targetInfo is FileInfo info ? info.DirectoryName : targetInfo.FullName;
 
 	        return result;
         }

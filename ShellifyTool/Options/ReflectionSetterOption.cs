@@ -27,10 +27,9 @@ using System.Reflection;
 
 namespace Shellify.Tool.Options
 {
-    class ReflectionSetterOption : Option
+	internal class ReflectionSetterOption : Option
     {
-
-        public string[] PropertyPath { get; set; }
+	    protected string[] PropertyPath { get; set; }
 
         public ReflectionSetterOption(string tag, string description, IList<Command> applies, params string[] propertyPath)
             : base(tag, description, 1, applies)
@@ -38,7 +37,7 @@ namespace Shellify.Tool.Options
             PropertyPath = propertyPath;
         }
 
-        public virtual object ChangeType(object source, Type targetType)
+        protected virtual object ChangeType(object source, Type targetType)
         {
             return Convert.ChangeType(source, targetType, CultureInfo.InvariantCulture);
         }
@@ -54,13 +53,13 @@ namespace Shellify.Tool.Options
 		            obj = pinfo.GetValue(obj, null);
 	            
 				pinfo = ptype.GetProperty(item);
-                ptype = pinfo.PropertyType;
+				if (pinfo != null) 
+					ptype = pinfo.PropertyType;
             }
 
             var value = ChangeType(Argument, ptype);
 
-			if (pinfo != null)
-				pinfo.SetValue(obj, value, null);
+            pinfo?.SetValue(obj, value, null);
         }
 
     }

@@ -26,10 +26,9 @@ using Shellify.Core;
 
 namespace Shellify.Tool.Options
 {
-    class HeaderFlagOption : Option
+	internal class HeaderFlagOption : Option
     {
-
-        public LinkFlags Flag { get; set; }
+	    private LinkFlags Flag { get; }
 
         public HeaderFlagOption(string tag, string description, IList<Command> applies, LinkFlags flag)
             : base(tag, description, 1, applies)

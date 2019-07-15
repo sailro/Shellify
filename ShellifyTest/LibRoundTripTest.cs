@@ -30,16 +30,9 @@ namespace Shellify.Test
 	    private TestContext _testContextInstance;
         private string _filesDirectory;
 
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
         public TestContext TestContext
         {
-            get
-            {
-                return _testContextInstance;
-            }
+            get => _testContextInstance;
             set
             {
                 _testContextInstance = value;
@@ -54,13 +47,13 @@ namespace Shellify.Test
             Assert.AreEqual(reoriginal.BaseStream.Length, recompared.BaseStream.Length, "Size mismatch");
             while (reoriginal.BaseStream.Position < reoriginal.BaseStream.Length)
             {
-                byte b1 = reoriginal.ReadByte();
-                byte b2 = recompared.ReadByte();
+                var b1 = reoriginal.ReadByte();
+                var b2 = recompared.ReadByte();
                 Assert.AreEqual(b1, b2, "Position: {0}", reoriginal.BaseStream.Position);
             }
         }
 
-        public static void CompareFiles(Stream soriginal, Stream scompared)
+        private static void CompareFiles(Stream soriginal, Stream scompared)
         {
             using (var reoriginal = new BinaryReader(soriginal))
             {
@@ -71,7 +64,7 @@ namespace Shellify.Test
             }
         }
 
-        public static void CompareFiles(string original, string compared) {
+        private static void CompareFiles(string original, string compared) {
             using (var fsoriginal = new FileStream(original, FileMode.Open))
             {
                 using (var fscompared = new FileStream(compared, FileMode.Open))

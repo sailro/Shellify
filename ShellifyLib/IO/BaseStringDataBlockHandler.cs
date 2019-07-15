@@ -28,32 +28,24 @@ namespace Shellify.IO
 {
 	public abstract class BaseStringDataBlockHandler<T> : ExtraDataBlockHandler<T> where T: BaseStringDataBlock
 	{
-
-        public const int ValueSize = 260;
-        public const int ValueSizeUnicode = 520;
-        public const int ExactBlockSize = 0x314;
+		private const int ValueSize = 260;
+		private const int ValueSizeUnicode = 520;
+		private const int ExactBlockSize = 0x314;
 
 		protected BaseStringDataBlockHandler(T item, ShellLinkFile context)
             : base(item, context)
 		{
 		}
 		
-		public override int ComputedSize
-		{
-			get
-			{
-                return base.ComputedSize + ValueSize + ValueSizeUnicode;
-			}
-		}
-		
+		public override int ComputedSize => base.ComputedSize + ValueSize + ValueSizeUnicode;
+
 		public override void ReadFrom(BinaryReader reader)
 		{
 			base.ReadFrom(reader);
 
-            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize); 
-            byte[] padding;
-            
-            Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out padding);
+            FormatChecker.CheckExpression(() => BlockSize == ExactBlockSize);
+
+            Item.Value = reader.ReadASCIIZF(Encoding.Default, ValueSize, out var padding);
             Item.ValuePadding = padding;
 
             Item.ValueUnicode = reader.ReadASCIIZF(Encoding.Unicode, ValueSizeUnicode, out padding);

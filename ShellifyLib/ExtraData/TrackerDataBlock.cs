@@ -44,7 +44,7 @@ namespace Shellify.ExtraData
         {
             var builder = new StringBuilder();
             builder.Append("{");
-            foreach (object item in collection)
+            foreach (var item in collection)
             {
                 if (builder.Length > 1)
                 {

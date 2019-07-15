@@ -32,10 +32,6 @@ namespace Shellify.Test
     [TestClass]
     public class ToolParserTest
     {
-	    /// <summary>
-	    ///Gets or sets the test context which provides
-	    ///information about and functionality for the current test run.
-	    ///</summary>
 	    public TestContext TestContext { get; set; }
 
 	    [TestMethod]
@@ -79,7 +75,7 @@ namespace Shellify.Test
             try
             {
                 dic.Arguments.Clear();
-                Command cmd = CommandLineParser.Parse(new[] { dic.Tag, @"..\..\..\Shellify.sln" });
+                var cmd = CommandLineParser.Parse(new[] { dic.Tag, @"..\..\..\Shellify.sln" });
                 cmd.Execute();
                 Assert.Fail("Exception required");
             }

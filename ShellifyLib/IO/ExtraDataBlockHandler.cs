@@ -32,19 +32,13 @@ namespace Shellify.IO
 
     public abstract class ExtraDataBlockHandler<T> : ExtraDataBlockHandler, ISizeComputable where T : ExtraDataBlock
 	{
-		protected T Item { get; set; }
-		protected int BlockSize { get; set; }
-        protected ShellLinkFile Context { get; set; }
+		protected T Item { get; }
+		protected int BlockSize { get; private set; }
+        protected ShellLinkFile Context { get; }
 
-		public virtual int ComputedSize
-		{
-			get
-			{
-				return Marshal.SizeOf(BlockSize) + Marshal.SizeOf(typeof(int));
-			}
-		}
+		public virtual int ComputedSize => Marshal.SizeOf(BlockSize) + Marshal.SizeOf(typeof(int));
 
-	    protected ExtraDataBlockHandler(T item, ShellLinkFile context)
+		protected ExtraDataBlockHandler(T item, ShellLinkFile context)
 		{
 			Item = item;
             Context = context;

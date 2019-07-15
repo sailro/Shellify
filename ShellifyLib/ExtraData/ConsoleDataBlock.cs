@@ -40,8 +40,7 @@ namespace Shellify.ExtraData
         private string _facename;
         public string FaceName
         {
-            get
-            { return _facename; }
+            get => _facename;
             set
             {
                 _facename = value;
@@ -78,11 +77,13 @@ namespace Shellify.ExtraData
             builder.AppendFormat("FontSize: {0}", FontSize); builder.AppendLine();
             builder.AppendFormat("FontWeight: {0}", FontWeight); builder.AppendLine();
             builder.AppendFormat("FaceName: {0}", FaceName); builder.AppendLine();
+
             if (FaceNamePadding != null)
             {
                 builder.AppendFormat("FaceName padding length: {0}", FaceNamePadding.Length); builder.AppendLine();
                 builder.AppendFormat("FaceName padding Hash: {0}", FaceNamePadding.ComputeHash()); builder.AppendLine();
             }
+
             builder.AppendFormat("CursorSize: {0}", CursorSize); builder.AppendLine();
             builder.AppendFormat("FullScreen: {0}", FullScreen); builder.AppendLine();
             builder.AppendFormat("FastEdit: {0}", FastEdit); builder.AppendLine();
@@ -91,6 +92,7 @@ namespace Shellify.ExtraData
             builder.AppendFormat("HistoryBufferSize: {0}", HistoryBufferSize); builder.AppendLine();
             builder.AppendFormat("NumberOfHistoryBuffers: {0}", NumberOfHistoryBuffers); builder.AppendLine();
             builder.AppendFormat("HistoryDuplicateAllowed: {0}", HistoryDuplicateAllowed); builder.AppendLine();
+
             if (ColorTable != null)
             {
                 builder.AppendFormat("Color Table length: {0}", ColorTable.Length); builder.AppendLine();
@@ -100,6 +102,7 @@ namespace Shellify.ExtraData
             {
                 builder.Append("No data");
             }
+
             return builder.ToString();
         }
 

@@ -25,34 +25,34 @@ using Shellify.Tool.Options;
 
 namespace Shellify.Tool.CommandLine
 {
-    public class CommandLineParser
+    public static class CommandLineParser
     {
 
         public const string OptionPrefix = "-";
         public const string OptionArgumentSeparator = "=";
 
-        public static void CheckItem(CommandLineItem item)
+        private static void CheckItem(CommandLineItem item)
         {
-            if (item != null)
-            {
-                if (item.ExpectedArguments != item.Arguments.Count)
-                {
-                    throw new CommandLineParseException(string.Format("'{0}' expects {1} argument(s)", item, item.ExpectedArguments));
-                }
-            }
+	        if (item == null) 
+		        return;
+
+	        if (item.ExpectedArguments != item.Arguments.Count)
+	        {
+		        throw new CommandLineParseException($"'{item}' expects {item.ExpectedArguments} argument(s)");
+	        }
         }
 
-        public static Command ParseCommand(string item)
+        private static Command ParseCommand(string item)
         {
-            Command command = ProgramContext.Commands.FirstOrDefault(c => c.Tag.Equals(item, System.StringComparison.InvariantCultureIgnoreCase));
+            var command = ProgramContext.Commands.FirstOrDefault(c => c.Tag.Equals(item, System.StringComparison.InvariantCultureIgnoreCase));
 
 	        if (command == null)
-                throw new CommandLineParseException(string.Format("Unknown command {0}", item));
+                throw new CommandLineParseException($"Unknown command {item}");
 
             return command;
         }
 
-        public static Option ParseOption(Command command, string item)
+        private static Option ParseOption(Command command, string item)
         {
             Option option = null;
 
@@ -65,8 +65,8 @@ namespace Shellify.Tool.CommandLine
 		            continue;
 
 	            if (!o.Applies.Contains(command))
-		            throw new CommandLineParseException(string.Format("'{0}' option is not available for '{1}' command", o,
-		                                                              command));
+		            throw new CommandLineParseException($"'{o}' option is not available for '{command}' command");
+
 	            if (tokens.Length > 1)
 		            o.Arguments.Add(tokens[1]);
 
@@ -75,7 +75,7 @@ namespace Shellify.Tool.CommandLine
             }
 
 	        if (option == null)
-		        throw new CommandLineParseException(string.Format("Unknown option {0}", item));
+		        throw new CommandLineParseException($"Unknown option {item}");
 
 			CheckItem(option);
 	        return option;

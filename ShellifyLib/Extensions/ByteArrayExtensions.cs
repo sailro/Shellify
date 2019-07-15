@@ -27,8 +27,7 @@ namespace Shellify.Extensions
 {
     public static class ByteArrayExtensions
     {
-
-        public static string ToHexString(this byte[] bytes)
+	    private static string ToHexString(this byte[] bytes)
         {
             var builder = new StringBuilder();
 
@@ -44,7 +43,7 @@ namespace Shellify.Extensions
                 return ToHexString(md5.ComputeHash(bytes));
         }
 
-        public static bool Match(this byte[] array, byte[] item, int offset)
+        private static bool Match(this byte[] array, byte[] item, int offset)
         {
 	        return !item.Where((t, i) => i >= array.Length || (array[i + offset] != t)).Any();
         }

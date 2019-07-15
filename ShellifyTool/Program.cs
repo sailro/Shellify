@@ -21,23 +21,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using System;
 using Shellify.Tool.CommandLine;
-using Shellify.Tool.Commands;
 using System.Text;
 
 namespace Shellify.Tool
 {
     public class Program
     {
-        public const string DemoValue = "value";
-        public const string OptionTagDescriptionSeparator = " - ";
+	    private const string DemoValue = "value";
+	    private const string OptionTagDescriptionSeparator = " - ";
 
         public static void Main(string[] args)
         {
             try
             {
-                Console.WriteLine("ShellifyTool v{0} by Sebastien LEBRETON", typeof(Program).Assembly.GetName().Version.ToString(2));
+                Console.WriteLine("ShellifyTool v{0} by Sebastien Lebreton", typeof(Program).Assembly.GetName().Version.ToString(2));
                 Console.WriteLine();
-                Command command = CommandLineParser.Parse(args);
+                var command = CommandLineParser.Parse(args);
                 if (command != null)
                     command.Execute();
                 else
@@ -112,32 +111,32 @@ namespace Shellify.Tool
             var currentWidth = 0;
             const int windowWidth = 80; // Console.WindowWidth no implemented in mono...
 
-            if (builder.Length > windowWidth)
+            if (builder.Length <= windowWidth) 
+	            return result;
+
+            var splits = result.Split(separator);
+            builder.Length = 0;
+            foreach (var split in splits)
             {
-                var splits = result.Split(separator);
-                builder.Length = 0;
-                foreach (var split in splits)
-                {
-                    if (builder.Length > 0)
-                    {
-                        builder.Append(separator);
-                        currentWidth++;
-                    }
-                    if (currentWidth + split.Length >= windowWidth)
-                    {
-                        builder.AppendLine();
-                        currentWidth = 0;
-                        while (currentWidth < optionWidth + OptionTagDescriptionSeparator.Length)
-                        {
-                            builder.Append(" ");
-                            currentWidth++;
-                        }
-                    }
-                    builder.Append(split);
-                    currentWidth += split.Length;
-                }
-                result = builder.ToString();
+	            if (builder.Length > 0)
+	            {
+		            builder.Append(separator);
+		            currentWidth++;
+	            }
+	            if (currentWidth + split.Length >= windowWidth)
+	            {
+		            builder.AppendLine();
+		            currentWidth = 0;
+		            while (currentWidth < optionWidth + OptionTagDescriptionSeparator.Length)
+		            {
+			            builder.Append(" ");
+			            currentWidth++;
+		            }
+	            }
+	            builder.Append(split);
+	            currentWidth += split.Length;
             }
+            result = builder.ToString();
 
             return result;
         }

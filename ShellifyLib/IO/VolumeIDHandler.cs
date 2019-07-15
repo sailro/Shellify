@@ -29,7 +29,7 @@ namespace Shellify.IO
 {
     public class VolumeIDHandler : IBinaryReadable, IBinaryWriteable, ISizeComputable
 	{
-        public const int MinimumVolumeIDSize = 0x10;
+		private const int MinimumVolumeIDSize = 0x10;
 		
 		private readonly VolumeID _item;
 		private int VolumeIDSize { get; set; }
@@ -60,22 +60,13 @@ namespace Shellify.IO
             _item.VolumeLabel = reader.ReadASCIIZ(readerOffset, VolumeLabelOffset, VolumeLabelOffsetUnicode);
 		}
 		
-		public int ComputedSize
-		{
-			get
-			{
-                return Marshal.SizeOf(VolumeIDSize) +
-                Marshal.SizeOf(typeof(int)) +
-                Marshal.SizeOf(_item.DriveSerialNumber) +
-                Marshal.SizeOf(VolumeLabelOffset) +
-                Encoding.Default.GetASCIIZSize(_item.VolumeLabel);
+		public int ComputedSize =>
+			Marshal.SizeOf(VolumeIDSize) +
+			Marshal.SizeOf(typeof(int)) +
+			Marshal.SizeOf(_item.DriveSerialNumber) +
+			Marshal.SizeOf(VolumeLabelOffset) +
+			Encoding.Default.GetASCIIZSize(_item.VolumeLabel);
 
-                // TODO: Handle unicode strings and offsets
-                // VolumeLabelOffsetUnicode = 
-                // VolumeLabelOffset = &H14 
-			}
-		}
-		
 		public void WriteTo(BinaryWriter writer)
 		{
 			VolumeIDSize = ComputedSize;

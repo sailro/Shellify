@@ -39,12 +39,16 @@ namespace Shellify.Core
             builder.AppendFormat("Flags: {0}", LinkInfoFlags); builder.AppendLine();
             builder.AppendFormat("LocalBasePath: {0}", LocalBasePath); builder.AppendLine();
             builder.AppendFormat("CommonPathSuffix: {0}", CommonPathSuffix); builder.AppendLine();
-            if (VolumeID != null) builder.Append(VolumeID);
+
+            if (VolumeID != null) 
+	            builder.Append(VolumeID);
+
             if (CommonNetworkRelativeLink != null)
             {
                 if (VolumeID != null) builder.AppendLine();
                 builder.Append(CommonNetworkRelativeLink);
             }
+
             return builder.ToString();
         }
 		
