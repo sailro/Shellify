@@ -27,19 +27,10 @@ namespace Shellify.Tests
 	[TestClass]
 	public class LibRoundTripTest
 	{
-		private TestContext _testContextInstance;
-		private string _filesDirectory;
-
 		public TestContext TestContext
 		{
-			get => _testContextInstance;
-			set
-			{
-				_testContextInstance = value;
-				_filesDirectory = Path.Combine(_testContextInstance.TestDir, @"..\..");
-				_filesDirectory = Path.Combine(_filesDirectory, @"ShellifyTest\Files");
-				_filesDirectory = Path.GetFullPath(_filesDirectory);
-			}
+			get;
+			set;
 		}
 
 		private static void CompareFiles(BinaryReader reoriginal, BinaryReader recompared)
@@ -78,11 +69,14 @@ namespace Shellify.Tests
 		[TestMethod]
 		public void TestRoundTrip()
 		{
-			foreach (var file in Directory.GetFiles(_filesDirectory))
+			var basePath = GetType().Assembly.Location;
+			var filesPath = Path.Combine(Path.GetDirectoryName(basePath), "Files");
+
+			foreach (var file in Directory.GetFiles(filesPath))
 			{
-				_testContextInstance.WriteLine("Testing {0}", file);
+				TestContext.WriteLine("Testing {0}", file);
 				var slf = ShellLinkFile.Load(file);
-				_testContextInstance.WriteLine("{0}", slf);
+				TestContext.WriteLine("{0}", slf);
 				var tmpFile = Path.GetTempFileName();
 
 				slf.SaveAs(tmpFile);

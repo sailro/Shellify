@@ -71,18 +71,6 @@ namespace Shellify.Tests
 			{
 				Assert.IsInstanceOfType(e, typeof(FileNotFoundException));
 			}
-
-			try
-			{
-				dic.Arguments.Clear();
-				var cmd = CommandLineParser.Parse(new[] {dic.Tag, @"..\..\..\Shellify.sln"});
-				cmd.Execute();
-				Assert.Fail("Exception required");
-			}
-			catch (Exception e)
-			{
-				Assert.IsInstanceOfType(e, typeof(MalformedException));
-			}
 		}
 	}
 }
