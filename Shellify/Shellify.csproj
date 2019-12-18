@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	
+    <Authors>Sebastien Lebreton</Authors>
+    <RepositoryUrl>https://github.com/sailro/Shellify</RepositoryUrl>
+    <VersionPrefix>0.4.0</VersionPrefix>
+    <Copyright>Sebastien Lebreton</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageTags>LNK Shell Link</PackageTags>
+    <Description>Shellify is a 100% managed .NET implementation of the Microsoft Shell Link (.LNK) Binary File Format</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/sailro/Shellify</PackageProjectUrl>	
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>  
+  
+</Project>

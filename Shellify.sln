@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyLib", "ShellifyLib\ShellifyLib.csproj", "{96BDF0A5-CE59-4F15-A809-4B086B2120AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shellify", "Shellify\Shellify.csproj", "{96BDF0A5-CE59-4F15-A809-4B086B2120AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyTool", "ShellifyTool\ShellifyTool.csproj", "{D532AE73-8E91-4F89-881A-688D80AE0103}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shellify.Tool", "Shellify.Tool\Shellify.Tool.csproj", "{D532AE73-8E91-4F89-881A-688D80AE0103}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellifyTest", "ShellifyTest\ShellifyTest.csproj", "{995CB573-137C-4FD6-8833-29B051763A4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shellify.Tests", "Shellify.Tests\Shellify.Tests.csproj", "{995CB573-137C-4FD6-8833-29B051763A4F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
