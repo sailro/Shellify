@@ -72,7 +72,7 @@ namespace Shellify.IO
 			reader.ReadInt16();
 			Item.FontSize = reader.ReadInt16();
 
-			Item.FontFamily = (ExtraData.FontFamily)reader.ReadUInt32();
+			Item.FontFamily = (FontFamily)reader.ReadUInt32();
 			Item.FontWeight = reader.ReadUInt32();
 
 			// Keep unknown data padding to preserve valid file roundtrip

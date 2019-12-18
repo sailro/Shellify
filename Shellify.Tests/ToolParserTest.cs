@@ -23,7 +23,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Shellify.IO;
 using Shellify.Tool.CommandLine;
 using Shellify.Tool.Commands;
 
