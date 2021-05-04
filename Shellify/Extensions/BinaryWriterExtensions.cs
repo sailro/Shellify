@@ -61,7 +61,7 @@ namespace Shellify.Extensions
 			if (padding != null)
 			{
 				var padindex = 0;
-				while ((bytes.Count < length) && (padindex < padding.Length))
+				while (bytes.Count < length && (padindex < padding.Length))
 					bytes.Add(padding[padindex++]);
 			}
 

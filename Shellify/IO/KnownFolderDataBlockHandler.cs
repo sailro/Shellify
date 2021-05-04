@@ -31,8 +31,7 @@ namespace Shellify.IO
 
 		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(Item.KnownFolder);
 
-		public KnownFolderDataBlockHandler(KnownFolderDataBlock item, ShellLinkFile context)
-			: base(item, context)
+		public KnownFolderDataBlockHandler(KnownFolderDataBlock item, ShellLinkFile context) : base(item, context)
 		{
 		}
 

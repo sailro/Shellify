@@ -51,10 +51,14 @@ namespace Shellify.IO
 		private static void EnsurePosition(BinaryReader reader, long baseOffset, int offset)
 		{
 			var delta = (int)(baseOffset + offset - reader.BaseStream.Position);
-			if (delta > 0)
-				reader.ReadBytes(delta);
-			else if (delta < 0)
-				throw new ArgumentException();
+			switch (delta)
+			{
+				case > 0:
+					reader.ReadBytes(delta);
+					break;
+				case < 0:
+					throw new ArgumentException();
+			}
 		}
 
 		public void ReadFrom(BinaryReader reader)

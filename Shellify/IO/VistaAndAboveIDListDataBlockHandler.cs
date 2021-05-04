@@ -29,8 +29,7 @@ namespace Shellify.IO
 	{
 		private const int MinimumBlockSize = 0xA;
 
-		public VistaAndAboveIDListDataBlockHandler(VistaAndAboveIDListDataBlock item, ShellLinkFile context)
-			: base(item, context)
+		public VistaAndAboveIDListDataBlockHandler(VistaAndAboveIDListDataBlock item, ShellLinkFile context) : base(item, context)
 		{
 		}
 

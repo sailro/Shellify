@@ -34,7 +34,7 @@ namespace Shellify.IO
 			if (type == null)
 				throw new ArgumentException(typename);
 
-			return (ExtraDataBlockHandler)Activator.CreateInstance(type, new object[] {item, context});
+			return (ExtraDataBlockHandler)Activator.CreateInstance(type, item, context);
 		}
 	}
 }

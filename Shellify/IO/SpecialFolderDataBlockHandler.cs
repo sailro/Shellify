@@ -30,9 +30,8 @@ namespace Shellify.IO
 		private const int ExactBlockSize = 0x10;
 
 		public override int ComputedSize => base.ComputedSize + Marshal.SizeOf(typeof(int));
-
-		public SpecialFolderDataBlockHandler(SpecialFolderDataBlock item, ShellLinkFile context)
-			: base(item, context)
+		
+		public SpecialFolderDataBlockHandler(SpecialFolderDataBlock item, ShellLinkFile context) : base(item, context)
 		{
 		}
 

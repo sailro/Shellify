@@ -25,8 +25,7 @@ namespace Shellify.IO
 {
 	public class PropertyStoreDataBlockHandler : BaseRawDataBlockHandler<PropertyStoreDataBlock>
 	{
-		public PropertyStoreDataBlockHandler(PropertyStoreDataBlock item, ShellLinkFile context)
-			: base(item, context)
+		public PropertyStoreDataBlockHandler(PropertyStoreDataBlock item, ShellLinkFile context) : base(item, context)
 		{
 		}
 	}

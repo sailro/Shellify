@@ -32,8 +32,7 @@ namespace Shellify.IO
 		private const int ValueSizeUnicode = 520;
 		private const int ExactBlockSize = 0x314;
 
-		protected BaseStringDataBlockHandler(T item, ShellLinkFile context)
-			: base(item, context)
+		protected BaseStringDataBlockHandler(T item, ShellLinkFile context) : base(item, context)
 		{
 		}
 

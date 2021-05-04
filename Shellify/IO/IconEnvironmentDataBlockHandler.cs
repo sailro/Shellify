@@ -25,8 +25,7 @@ namespace Shellify.IO
 {
 	public class IconEnvironmentDataBlockHandler : BaseStringDataBlockHandler<IconEnvironmentDataBlock>
 	{
-		public IconEnvironmentDataBlockHandler(IconEnvironmentDataBlock item, ShellLinkFile context)
-			: base(item, context)
+		public IconEnvironmentDataBlockHandler(IconEnvironmentDataBlock item, ShellLinkFile context) : base(item, context)
 		{
 		}
 	}

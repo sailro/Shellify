@@ -161,15 +161,13 @@ namespace Shellify
 		public static ShellLinkFile Load(string filename)
 		{
 			var result = new ShellLinkFile();
-			using (var stream = new FileStream(filename, FileMode.Open))
-			{
-				using (var binaryReader = new BinaryReader(stream))
-				{
-					var reader = new ShellLinkFileHandler(result);
-					reader.ReadFrom(binaryReader);
-					return result;
-				}
-			}
+			
+			using var stream = new FileStream(filename, FileMode.Open);
+			using var binaryReader = new BinaryReader(stream);
+			
+			var reader = new ShellLinkFileHandler(result);
+			reader.ReadFrom(binaryReader);
+			return result;
 		}
 
 		private static FileSystemInfo SetFileSystemInfo(ShellLinkFile slf, string target)
@@ -221,14 +219,11 @@ namespace Shellify
 
 		public void SaveAs(string filename)
 		{
-			using (var stream = new FileStream(filename, FileMode.Create))
-			{
-				using (var binaryWriter = new BinaryWriter(stream))
-				{
-					var writer = new ShellLinkFileHandler(this);
-					writer.WriteTo(binaryWriter);
-				}
-			}
+			using var stream = new FileStream(filename, FileMode.Create);
+			using var binaryWriter = new BinaryWriter(stream);
+
+			var writer = new ShellLinkFileHandler(this);
+			writer.WriteTo(binaryWriter);
 		}
 	}
 }

@@ -39,8 +39,9 @@ namespace Shellify.Extensions
 
 		public static string ComputeHash(this byte[] bytes)
 		{
-			using (MD5 md5 = new MD5CryptoServiceProvider())
-				return ToHexString(md5.ComputeHash(bytes));
+			using MD5 md5 = new MD5CryptoServiceProvider();
+
+			return ToHexString(md5.ComputeHash(bytes));
 		}
 
 		private static bool Match(this byte[] array, byte[] item, int offset)
