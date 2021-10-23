@@ -162,7 +162,7 @@ namespace Shellify
 		{
 			var result = new ShellLinkFile();
 			
-			using var stream = new FileStream(filename, FileMode.Open);
+			using var stream = File.OpenRead(filename);
 			using var binaryReader = new BinaryReader(stream);
 			
 			var reader = new ShellLinkFileHandler(result);
